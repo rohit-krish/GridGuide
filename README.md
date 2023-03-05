@@ -1,3 +1,5 @@
+Create flutter app
+publish the data to kaggle
 <img src="./dataset/data_distribution.png" alt="data distribution chart">
 
 Names
