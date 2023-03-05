@@ -1,3 +1,5 @@
+<img src="./dataset/data_distribution.png" alt="data distribution chart">
+
 Names
 
 * GridGuid AI Sudoku Solver
