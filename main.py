@@ -43,69 +43,60 @@ img_warp = cv2.cvtColor(img_warp, cv2.COLOR_BGR2GRAY)
 # splitting the boxes
 boxes = split_boxes(img_warp)
 
-cv2.imshow('warp', img_warp)
+# predicting the numbers
+numbers = prediction(boxes, model)
 
-for box in boxes:
-    pad = 15
-    box = box[pad:box.shape[1]-pad, pad:box.shape[0]-pad]
-    # box = cv2.resize(box, (28,28))
-    cv2.imshow('box', box)
-    if cv2.waitKey(0) == ord('q'): break
+detected_digits = display_numbers(img_blank.copy(), numbers)
+numbers = np.asarray(numbers)
 
-# # predicting the numbers
-# numbers = prediction(boxes, model)
+pos_array = np.where(numbers > 0, 0, 1)
 
-# detected_digits = display_numbers(img_blank.copy(), numbers)
-# numbers = np.asarray(numbers)
+# find solution
+board = np.array_split(numbers, 9)
+solve(board)
 
-# pos_array = np.where(numbers > 0, 0, 1)
+pos_array = np.array(np.array_split(pos_array, 9))
+solved_numbers = board * pos_array
 
-# # find solution
-# board = np.array_split(numbers, 9)
-# solve(board)
+solved_numbers = np.ravel(solved_numbers)
 
-# pos_array = np.array(np.array_split(pos_array, 9))
-# solved_numbers = board * pos_array
+img_solved_numbers = display_numbers(img_blank.copy(), solved_numbers)
 
-# solved_numbers = np.ravel(solved_numbers)
+# over the solution onto the image
+pts2 = np.float32(biggest_contour)
+pts1 = np.float32(
+    [[0, 0], [img_w, 0], [0, img_h], [img_w, img_h]]
+)
 
-# img_solved_numbers = display_numbers(img_blank.copy(), solved_numbers)
+matrix = cv2.getPerspectiveTransform(pts1, pts2)
+img_inv_warp = img.copy()
+img_inv_warp = cv2.warpPerspective(img_solved_numbers, matrix, (img_w, img_h))
+inv_perspective = cv2.addWeighted(img_inv_warp, 1, img, 0.5, 1)
 
-# # over the solution onto the image
-# pts2 = np.float32(biggest_contour)
-# pts1 = np.float32(
-#     [[0, 0], [img_w, 0], [0, img_h], [img_w, img_h]]
-# )
+cv2.drawContours(img_contours, contours, -1, (0, 0, 255), 5)
+cv2.drawContours(img_biggest_contour, biggest_contour, -1, (0, 0, 255), 20)
 
-# matrix = cv2.getPerspectiveTransform(pts1, pts2)
-# img_inv_warp = img.copy()
-# img_inv_warp = cv2.warpPerspective(img_solved_numbers, matrix, (img_w, img_h))
-# inv_perspective = cv2.addWeighted(img_inv_warp, 1, img, 0.5, 1)
+images = [
+    [img, img_preprocessed, img_contours,],
+    [img_biggest_contour, img_warp, detected_digits],
+    [img_solved_numbers, img_inv_warp, inv_perspective]
+]
+labels = [
+    ['img', 'thresholded', 'all contours'],
+    ['biggest contour', 'warp', 'detected digits',],
+    ['solved board', 'inv warp', 'inv perspective']
+]
 
-# cv2.drawContours(img_contours, contours, -1, (0, 0, 255), 5)
-# cv2.drawContours(img_biggest_contour, biggest_contour, -1, (0, 0, 255), 20)
+cv2.imshow(
+    'img', stackIt(
+        images, labels, fontFace=cv2.FONT_HERSHEY_SIMPLEX,
+        fontScale=.8, color=(0, 255, 0), thickness=1, img_scale=.4
+    )
+)
 
-# images = [
-#     [img, img_preprocessed, img_contours,],
-#     [img_biggest_contour, img_warp, detected_digits],
-#     [img_solved_numbers, img_inv_warp, inv_perspective]
-# ]
-# labels = [
-#     ['img', 'thresholded', 'all contours'],
-#     ['biggest contour', 'warp', 'detected digits',],
-#     ['solved board', 'inv warp', 'inv perspective']
-# ]
+# print(boxes[0][...,None].shape)
+# cv2.imshow("box", boxes[3][..., None])
 
-# cv2.imshow(
-#     'img', stackIt(
-#         images, labels, fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-#         fontScale=.8, color=(0, 255, 0), thickness=1, img_scale=.4
-#     )
-# )
-
-# # print(boxes[0][...,None].shape)
-# # cv2.imshow("box", boxes[3][..., None])
-
-# cv2.waitKey(0)
-# # if cv2.waitKey(1) == ord('q'):
-# # break
+cv2.waitKey(0)
+# if cv2.waitKey(1) == ord('q'):
+# break

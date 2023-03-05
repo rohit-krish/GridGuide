@@ -37,7 +37,7 @@ def display_numbers(img, numbers):
     h, w = int(img.shape[0]/9), int(img.shape[1]/9)
     for x in range(9):
         for y in range(9):
-            print(numbers[(y*9)+x])
+            # print(numbers[(y*9)+x])
             if numbers[(y*9)+x] != 0:
                 cv2.putText(
                     img, str(numbers[(y*9)+x]), (x*w+int(w/2)-10, int((y+.8)*h)),
@@ -82,7 +82,7 @@ def reorder(points):
 
 def split_boxes(img):
     # img = img[1:img.shape[1]-1, 1:img.shape[0]-1]
-    print(img.shape)
+    # print(img.shape)
     rows = np.vsplit(img, 9)
     boxes = []
 

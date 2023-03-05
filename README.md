@@ -19,6 +19,12 @@ References:
 - https://youtu.be/qOXDoYUgNlU
 
 
+Image Requirments:
+- clear picture
+- one big digit at a cell
+- no occulsion
+- digit up and down no tilting
+- only numbers
 
 Plan
 - collect many digit box data from sudoku board and also use the mnist digit dataset
