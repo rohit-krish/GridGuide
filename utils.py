@@ -16,10 +16,12 @@ def prediction(boxes, model):
 
     for box in boxes:
         img = np.asarray(box)
-        img = img[4:img.shape[0]-4, 4:img.shape[1]-4]
-        img = cv2.resize(img, (28, 28))
-        img = img / 255
-        img = img.reshape(1, 28, 28, 1)
+        img = img[10:img.shape[0]-10, 10:img.shape[1]-10]
+        img = cv2.resize(img, (70, 70))
+        # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+        # img = img / 255
+        img = img.reshape(1, 70, 70, 3)
 
         preds = model.predict(img)
 
@@ -83,10 +85,12 @@ def reorder(points):
 def split_boxes(img):
     # img = img[1:img.shape[1]-1, 1:img.shape[0]-1]
     # print(img.shape)
+    img = cv2.resize(img, (810, 810))
     rows = np.vsplit(img, 9)
     boxes = []
 
     for r in rows:
+        print(r.shape)
         cols = np.hsplit(r, 9)
         for box in cols:
             boxes.append(box)
