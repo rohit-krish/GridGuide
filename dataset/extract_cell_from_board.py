@@ -59,6 +59,7 @@ def doit():
         for cnt, box in enumerate(boxes):
             box = box[pad:box.shape[1]-pad, pad:box.shape[0]-pad]
             box = cv2.resize(box, (70, 70)).astype(np.uint8)
+            box = cv2.cvtColor(box, cv2.COLOR_BGR2GRAY)
 
             cv2.imshow('box', box)
             key = cv2.waitKey(0)
