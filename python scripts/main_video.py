@@ -1,4 +1,6 @@
-from tensorflow.keras.models import load_model
+from tensorflow import keras
+
+# from tensorflow.keras.models import load_model
 
 import cv2
 from mylib.show import stackIt
@@ -9,7 +11,7 @@ from solver import solve
 img = cv2.imread('./assets/20_board.jpg')
 img = cv2.resize(img, (810, 810))
 img_blank = np.zeros_like(img)
-model = load_model('./model')
+model = keras.models.load_model('./model')
 
 cap = cv2.VideoCapture(0)
 

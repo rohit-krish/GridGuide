@@ -32,6 +32,12 @@ Image Requirments:
 
 Plan
 - collect many digit box data from sudoku board and also use the mnist digit dataset
+- flutter upto statemanagement
+- c++ in flutter
+- build it
+- animation
+- ads
+
 
 
 ### Data
@@ -50,3 +56,11 @@ Features of the app
 - solve sudoku by scaning image
 - play sudoku game
 - generate sudoku game as image
+
+
+
+##### Illustrations
+https://www.figma.com/community/file/890095002328610853
+
+
+
