@@ -74,6 +74,7 @@ def reorder(points):
     sum_points = np.sum(points, axis=1)
     diff_points = np.diff(points, axis=1)
 
+
     result[0] = points[np.argmin(sum_points)]
     result[3] = points[np.argmax(sum_points)]
     result[1] = points[np.argmin(diff_points)]
