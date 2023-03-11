@@ -1,42 +1,10 @@
 #pragma once
 
 #include <iostream>
-#include <opencv2/opencv.hpp>
+#include <opencv2/imgproc.hpp>
 
 using namespace std;
 using namespace cv;
-
-int argmin(float pnt[4])
-{
-    int min_val = pnt[0];
-    int min_arg;
-
-    for (int i = 0; i < 4; i++)
-    {
-        if (pnt[i] < min_val)
-        {
-            min_val = pnt[i];
-            min_arg = i;
-        }
-    }
-    return min_arg;
-}
-
-int argmax(float pnt[4])
-{
-    int max_val = pnt[0];
-    int max_arg;
-
-    for (int i = 0; i < 4; i++)
-    {
-        if (pnt[i] > max_val)
-        {
-            max_val = pnt[i];
-            max_arg = i;
-        }
-    }
-    return max_arg;
-}
 
 
 void preprocess(Mat &src_img, Mat &dst_img)
@@ -76,25 +44,6 @@ void find_biggest_contour(Mat &src_img, float &max_area, vector<Point> &biggest_
     }
 }
 
-void reorder_cnt(vector<Point> &contour)
-{
-    vector<Point> contour_tmp = contour;
-
-    int n = contour.size();
-    float sum_points[n], diff_points[n];
-
-    for (int i = 0; i < n; i++)
-    {
-        sum_points[i] = contour[i].y + contour[i].x;
-        diff_points[i] = contour[i].y - contour[i].x;
-    }
-
-    contour[0] = contour_tmp[argmin(sum_points)];
-    contour[3] = contour_tmp[argmax(sum_points)];
-    contour[1] = contour_tmp[argmin(diff_points)];
-    contour[2] = contour_tmp[argmax(diff_points)];
-}
-
 void warp_perspective(vector<Point> contour, Mat img, Mat &img_res)
 {
     Mat matrix;
@@ -112,32 +61,3 @@ void warp_perspective(vector<Point> contour, Mat img, Mat &img_res)
 
     cvtColor(img_res, img_res, COLOR_BGR2GRAY);
 }
-
-//int main()
-//{
-//    Mat img = imread("../../assets/20_board.jpg");
-//    resize(img, img, Size(720, 720));
-//
-//    Mat img_preprocessed, img_warped;
-//    float area;
-//    vector<Point> biggest_cnt;
-//    // Mat boxes[81];
-//
-//    preprocess(img, img_preprocessed);
-//    find_biggest_contour(img_preprocessed, area, biggest_cnt);
-//    reorder_cnt(biggest_cnt);
-//    warp_perspective(biggest_cnt, img, img_warped);
-//    // split_boxes(img_warped, boxes);
-//
-//
-//    imshow("img", img);
-//    imshow("warped", img_warped);
-//
-//    // for (Mat box : boxes)
-//    // {
-//    //     imshow("box", box);
-//    //     waitKey(0);
-//    // }
-//
-//    waitKey(0);
-//}
