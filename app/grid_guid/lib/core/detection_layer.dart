@@ -18,8 +18,8 @@ class BoundingBoxPainter extends CustomPainter {
   BoundingBoxPainter({required this.bbox});
 
   final _paint = Paint()
-    ..strokeWidth = 2.0
-    ..color = Colors.green
+    ..strokeWidth = 3.0
+    ..color = Colors.indigo
     ..style = PaintingStyle.stroke;
 
   @override

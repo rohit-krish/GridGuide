@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
+import '../widgets/camera_page/click_button.dart' show ClickButton;
 import '../core/sudoku_detector.dart';
 import '../core/detection_layer.dart';
 
@@ -88,10 +89,10 @@ class _CameraPageState extends State<CameraPage> {
     }
 
     if (_camFrameToScreenScale == 0) {
-      var w = (_camFrameRotation == 0  || _camFrameRotation == 180)
-        ? image.width
-        : image.height;
-      
+      var w = (_camFrameRotation == 0 || _camFrameRotation == 180)
+          ? image.width
+          : image.height;
+
       _camFrameToScreenScale = MediaQuery.of(context).size.width / w;
     }
 
@@ -103,12 +104,10 @@ class _CameraPageState extends State<CameraPage> {
       return;
     }
 
-    // log("Image w: ${image.width}, h: ${image.height}"); // w: 1280 , h: 720 , ^90
-    // log("Screen: w: ${MediaQuery.of(context).size.width}, h: ${MediaQuery.of(context).size.height}"); // w: 360 , h: 800
-
     setState(() {
       // _bbox = res.toList(growable: false);
-      _bbox = res.map((x) => x * _camFrameToScreenScale).toList(growable: false);
+      _bbox =
+          res.map((x) => x * _camFrameToScreenScale).toList(growable: false);
       _bbox = _sudokuDetector.reorder(_bbox);
     });
   }
@@ -119,14 +118,68 @@ class _CameraPageState extends State<CameraPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
+    final scale = 1 /
+        (_camController!.value.aspectRatio *
+            MediaQuery.of(context).size.aspectRatio);
+
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
-      body: Center(
-        child: Stack(
-          children: [
-            CameraPreview(_camController!),
-            DetectionLayer(bbox: _bbox)
-          ],
-        ),
+      body: Transform.scale(
+        scale: scale,
+        alignment: Alignment.topCenter,
+        child: Stack(children: [
+          CameraPreview(_camController!),
+          DetectionLayer(bbox: _bbox),
+          Padding(
+            padding: EdgeInsets.only(
+              top: height * 0.025,
+              left: width * 0.02,
+              right: width * 0.02,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back_sharp),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  color: Colors.black,
+                ),
+                const Text(
+                  'Camera Mode',
+                  style: TextStyle(color: Colors.black),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.check_outlined),
+                  color: Colors.black,
+                )
+              ],
+            ),
+          ),
+          SizedBox(
+            height: height,
+            child: Padding(
+              padding: EdgeInsets.only(top: height * .50),
+              child: Container(
+                margin: EdgeInsets.only(top: height * .22),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClickButton(Icons.auto_fix_high_outlined, width, () {}),
+                    // check_outlined , camera
+                    ClickButton(Icons.camera, width, () {}),
+                    ClickButton(Icons.autorenew, width, () {}),
+                  ],
+                ),
+              ),
+            ),
+          )
+        ]),
       ),
     );
   }

@@ -6,13 +6,15 @@ class MyThemes {
     brightness: Brightness.dark,
     primarySwatch: Colors.indigo,
     scaffoldBackgroundColor: Colors.grey.shade900,
+    fontFamily: 'PTSans',
     appBarTheme: AppBarTheme(
+      titleTextStyle: const TextStyle(fontSize: 23, color: Colors.white),
       elevation: 0,
       centerTitle: true,
       foregroundColor: Colors.white,
       backgroundColor: Colors.grey.shade900,
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.grey.shade900,
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.light,
       ),
     ),
@@ -21,13 +23,15 @@ class MyThemes {
     brightness: Brightness.light,
     primarySwatch: Colors.indigo,
     scaffoldBackgroundColor: Colors.grey.shade100,
+    fontFamily: 'PTSans',
     appBarTheme: AppBarTheme(
+      titleTextStyle: const TextStyle(fontSize: 23, color: Colors.black),
       elevation: 0,
       centerTitle: true,
       foregroundColor: Colors.black,
       backgroundColor: Colors.grey.shade100,
-      systemOverlayStyle: SystemUiOverlayStyle(
-        statusBarColor: Colors.grey.shade100,
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
         statusBarIconBrightness: Brightness.dark,
       ),
     ),

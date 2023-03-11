@@ -19,12 +19,14 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: "Grid Guid",
       debugShowCheckedModeBanner: false,
       theme: MyThemes.lightTheme,
       darkTheme: MyThemes.darkTheme,
-      initialRoute: '/',
+      // initialRoute: '/',
+      home: const HomePage(),
       routes: {
-        '/': (_) => HomePage(),
+        // '/': (_) => const HomePage(),
         CameraPage.routeName: (_) => const CameraPage()
       },
     );
