@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:grid_guid/core/sudoku_detector.dart';
 
 class CameraPage extends StatefulWidget {
   static const routeName = '/camera-page';
@@ -13,16 +14,22 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   CameraController? _camController;
+  late SudokuDetector _sudokuDetector;
+  int _camFrameRoatation = 0;
+  int _lastRun = 0;
+
 
   @override
   void initState() {
     super.initState();
+    _sudokuDetector = SudokuDetector();
     initCamera();
   }
 
   @override
   void dispose() {
     _camController?.dispose();
+    _sudokuDetector.dispose();
     super.dispose();
   }
 
@@ -52,12 +59,13 @@ class _CameraPageState extends State<CameraPage> {
     }
 
     var desc = cameras[idx];
+    _camFrameRoatation = desc.sensorOrientation;
 
     _camController = CameraController(
       desc,
       ResolutionPreset.max,
       enableAudio: false,
-      imageFormatGroup: ImageFormatGroup.jpeg,
+      imageFormatGroup: ImageFormatGroup.yuv420,
     );
 
     try {
@@ -74,15 +82,29 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void _processCameraImage(CameraImage image) {
-    if (mounted || !mounted) return;
+    // if (!mounted) return;
+    if (!mounted || DateTime.now().millisecondsSinceEpoch - _lastRun < 30) {
+      return;
+    }
 
-    // setState(() {});
+    // call the detector
+    var res = _sudokuDetector.detect(image, _camFrameRoatation);
+    _lastRun = DateTime.now().millisecondsSinceEpoch;
+
+    if (res == null || res.isEmpty) {
+      return;
+    } else {
+      // log(res.toString());
+      log("**************************************");
+      log(res.toList(growable: false).toString());
+      log("**************************************");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     if (_camController == null) {
-      return const Center(child: Text('loading'));
+      return const Center(child: CircularProgressIndicator());
     }
 
     return Scaffold(

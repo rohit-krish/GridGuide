@@ -1,5 +1,6 @@
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <opencv2/core.hpp>
 
 #include "utils.h"
 // #include "solver.h"
@@ -106,6 +107,7 @@ int main()
 {
     Mat img = imread("../../assets/20_board.jpg");
     resize(img, img, Size(720, 720));
+    
 
     Mat img_preprocessed, img_warped;
     float area;

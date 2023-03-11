@@ -24,7 +24,7 @@ class App extends StatelessWidget {
       darkTheme: MyThemes.darkTheme,
       initialRoute: '/',
       routes: {
-        '/': (_) => const HomePage(),
+        '/': (_) => HomePage(),
         CameraPage.routeName: (_) => const CameraPage()
       },
     );
