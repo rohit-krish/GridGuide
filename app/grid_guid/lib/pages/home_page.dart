@@ -13,7 +13,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
   final List<Widget> _widgetOptions = <Widget>[
     const CameraPage(),
-    SudokuPlay(),
+    const SudokuPlay(),
     const Center(child: Text('Info'))
   ];
 
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {},
             icon: Icon(
               Icons.token_outlined,
-              color: Colors.lightGreen,
+              color: Colors.orange.shade400,
               size: width * .08
             ),
           )

@@ -33,6 +33,7 @@ dependencies:
 
   camera: ^0.10.3+2
   sudoku_solver_generator: ^2.1.0+1
+  provider: ^6.0.5
   native_opencv:
     path: ../native_opencv
 

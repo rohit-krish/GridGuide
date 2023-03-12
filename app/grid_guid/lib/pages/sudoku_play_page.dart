@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
+import 'package:grid_guid/widgets/sudoku_play_page/sudoku_board_widget.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/board_provider.dart';
 import '../widgets/sudoku_play_page/input_button.dart';
 
 class SudokuPlay extends StatelessWidget {
-  SudokuPlay({super.key});
+  const SudokuPlay({super.key});
 
   @override
   Widget build(BuildContext context) {
+    var providerKey = Provider.of<BoardProvider>(context, listen: false);
+
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
@@ -19,64 +23,20 @@ class SudokuPlay extends StatelessWidget {
       alignment: Alignment.topCenter,
       child: Column(
         children: [
-          GridView.builder(
-            itemCount: 9,
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              childAspectRatio: 1,
-              crossAxisSpacing: width * .01,
-              mainAxisSpacing: width * .01,
-            ),
-            physics: const ScrollPhysics(),
-            itemBuilder: (ctx, idx) {
-              return Container(
-                color: (idx % 2 == 0)
-                    ? Colors.grey.shade100
-                    : Colors.blueGrey.shade50,
-                alignment: Alignment.center,
-                child: GridView.builder(
-                  itemCount: 9,
-                  shrinkWrap: true,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    childAspectRatio: 1,
-                    crossAxisSpacing: 0,
-                    mainAxisSpacing: 0,
-                  ),
-                  physics: const ScrollPhysics(),
-                  itemBuilder: (ctx, idx) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blueGrey.shade200),
-                      ),
-                      alignment: Alignment.center,
-                      child: FittedBox(
-                        child: Text(
-                          '${idx + 1}',
-                          style: TextStyle(fontSize: width * .1),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
-          ),
+          const SudokuBoardWidget(),
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  providerKey.getSolutions;
+                },
                 icon: const Icon(Icons.auto_fix_high_outlined),
               ),
               SizedBox(width: width * .07),
               IconButton(
-                onPressed: () {
-                  var sudokuGenerator = SudokuGenerator();
-                  print(sudokuGenerator.newSudoku);
-                },
+                onPressed: () => providerKey.generateNewBoard,
                 icon: const Icon(Icons.refresh),
               )
             ],
