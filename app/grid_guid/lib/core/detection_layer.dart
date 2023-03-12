@@ -26,10 +26,10 @@ class BoundingBoxPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     if (bbox.isEmpty) return;
 
-    final topLeft      = Offset(bbox[0], bbox[1]);
-    final topRight     = Offset(bbox[2], bbox[3]);
-    final bottomLeft   = Offset(bbox[4], bbox[5]);
-    final bottomRight  = Offset(bbox[6], bbox[7]);
+    final topLeft = Offset(bbox[0], bbox[1]);
+    final topRight = Offset(bbox[2], bbox[3]);
+    final bottomLeft = Offset(bbox[4], bbox[5]);
+    final bottomRight = Offset(bbox[6], bbox[7]);
 
     canvas.drawLine(topLeft, topRight, _paint);
     canvas.drawLine(topRight, bottomRight, _paint);
@@ -38,7 +38,14 @@ class BoundingBoxPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+  bool shouldRepaint(BoundingBoxPainter oldDelegate) {
+    // if (bbox.length != oldDelegate.bbox.length) return true;
+
+    // for (int i = 0; i < bbox.length; i++) {
+    //   if (bbox[i] != oldDelegate.bbox[i]) {
+    //     return true;
+    //   }
+    // }
     return true;
   }
 }

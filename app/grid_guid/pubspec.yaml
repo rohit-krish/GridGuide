@@ -30,11 +30,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  camera: ^0.10.3+2
 
+  camera: ^0.10.3+2
+  sudoku_solver_generator: ^2.1.0+1
   native_opencv:
     path: ../native_opencv
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

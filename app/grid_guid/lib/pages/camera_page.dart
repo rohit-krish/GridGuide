@@ -106,8 +106,7 @@ class _CameraPageState extends State<CameraPage> {
 
     setState(() {
       // _bbox = res.toList(growable: false);
-      _bbox =
-          res.map((x) => x * _camFrameToScreenScale).toList(growable: false);
+      _bbox = res.map((x) => x * _camFrameToScreenScale).toList(growable: false);
       _bbox = _sudokuDetector.reorder(_bbox);
     });
   }
@@ -118,9 +117,7 @@ class _CameraPageState extends State<CameraPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    final scale = 1 /
-        (_camController!.value.aspectRatio *
-            MediaQuery.of(context).size.aspectRatio);
+    final scale = 1 / (_camController!.value.aspectRatio * MediaQuery.of(context).size.aspectRatio);
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;

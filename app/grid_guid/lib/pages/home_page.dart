@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:grid_guid/pages/camera_page.dart';
+import 'package:grid_guid/pages/sudoku_play_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
   final List<Widget> _widgetOptions = <Widget>[
     const CameraPage(),
-    const Center(child: Text('Play')),
+    SudokuPlay(),
     const Center(child: Text('Info'))
   ];
 
@@ -28,9 +29,21 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Grid Guid'),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(
+              Icons.token_outlined,
+              color: Colors.lightGreen,
+              size: width * .08
+            ),
+          )
+        ],
       ),
       body: _widgetOptions[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -54,3 +67,5 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+// whatshot_outlined, webhook_outlined, water_drop_outlined
