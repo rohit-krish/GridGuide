@@ -19,6 +19,14 @@ class SudokuBoardWidget extends StatefulWidget {
 }
 
 class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
+  String getWhichDigitToDisplay(BoardCell currentWidget, int count) {
+    if (currentWidget.digit == 0) {
+      return '';
+    } else {
+      return currentWidget.digit.toString();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -52,9 +60,9 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
             physics: const ScrollPhysics(),
             itemBuilder: (ctx_, cellIdx_) {
               int count = boardCellCount++;
+              // print('cell $count built');
 
-              var boardProvider =
-                  Provider.of<BoardProvider>(context, listen: false);
+              var boardProvider = Provider.of<BoardProvider>(context);
               var board = boardProvider.getBoard;
 
               BoardCell currentWidget = board[getCorrespondingIndex(count)];
@@ -83,10 +91,9 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
                   alignment: Alignment.center,
                   child: LayoutBuilder(
                     builder: (ctx, constrains) {
+                      print('${currentWidget.digit} ${currentWidget.isSolution}');
                       return Text(
-                        currentWidget.digit == 0
-                            ? ''
-                            : '${currentWidget.digit}',
+                        getWhichDigitToDisplay(currentWidget, count),
                         style: TextStyle(
                           color: currentWidget.isSolution
                               ? Colors.lightGreen
