@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:grid_guid/pages/camera_page.dart';
 import 'package:grid_guid/pages/sudoku_play_page.dart';
 
+import '../widgets/home_page/token_widget.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -35,13 +37,10 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text('Grid Guid'),
         actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              Icons.token_outlined,
-              color: Colors.orange.shade400,
-              size: width * .08
-            ),
+          TokenWidget(
+            width: width,
+            tokensLeft: 100,
+            onTapFunc: () {},
           )
         ],
       ),

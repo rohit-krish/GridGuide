@@ -74,8 +74,7 @@ class _CameraPageState extends State<CameraPage> {
 
     try {
       await _camController!.initialize();
-      await _camController!
-          .startImageStream((image) => _processCameraImage(image));
+      // await _camController!.startImageStream((image) => _processCameraImage(image));
     } catch (e) {
       log('Error initializing camera, error: ${e.toString()}');
     }
