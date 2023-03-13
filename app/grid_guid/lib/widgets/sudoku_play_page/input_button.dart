@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class InputButton extends StatelessWidget {
   final String labelText;
-  const InputButton(this.labelText, {super.key});
+  final Function onPressedFunc;
+  const InputButton(this.labelText, this.onPressedFunc, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +22,7 @@ class InputButton extends StatelessWidget {
         ],
       ),
       child: TextButton(
-        onPressed: () {},
+        onPressed: () => onPressedFunc(),
         child: FittedBox(
           child: Text(
             labelText,

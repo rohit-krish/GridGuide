@@ -1,20 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
-
-List<int> _flatten(List<List<int>> board) {
-  List<int> res = List.empty(growable: true);
-  for (int i = 0; i < 9; i++) {
-    for (int j = 0; j < 9; j++) {
-      res.add(board[i][j]);
-    }
-  }
-
-  return res;
-}
+import 'dart:math';
 
 class BoardProvider with ChangeNotifier {
   void _generateNewBoard() {
-    _boardData = Board(SudokuGenerator(emptySquares: 40));
+    _boardData = Board(SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)));
     _getSolution = false;
     notifyListeners();
   }
@@ -24,7 +14,8 @@ class BoardProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Board _boardData = Board(SudokuGenerator(emptySquares: 40));
+
+  Board _boardData = Board(SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)));
   bool _getSolution = false;
 
   void get generateNewBoard => _generateNewBoard();
@@ -34,9 +25,10 @@ class BoardProvider with ChangeNotifier {
 }
 
 class BoardCell {
-  bool isSolution = false;
   int digit;
-  BoardCell(this.digit, this.isSolution);
+  bool isSolution;
+
+  BoardCell(this.digit, {this.isSolution = false});
 }
 
 class Board {
@@ -45,15 +37,15 @@ class Board {
   Board(this.generator);
 
   List<BoardCell> _getNormalBoard() {
-    board = _flatten(generator.newSudoku)
-        .map((digit) => BoardCell(digit, false))
+    board = SudokuUtilities.to1D(generator.newSudoku)
+        .map((digit) => BoardCell(digit))
         .toList();
     return board!;
   }
 
   List<BoardCell> _getSolutionBoard() {
-    List<BoardCell> solutions = _flatten(generator.newSudokuSolved)
-        .map((digit) => BoardCell(digit, true))
+    List<BoardCell> solutions = SudokuUtilities.to1D(generator.newSudokuSolved)
+        .map((digit) => BoardCell(digit, isSolution: true))
         .toList();
 
     for (int i = 0; i < 81; i++) {
@@ -66,5 +58,5 @@ class Board {
 
   List<BoardCell> getBoard(bool getSolution) {
     return getSolution ? _getSolutionBoard() : _getNormalBoard();
-  } 
+  }
 }
