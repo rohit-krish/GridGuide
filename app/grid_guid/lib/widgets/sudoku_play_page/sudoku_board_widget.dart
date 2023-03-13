@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/board_provider.dart';
-import '../../utils/get_corresponding_element.dart';
+import '../../utils/get_corresponding_element_utils.dart';
+import '../../theme/sudoku_board_widget_theme.dart';
 
 class SudokuBoardWidget extends StatefulWidget {
   final Function getCurrentPressedCount;
@@ -19,16 +20,11 @@ class SudokuBoardWidget extends StatefulWidget {
 }
 
 class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
-  String getWhichDigitToDisplay(BoardCell currentWidget, int count) {
-    if (currentWidget.digit == 0) {
-      return '';
-    } else {
-      return currentWidget.digit.toString();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
     final width = MediaQuery.of(context).size.width;
     int boardCellCount = 0;
 
@@ -44,9 +40,7 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
       physics: const ScrollPhysics(),
       itemBuilder: (ctx_, boxIdx) {
         return Container(
-          color: (boxIdx % 2 == 0)
-              ? Colors.grey.shade100
-              : Colors.blueGrey.shade50,
+          color: getWhichBoardBoxColorToDisplay(boxIdx, isDarkMode),
           alignment: Alignment.center,
           child: GridView.builder(
             itemCount: 9,
@@ -83,21 +77,29 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
                 },
                 child: Container(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blueGrey.shade200),
-                    color: (count == widget.getCurrentPressedCount())
-                        ? Colors.indigo.shade100
-                        : Colors.transparent,
+                    border: Border.all(
+                      width: getWhichCellBorderWidthToDisplay(
+                        count,
+                        widget.getCurrentPressedCount,
+                        currentWidget.isDigitValid
+                      ),
+                      color: getWhichCellBorderColorToDisplay(
+                        currentWidget,
+                        count,
+                        widget.getCurrentPressedCount,
+                        isDarkMode,
+                      ),
+                    ),
+                    color: Colors.transparent,
                   ),
                   alignment: Alignment.center,
                   child: LayoutBuilder(
                     builder: (ctx, constrains) {
-                      print('${currentWidget.digit} ${currentWidget.isSolution}');
                       return Text(
                         getWhichDigitToDisplay(currentWidget, count),
                         style: TextStyle(
-                          color: currentWidget.isSolution
-                              ? Colors.lightGreen
-                              : Colors.black,
+                          color: getWhichTextColorToDisplay(
+                              currentWidget, isDarkMode),
                           fontSize: constrains.maxWidth * .8,
                         ),
                       );
