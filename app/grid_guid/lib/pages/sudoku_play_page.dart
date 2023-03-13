@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grid_guid/utils/get_corresponding_element.dart';
 import 'package:grid_guid/widgets/sudoku_play_page/sudoku_board_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,7 @@ class SudokuPlay extends StatefulWidget {
 
 class _SudokuPlayState extends State<SudokuPlay> {
   int currentPressedCount = -1;
+  bool isSolutionsShown = false;
 
   int getCurrentPressedCount() {
     return currentPressedCount;
@@ -21,6 +23,15 @@ class _SudokuPlayState extends State<SudokuPlay> {
 
   updateCurrentPressedCount(int newVal) {
     currentPressedCount = newVal;
+  }
+
+  updateBoard(String value, BoardProvider boardProvider) {
+    if (!isSolutionsShown) {
+      boardProvider.updateBoard(
+        value,
+        getCorrespondingIndex(currentPressedCount),
+      );
+    }
   }
 
   @override
@@ -38,18 +49,25 @@ class _SudokuPlayState extends State<SudokuPlay> {
       alignment: Alignment.topCenter,
       child: Column(
         children: [
-          SudokuBoardWidget(getCurrentPressedCount, updateCurrentPressedCount),
+          SudokuBoardWidget(
+            getCurrentPressedCount,
+            updateCurrentPressedCount,
+          ),
           const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                onPressed: () => boardProvider.getSolutions,
+                onPressed: () {
+                  boardProvider.getSolutions;
+                  isSolutionsShown = true;
+                },
                 icon: const Icon(Icons.auto_fix_high_outlined),
               ),
               SizedBox(width: width * .07),
               IconButton(
                 onPressed: () {
+                  isSolutionsShown = false;
                   boardProvider.generateNewBoard;
                 },
                 icon: const Icon(Icons.refresh),
@@ -62,24 +80,22 @@ class _SudokuPlayState extends State<SudokuPlay> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  InputButton('1', () {}),
-                  InputButton('2', () {}),
-                  InputButton('3', () {}),
-                  InputButton('4', () {}),
-                  InputButton('5', () {}),
+                  InputButton('1', () => updateBoard('1', boardProvider)),
+                  InputButton('2', () => updateBoard('2', boardProvider)),
+                  InputButton('3', () => updateBoard('3', boardProvider)),
+                  InputButton('4', () => updateBoard('4', boardProvider)),
+                  InputButton('5', () => updateBoard('5', boardProvider)),
                 ],
               ),
               SizedBox(height: height * .02),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  InputButton('6', () {}),
-                  InputButton('7', () {}),
-                  InputButton('8', () {}),
-                  InputButton('9', () {}),
-                  InputButton('X', () {
-                    print(currentPressedCount);
-                  }),
+                  InputButton('6', () => updateBoard('6', boardProvider)),
+                  InputButton('7', () => updateBoard('7', boardProvider)),
+                  InputButton('8', () => updateBoard('8', boardProvider)),
+                  InputButton('9', () => updateBoard('9', boardProvider)),
+                  InputButton('X', () => updateBoard('X', boardProvider)),
                 ],
               ),
             ],

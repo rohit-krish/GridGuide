@@ -4,7 +4,8 @@ import 'dart:math';
 
 class BoardProvider with ChangeNotifier {
   void _generateNewBoard() {
-    _boardData = Board(SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)));
+    _boardData =
+        Board(SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)));
     _getSolution = false;
     notifyListeners();
   }
@@ -14,46 +15,71 @@ class BoardProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void updateBoard(String value, int index) {
+    if (index != -1) {
+      _boardData.updateBoard(int.parse(value), index);
+      notifyListeners();
+    }
+  }
 
-  Board _boardData = Board(SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)));
+  Board _boardData =
+      Board(SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)));
+
   bool _getSolution = false;
 
   void get generateNewBoard => _generateNewBoard();
   void get getSolutions => _getSolutions();
-
   List<BoardCell> get getBoard => _boardData.getBoard(_getSolution);
 }
 
 class BoardCell {
   int digit;
   bool isSolution;
+  bool isDigitValid;
 
-  BoardCell(this.digit, {this.isSolution = false});
+  BoardCell(
+    this.digit, {
+    this.isSolution = false,
+    this.isDigitValid = true,
+  });
 }
 
 class Board {
   SudokuGenerator generator;
-  List<BoardCell>? board;
-  Board(this.generator);
+  late List<BoardCell> board;
 
-  List<BoardCell> _getNormalBoard() {
+  Board(this.generator) {
     board = SudokuUtilities.to1D(generator.newSudoku)
         .map((digit) => BoardCell(digit))
         .toList();
-    return board!;
+  }
+
+  void updateBoard(int value, int index) {
+    // NOTE: when updating the board check if the inputs are valid or not
+    board[index] = BoardCell(value);
+  }
+
+  List<BoardCell> _getNormalBoard() {
+    for (int i = 0; i < 81; i++) {
+      board[i].isSolution = false;
+    }
+    return board;
   }
 
   List<BoardCell> _getSolutionBoard() {
-    List<BoardCell> solutions = SudokuUtilities.to1D(generator.newSudokuSolved)
-        .map((digit) => BoardCell(digit, isSolution: true))
+    var solutions = SudokuUtilities.to1D(generator.newSudokuSolved);
+    board = SudokuUtilities.to1D(generator.newSudoku)
+        .map((digit) => BoardCell(digit))
         .toList();
 
     for (int i = 0; i < 81; i++) {
-      if (board![i].digit == solutions[i].digit) {
-        solutions[i].isSolution = false;
+      // print('${board[i].digit} ${solutions[i]}');
+      if (board[i].digit != solutions[i]) {
+        board[i].digit = solutions[i];
+        board[i].isSolution = true;
       }
     }
-    return solutions;
+    return board;
   }
 
   List<BoardCell> getBoard(bool getSolution) {
