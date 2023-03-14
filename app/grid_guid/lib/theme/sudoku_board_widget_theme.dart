@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../providers/board_provider.dart';
+import '../providers/board_provider_models.dart';
 
 Color getWhichBoardBoxColorToDisplay(int boxIdx, bool isDarkMode) {
   if (isDarkMode) {
@@ -67,7 +68,7 @@ Color getWhichCellBorderColorToDisplay(
 
 Color getWhichTextColorToDisplay(BoardCell currentWidget, bool isDarkMode) {
   if (isDarkMode) {
-    if (currentWidget.isSolution) {
+    if (currentWidget.isSolution && !currentWidget.isMarked) {
       return Colors.green.shade700;
     }
     if (currentWidget.isMarked) {

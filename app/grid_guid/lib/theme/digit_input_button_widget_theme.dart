@@ -10,7 +10,7 @@ Color getWhichBackGroundColorToDisplay(bool isDarkMode) {
 
 Color getWhichShadowColorToDisplay(bool isDarkMode) {
   if (isDarkMode) {
-    return Colors.grey.shade800;
+    return Colors.grey.shade900;
   } else {
     return Colors.grey.shade300;
   }

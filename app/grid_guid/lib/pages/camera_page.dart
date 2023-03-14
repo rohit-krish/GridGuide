@@ -166,7 +166,7 @@ class _CameraPageState extends State<CameraPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClickButton(Icons.auto_fix_high_outlined, width, () {}),
+                    ClickButton(Icons.lightbulb_outline_sharp, width, () {}),
                     // check_outlined , camera
                     ClickButton(Icons.camera, width, () {}),
                     ClickButton(Icons.autorenew, width, () {}),

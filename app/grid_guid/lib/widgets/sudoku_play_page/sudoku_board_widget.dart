@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../providers/board_provider.dart';
+import '../../providers/board_provider_models.dart';
 import '../../utils/get_corresponding_element_utils.dart';
 import '../../theme/sudoku_board_widget_theme.dart';
 
@@ -81,7 +82,7 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
                       width: getWhichCellBorderWidthToDisplay(
                         count,
                         widget.getCurrentPressedCount,
-                        currentWidget.isDigitValid
+                        currentWidget.isDigitValid,
                       ),
                       color: getWhichCellBorderColorToDisplay(
                         currentWidget,
@@ -99,7 +100,9 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
                         getWhichDigitToDisplay(currentWidget, count),
                         style: TextStyle(
                           color: getWhichTextColorToDisplay(
-                              currentWidget, isDarkMode),
+                            currentWidget,
+                            isDarkMode,
+                          ),
                           fontSize: constrains.maxWidth * .8,
                         ),
                       );

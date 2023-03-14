@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../providers/board_provider.dart';
+import '../../providers/board_provider.dart';
 
 Future<void> showAlertDialogForRefreshingBoard(
   BoardProvider boardProvider,

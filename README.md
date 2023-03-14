@@ -1,10 +1,16 @@
+## Next
+1. Change the icon to bulb
+2. when user completely solved it show AlertDialog
+3. only detect sudoku after the image is taken
+
+
 Create flutter app
 publish the data to kaggle
 <img src="./dataset/data_distribution.png" alt="data distribution chart">
 
 Names
 
-* GridGuid AI Sudoku Solver
+* GridGuid Sudoku Board Detector & Solver
 
 * BoldBlocks
 * HyperGrid[taken]

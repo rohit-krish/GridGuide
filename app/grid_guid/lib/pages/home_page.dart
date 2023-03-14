@@ -66,5 +66,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-// whatshot_outlined, webhook_outlined, water_drop_outlined

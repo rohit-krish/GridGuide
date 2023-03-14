@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 
 import '../providers/board_provider.dart';
 import '../widgets/sudoku_play_page/digit_input_button.dart';
-import '../utils/alert_dialog_sudoku_play_page.dart';
+import '../utils/sudoku_play_page/alert_dialog_sudoku_reload_button.dart';
+import '../utils/sudoku_play_page/alert_dialog_user_complets_puzzle.dart';
 
 class SudokuPlay extends StatefulWidget {
   const SudokuPlay({super.key});
@@ -15,6 +16,7 @@ class SudokuPlay extends StatefulWidget {
 }
 
 class _SudokuPlayState extends State<SudokuPlay> {
+  bool? _isBoardCompletelySolvedbyUser;
   int currentPressedCount = -1;
 
   int getCurrentPressedCount() {
@@ -26,14 +28,15 @@ class _SudokuPlayState extends State<SudokuPlay> {
   }
 
   updateBoard(String value, BoardProvider boardProvider) {
-    bool isBoardCompletelySolvedbyUser = boardProvider.updateBoard(
+    _isBoardCompletelySolvedbyUser = boardProvider.updateBoard(
       value,
       getCorrespondingIndex(currentPressedCount),
     );
-    print(isBoardCompletelySolvedbyUser);
 
+    if (_isBoardCompletelySolvedbyUser == true) {
+      showAlertDialogWhenUserCompletesPuzzle(context, boardProvider);
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -55,11 +58,24 @@ class _SudokuPlayState extends State<SudokuPlay> {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              IconButton(
-                onPressed: () {
-                  boardProvider.getSolutions;
+              Consumer<BoardProvider>(
+                builder: (ctx, boardProvider, child) {
+                  return IconButton(
+                    onPressed: () {
+                      if (_isBoardCompletelySolvedbyUser == true) {
+                        //TODO: show a snack bar to tell that the board is already solved
+                      } else {
+                        boardProvider.getSolutions;
+                      }
+                    },
+                    icon: Icon(
+                      boardProvider.isNowShowingSolutions &&
+                              (_isBoardCompletelySolvedbyUser == false)
+                          ? Icons.lightbulb
+                          : Icons.lightbulb_outline_sharp,
+                    ),
+                  );
                 },
-                icon: const Icon(Icons.auto_fix_high_outlined),
               ),
               SizedBox(width: width * .07),
               IconButton(
