@@ -5,7 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:native_opencv/native_opencv.dart';
 
 class SudokuDetector {
-  NativeOpenCV? _nativeOpenCV;
+  late NativeOpenCV _nativeOpenCV;
 
   late List<double> sumPoints;
   late List<double> diffPoints;
@@ -16,9 +16,7 @@ class SudokuDetector {
   }
 
   void dispose() {
-    if (_nativeOpenCV != null) {
-      _nativeOpenCV!.dispose();
-    }
+    _nativeOpenCV.dispose();
   }
 
   int _argmin(List<double> pnt) {
@@ -78,15 +76,13 @@ class SudokuDetector {
     return res;
   }
 
-  Float32List? detect(CameraImage image, int rotation) {
-    if (_nativeOpenCV == null) return null;
-
+  Float32List detect(CameraImage image, int rotation) {
     var planes = image.planes;
     Uint8List yBuffer = planes[0].bytes;
     Uint8List uBuffer = planes[1].bytes;
     Uint8List vBuffer = planes[2].bytes;
 
-    var res = _nativeOpenCV!.detect(
+    var res = _nativeOpenCV.detect(
       image.width,
       image.height,
       rotation,

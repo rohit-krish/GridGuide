@@ -27,12 +27,6 @@ extern "C"
 {
     // Attributes to prevent 'unused' function from being removed and to make it visible
     __attribute__((visibility("default"))) __attribute__((used))
-    const char * version()
-    {
-        return CV_VERSION;
-    }
-
-    __attribute__((visibility("default"))) __attribute__((used))
     const float * detect(uint8_t *bytes, int width, int height, int rotation, int32_t *outCount)
     {
         Mat image(height + height / 2, width, CV_8UC1, bytes);

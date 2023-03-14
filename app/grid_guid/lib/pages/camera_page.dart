@@ -2,10 +2,12 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:provider/provider.dart';
 
-import '../widgets/camera_page/click_button.dart';
 import '../core/sudoku_detector.dart';
 import '../core/detection_layer.dart';
+import '../widgets/camera_page/click_button.dart';
+import '../providers/camera_provider.dart';
 
 class CameraPage extends StatefulWidget {
   static const routeName = '/camera-page';
@@ -82,33 +84,32 @@ class _CameraPageState extends State<CameraPage> {
     if (mounted) setState(() {});
   }
 
-  void _processCameraImage(CameraImage image) {
-    if (!mounted || DateTime.now().millisecondsSinceEpoch - _lastRun < 30) {
-      return;
-    }
+  // void _processCameraImage(CameraImage image) {
+  //   if (!mounted || DateTime.now().millisecondsSinceEpoch - _lastRun < 30) {
+  //     return;
+  //   }
 
-    if (_camFrameToScreenScale == 0) {
-      var w = (_camFrameRotation == 0 || _camFrameRotation == 180)
-          ? image.width
-          : image.height;
+  //   if (_camFrameToScreenScale == 0) {
+  //     var w = (_camFrameRotation == 0 || _camFrameRotation == 180)
+  //         ? image.width
+  //         : image.height;
 
-      _camFrameToScreenScale = MediaQuery.of(context).size.width / w;
-    }
+  //     _camFrameToScreenScale = MediaQuery.of(context).size.width / w;
+  //   }
 
-    // call the detector
-    var res = _sudokuDetector.detect(image, _camFrameRotation);
-    _lastRun = DateTime.now().millisecondsSinceEpoch;
+  //   // call the detector
+  //   var res = _sudokuDetector.detect(image, _camFrameRotation);
+  //   _lastRun = DateTime.now().millisecondsSinceEpoch;
 
-    if (res == null || res.isEmpty) {
-      return;
-    }
+  //   if (res.isEmpty) return;
 
-    setState(() {
-      // _bbox = res.toList(growable: false);
-      _bbox = res.map((x) => x * _camFrameToScreenScale).toList(growable: false);
-      _bbox = _sudokuDetector.reorder(_bbox);
-    });
-  }
+  //   setState(() {
+  //     // _bbox = res.toList(growable: false);
+  //     _bbox =
+  //         res.map((x) => x * _camFrameToScreenScale).toList(growable: false);
+  //     _bbox = _sudokuDetector.reorder(_bbox);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +117,9 @@ class _CameraPageState extends State<CameraPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    final scale = 1 / (_camController!.value.aspectRatio * MediaQuery.of(context).size.aspectRatio);
+    final scale = 1 /
+        (_camController!.value.aspectRatio *
+            MediaQuery.of(context).size.aspectRatio);
 
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
@@ -148,11 +151,16 @@ class _CameraPageState extends State<CameraPage> {
                   'Camera Mode',
                   style: TextStyle(color: Colors.black),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.check_outlined),
-                  color: Colors.black,
-                )
+                Consumer<CameraProvider>(
+                    builder: (context, cameraProvider, child) {
+                  return IconButton(
+                    onPressed: cameraProvider.isImageCaptured ? () {} : () {},
+                    icon: const Icon(Icons.check_outlined),
+                    color: cameraProvider.isImageCaptured
+                        ? Colors.black
+                        : Colors.transparent,
+                  );
+                })
               ],
             ),
           ),
@@ -162,16 +170,35 @@ class _CameraPageState extends State<CameraPage> {
               padding: EdgeInsets.only(top: height * .50),
               child: Container(
                 margin: EdgeInsets.only(top: height * .22),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ClickButton(Icons.lightbulb_outline_sharp, width, () {}),
-                    // check_outlined , camera
-                    ClickButton(Icons.camera, width, () {}),
-                    ClickButton(Icons.autorenew, width, () {}),
-                  ],
-                ),
+                child: Consumer<CameraProvider>(
+                    builder: (context, cameraProvider, child) {
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClickButton(
+                        show: cameraProvider.isImageCaptured,
+                        Icons.lightbulb_outline_sharp,
+                        width,
+                        () {},
+                      ),
+                      if (!cameraProvider.isImageCaptured)
+                        ClickButton(
+                          Icons.camera,
+                          width,
+                          () {
+                            cameraProvider.imageIsCaptured();
+                          },
+                        ),
+                      ClickButton(
+                        show: cameraProvider.isImageCaptured,
+                        Icons.autorenew,
+                        width,
+                        () {},
+                      ),
+                    ],
+                  );
+                }),
               ),
             ),
           )

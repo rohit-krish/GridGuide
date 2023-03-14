@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:grid_guid/pages/camera_page.dart';
 import 'package:grid_guid/providers/board_provider.dart';
+import 'package:grid_guid/providers/camera_provider.dart';
 import 'package:grid_guid/theme/theme.dart';
 import 'package:grid_guid/pages/home_page.dart';
 import 'package:provider/provider.dart';
@@ -25,14 +26,15 @@ class App extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: MyThemes.lightTheme,
       darkTheme: MyThemes.darkTheme,
-      // initialRoute: '/',
       home: ChangeNotifierProvider<BoardProvider>(
         child: const HomePage(),
         create: (_) => BoardProvider(),
       ),
       routes: {
-        // '/': (_) => const HomePage(),
-        CameraPage.routeName: (_) => const CameraPage()
+        CameraPage.routeName: (_) => ChangeNotifierProvider<CameraProvider>(
+              create: (_) => CameraProvider(),
+              child: const CameraPage(),
+            )
       },
     );
   }
