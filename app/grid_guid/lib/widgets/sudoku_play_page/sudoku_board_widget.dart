@@ -63,7 +63,7 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
               BoardCell currentWidget = board[getCorrespondingIndex(count)];
               return InkWell(
                 onTap: () {
-                  /// receive inputs and do the usual, only if the board is not completely solved by the user
+                  /// if board is completely solved by the user the show the snak bar; else receive inputs and do the usual
                   if (boardProvider.isBoardCompletelySolvedbyUser == false) {
                     // when we press to a cell which is not yet pressed
                     if (count != widget.getCurrentPressedCount()) {

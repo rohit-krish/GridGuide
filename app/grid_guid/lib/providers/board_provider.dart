@@ -53,4 +53,13 @@ class BoardProvider with ChangeNotifier {
   void get getSolutions => _getSolutions();
   bool get isNowShowingSolutions => _getSolution;
   List<BoardCell> get getBoard => _boardData.getBoard(_getSolution);
+
+  final _snackBar = const SnackBar(
+    content: Text('Puzzle is already solved!'),
+    duration: Duration(milliseconds: 500),
+  );
+
+  void showSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+  }
 }

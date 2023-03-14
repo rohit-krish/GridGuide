@@ -27,13 +27,14 @@ class _SudokuPlayState extends State<SudokuPlay> {
   }
 
   updateBoard(String value, BoardProvider boardProvider) {
-    if (boardProvider.isBoardCompletelySolvedbyUser == false) {
+    if (boardProvider.isBoardCompletelySolvedbyUser) {
+      boardProvider.showSnackBar(context);
+    } else {
       boardProvider.updateBoard(
         value,
         getCorrespondingIndex(currentPressedCount),
       );
 
-      // if the board is completely solved by the user then don't receive any inputs unless new board loaded
       if (boardProvider.isBoardCompletelySolvedbyUser == true) {
         showAlertDialogWhenUserCompletesPuzzle(context, boardProvider);
       }
@@ -64,8 +65,8 @@ class _SudokuPlayState extends State<SudokuPlay> {
                 builder: (ctx, boardProvider, child) {
                   return IconButton(
                     onPressed: () {
-                      if (boardProvider.isBoardCompletelySolvedbyUser == true) {
-                        //TODO: show a snack bar to tell that the board is already solved
+                      if (boardProvider.isBoardCompletelySolvedbyUser) {
+                        boardProvider.showSnackBar(context);
                       } else {
                         boardProvider.getSolutions;
                       }

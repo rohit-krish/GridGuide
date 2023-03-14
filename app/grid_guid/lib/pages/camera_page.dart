@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 
-import '../widgets/camera_page/click_button.dart' show ClickButton;
+import '../widgets/camera_page/click_button.dart';
 import '../core/sudoku_detector.dart';
 import '../core/detection_layer.dart';
 
