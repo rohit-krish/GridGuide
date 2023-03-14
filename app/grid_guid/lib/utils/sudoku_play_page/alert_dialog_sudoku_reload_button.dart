@@ -37,6 +37,7 @@ Future<void> showAlertDialogForRefreshingBoard(
             onPressed: () {
               Navigator.of(context).pop();
               boardProvider.generateNewBoard;
+              boardProvider.isBoardCompletelySolvedbyUser = false;
             },
           ),
         ],

@@ -63,28 +63,33 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
               BoardCell currentWidget = board[getCorrespondingIndex(count)];
               return InkWell(
                 onTap: () {
-                  // when we press to a cell which is not yet pressed
-                  if (count != widget.getCurrentPressedCount()) {
-                    setState(() {
-                      widget.updateCurrentPressedCount(count);
-                    });
-                  }
-                  // when we press a cell which is already presssed
-                  else {
-                    setState(() {
-                      widget.updateCurrentPressedCount(-1);
-                    });
+                  /// receive inputs and do the usual, only if the board is not completely solved by the user
+                  if (boardProvider.isBoardCompletelySolvedbyUser == false) {
+                    // when we press to a cell which is not yet pressed
+                    if (count != widget.getCurrentPressedCount()) {
+                      setState(() {
+                        widget.updateCurrentPressedCount(count);
+                      });
+                    }
+                    // when we press a cell which is already presssed
+                    else {
+                      setState(() {
+                        widget.updateCurrentPressedCount(-1);
+                      });
+                    }
                   }
                 },
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
                       width: getWhichCellBorderWidthToDisplay(
+                        boardProvider.isBoardCompletelySolvedbyUser,
                         count,
                         widget.getCurrentPressedCount,
                         currentWidget.isDigitValid,
                       ),
                       color: getWhichCellBorderColorToDisplay(
+                        boardProvider.isBoardCompletelySolvedbyUser,
                         currentWidget,
                         count,
                         widget.getCurrentPressedCount,

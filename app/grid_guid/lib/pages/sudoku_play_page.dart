@@ -4,9 +4,9 @@ import 'package:grid_guid/widgets/sudoku_play_page/sudoku_board_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/board_provider.dart';
+import '../utils/sudoku_play_page/alert_dialog_user_complets_puzzle.dart';
 import '../widgets/sudoku_play_page/digit_input_button.dart';
 import '../utils/sudoku_play_page/alert_dialog_sudoku_reload_button.dart';
-import '../utils/sudoku_play_page/alert_dialog_user_complets_puzzle.dart';
 
 class SudokuPlay extends StatefulWidget {
   const SudokuPlay({super.key});
@@ -16,7 +16,6 @@ class SudokuPlay extends StatefulWidget {
 }
 
 class _SudokuPlayState extends State<SudokuPlay> {
-  bool? _isBoardCompletelySolvedbyUser;
   int currentPressedCount = -1;
 
   int getCurrentPressedCount() {
@@ -28,13 +27,16 @@ class _SudokuPlayState extends State<SudokuPlay> {
   }
 
   updateBoard(String value, BoardProvider boardProvider) {
-    _isBoardCompletelySolvedbyUser = boardProvider.updateBoard(
-      value,
-      getCorrespondingIndex(currentPressedCount),
-    );
+    if (boardProvider.isBoardCompletelySolvedbyUser == false) {
+      boardProvider.updateBoard(
+        value,
+        getCorrespondingIndex(currentPressedCount),
+      );
 
-    if (_isBoardCompletelySolvedbyUser == true) {
-      showAlertDialogWhenUserCompletesPuzzle(context, boardProvider);
+      // if the board is completely solved by the user then don't receive any inputs unless new board loaded
+      if (boardProvider.isBoardCompletelySolvedbyUser == true) {
+        showAlertDialogWhenUserCompletesPuzzle(context, boardProvider);
+      }
     }
   }
 
@@ -62,7 +64,7 @@ class _SudokuPlayState extends State<SudokuPlay> {
                 builder: (ctx, boardProvider, child) {
                   return IconButton(
                     onPressed: () {
-                      if (_isBoardCompletelySolvedbyUser == true) {
+                      if (boardProvider.isBoardCompletelySolvedbyUser == true) {
                         //TODO: show a snack bar to tell that the board is already solved
                       } else {
                         boardProvider.getSolutions;
@@ -70,7 +72,8 @@ class _SudokuPlayState extends State<SudokuPlay> {
                     },
                     icon: Icon(
                       boardProvider.isNowShowingSolutions &&
-                              (_isBoardCompletelySolvedbyUser == false)
+                              (boardProvider.isBoardCompletelySolvedbyUser ==
+                                  false)
                           ? Icons.lightbulb
                           : Icons.lightbulb_outline_sharp,
                     ),

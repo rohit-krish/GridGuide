@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../providers/board_provider.dart';
 import '../providers/board_provider_models.dart';
 
 Color getWhichBoardBoxColorToDisplay(int boxIdx, bool isDarkMode) {
@@ -28,10 +27,16 @@ String getWhichDigitToDisplay(BoardCell currentWidget, int count) {
 }
 
 double getWhichCellBorderWidthToDisplay(
+  bool isBoardCompletelySolvedbyUser,
   int count,
   Function getCurrentPressedCount,
   bool? isDigitValid,
 ) {
+  // if the board is completley solved then make the border of all cell's width to normal
+  if (isBoardCompletelySolvedbyUser) {
+    return 1.0;
+  }
+
   if (count == getCurrentPressedCount() || isDigitValid == false) {
     return 3.0;
   } else {
@@ -40,11 +45,20 @@ double getWhichCellBorderWidthToDisplay(
 }
 
 Color getWhichCellBorderColorToDisplay(
+  bool isBoardCompletelySolvedbyUser,
   BoardCell currentWidget,
   int count,
   Function getCurrentPressedCount,
   bool isDarkMode,
 ) {
+  // if the board is completley solved then make the border of all cell's color to normal
+  if (isBoardCompletelySolvedbyUser) {
+    if (isDarkMode) {
+      return Colors.grey.shade600;
+    } else {
+      return Colors.blueGrey.shade200;
+    }
+  }
   if (count == getCurrentPressedCount()) {
     if (currentWidget.isDigitValid == false) {
       return Colors.red.shade200;

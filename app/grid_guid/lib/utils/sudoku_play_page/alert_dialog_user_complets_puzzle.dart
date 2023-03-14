@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import '../../providers/board_provider.dart';
 
-
-Future<void> showAlertDialogWhenUserCompletesPuzzle(BuildContext context, BoardProvider boardProvider) {
+Future<void> showAlertDialogWhenUserCompletesPuzzle(
+    BuildContext context, BoardProvider boardProvider) {
   return showDialog<void>(
     context: context,
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
       return AlertDialog(
-        title: const Text('You Solved it! (~^⌣^)~'),
+        title: const Text('You Solved it!'),
         content: SingleChildScrollView(
           child: ListBody(
             children: const <Widget>[
+              Text(
+                "Earned 1+ tokens\n",
+                style: TextStyle(fontSize: 20),
+              ),
               Text('Load new Puzzle?')
             ],
           ),

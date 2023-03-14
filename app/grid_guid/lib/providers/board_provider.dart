@@ -6,8 +6,9 @@ import './board_provider_models.dart';
 
 class BoardProvider with ChangeNotifier {
   void _generateNewBoard() {
-    _boardData =
-        Board(SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)));
+    _boardData = Board(
+      SudokuGenerator(emptySquares: 27 + Random().nextInt(54 - 27)),
+    );
     _getSolution = false;
     notifyListeners();
   }
@@ -21,14 +22,14 @@ class BoardProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  bool updateBoard(String value, int index) {
+  updateBoard(String value, int index) {
     if (index != -1) {
       _boardData.updateBoard(value, index);
     }
 
     //*: check if the board completly solved by the user
     var board = _boardData.getBoard(_getSolution);
-    bool isBoardCompletelySolvedbyUser = false;
+    isBoardCompletelySolvedbyUser = false;
 
     for (int i = 0; i < 81; i++) {
       if (board[i].isSolution || board[i].digit == 0) {
@@ -40,18 +41,16 @@ class BoardProvider with ChangeNotifier {
     }
 
     notifyListeners();
-
-    return isBoardCompletelySolvedbyUser;
   }
 
-  Board _boardData =
-      Board(SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)));
-
+  Board _boardData = Board(
+    SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)),
+  );
   bool _getSolution = false;
+  bool isBoardCompletelySolvedbyUser = false;
 
   void get generateNewBoard => _generateNewBoard();
   void get getSolutions => _getSolutions();
   bool get isNowShowingSolutions => _getSolution;
   List<BoardCell> get getBoard => _boardData.getBoard(_getSolution);
 }
-
