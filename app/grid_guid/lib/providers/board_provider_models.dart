@@ -72,7 +72,7 @@ class Board {
     }
   }
 
-  List<BoardCell> _getNormalBoard() {
+  List<BoardCell> _getDefaultBoard() {
     for (int i = 0; i < 81; i++) {
       if (board[i].isSolution == true) {
         board[i].digit = 0;
@@ -97,6 +97,6 @@ class Board {
   }
 
   List<BoardCell> getBoard(bool getSolution) {
-    return getSolution ? _getSolutionBoard() : _getNormalBoard();
+    return getSolution ? _getSolutionBoard() : _getDefaultBoard();
   }
 }

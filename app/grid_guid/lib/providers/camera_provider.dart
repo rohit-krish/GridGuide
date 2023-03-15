@@ -25,7 +25,7 @@ class CameraProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void discardCurrentImage() {
+  void discardCurrentClickedImage() {
     isImageCaptureButttonClicked = false;
     bbox = List.empty();
     notifyListeners();

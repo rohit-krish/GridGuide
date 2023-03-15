@@ -22,6 +22,8 @@ class BoundingBoxPainter extends CustomPainter {
     ..color = Colors.indigo
     ..style = PaintingStyle.stroke;
 
+  bool didPaint = false;
+
   @override
   void paint(Canvas canvas, Size size) {
     if (bbox.isEmpty) return;
@@ -35,17 +37,16 @@ class BoundingBoxPainter extends CustomPainter {
     canvas.drawLine(topRight, bottomRight, _paint);
     canvas.drawLine(bottomRight, bottomLeft, _paint);
     canvas.drawLine(bottomLeft, topLeft, _paint);
+
+    didPaint = true;
   }
 
   @override
   bool shouldRepaint(BoundingBoxPainter oldDelegate) {
-    // if (bbox.length != oldDelegate.bbox.length) return true;
-
-    // for (int i = 0; i < bbox.length; i++) {
-    //   if (bbox[i] != oldDelegate.bbox[i]) {
-    //     return true;
-    //   }
-    // }
-    return true;
+    if (oldDelegate.didPaint) {
+      return false;
+    } else {
+      return true;
+    }
   }
 }

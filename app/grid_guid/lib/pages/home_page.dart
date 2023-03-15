@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:grid_guid/pages/camera_page.dart';
-import 'package:grid_guid/pages/sudoku_play_page.dart';
 
+import '../pages/camera_page.dart';
+import '../pages/sudoku_play_page.dart';
 import '../widgets/home_page/token_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -13,6 +13,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
+  double? width;
   final List<Widget> _widgetOptions = <Widget>[
     const CameraPage(),
     const SudokuPlay(),
@@ -31,14 +32,14 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Grid Guid'),
         actions: [
           TokenWidget(
-            width: width,
+            width: width!,
             tokensLeft: 100,
             onTapFunc: () {},
           )

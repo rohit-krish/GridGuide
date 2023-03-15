@@ -8,7 +8,7 @@ Future<void> showAlertDialogForRefreshingBoard(
 ) {
   return showDialog<void>(
     context: context,
-    barrierDismissible: false, // user must tap button!
+    barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('Load new Sudoku Board?'),

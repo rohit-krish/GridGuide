@@ -45,11 +45,3 @@ class TokenWidget extends StatelessWidget {
     );
   }
 }
-          // IconButton(
-          //   onPressed: () {},
-          //   icon: Icon(
-          //     Icons.token_outlined,
-          //     color: Colors.orange.shade400,
-          //     size: width * .08
-          //   ),
-          // )

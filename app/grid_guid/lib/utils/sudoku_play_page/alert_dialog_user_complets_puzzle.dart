@@ -5,7 +5,7 @@ Future<void> showAlertDialogWhenUserCompletesPuzzle(
     BuildContext context, BoardProvider boardProvider) {
   return showDialog<void>(
     context: context,
-    barrierDismissible: false, // user must tap button!
+    barrierDismissible: false,
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('You Solved it!'),
@@ -13,7 +13,7 @@ Future<void> showAlertDialogWhenUserCompletesPuzzle(
           child: ListBody(
             children: const <Widget>[
               Text(
-                "Earned 1+ tokens\n",
+                "Earned 1+ token\n",
                 style: TextStyle(fontSize: 20),
               ),
               Text('Load new Puzzle?')

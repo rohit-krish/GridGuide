@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../providers/board_provider.dart';
 import '../../providers/board_provider_models.dart';
-import '../../utils/get_corresponding_element_utils.dart';
+import '../../utils/get_corresponding_index_func.dart';
 import '../../theme/sudoku_board_widget_theme.dart';
 
 class SudokuBoardWidget extends StatefulWidget {
@@ -63,7 +63,7 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
               BoardCell currentWidget = board[getCorrespondingIndex(count)];
               return InkWell(
                 onTap: () {
-                  /// if board is completely solved by the user the show the snak bar; else receive inputs and do the usual
+                  /// if board is completely solved by the user the show the snack bar; else receive inputs and do the usual
                   if (boardProvider.isBoardCompletelySolvedbyUser == false) {
                     // when we press to a cell which is not yet pressed
                     if (count != widget.getCurrentPressedCount()) {

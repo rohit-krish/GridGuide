@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:grid_guid/pages/camera_page.dart';
-import 'package:grid_guid/providers/board_provider.dart';
-import 'package:grid_guid/providers/camera_provider.dart';
-import 'package:grid_guid/theme/theme.dart';
-import 'package:grid_guid/pages/home_page.dart';
 import 'package:provider/provider.dart';
+
+import './pages/camera_page.dart';
+import './providers/board_provider.dart';
+import './providers/camera_provider.dart';
+import './theme/theme.dart';
+import './pages/home_page.dart';
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,8 +25,8 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: "Grid Guid",
       debugShowCheckedModeBanner: false,
-      theme: MyThemes.lightTheme,
-      darkTheme: MyThemes.darkTheme,
+      theme: AppThemes.lightTheme,
+      darkTheme: AppThemes.darkTheme,
       home: ChangeNotifierProvider<BoardProvider>(
         child: const HomePage(),
         create: (_) => BoardProvider(),
@@ -34,7 +35,7 @@ class App extends StatelessWidget {
         CameraPage.routeName: (_) => ChangeNotifierProvider<CameraProvider>(
               create: (_) => CameraProvider(),
               child: const CameraPage(),
-            )
+            ),
       },
     );
   }

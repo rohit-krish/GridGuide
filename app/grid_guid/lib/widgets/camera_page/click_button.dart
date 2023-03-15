@@ -17,7 +17,6 @@ class ClickButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      // onTap: () => onTap(),
       onTap: show ? () => onTapFunc() : () {},
       child: Container(
         height: screenWidth * .12,

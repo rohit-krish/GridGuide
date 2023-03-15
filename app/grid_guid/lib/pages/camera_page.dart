@@ -60,7 +60,7 @@ class _CameraPageState extends State<CameraPage> {
         cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
 
     if (idx < 0) {
-      log("back camera not found");
+      log("back camera not found :( weird");
       return;
     }
 
@@ -104,30 +104,6 @@ class _CameraPageState extends State<CameraPage> {
         _camFrameToScreenScale,
       );
     }
-    //   if (!mounted || DateTime.now().millisecondsSinceEpoch - _lastRun < 30) {
-    //     return;
-    //   }
-
-    //   if (_camFrameToScreenScale == 0) {
-    //     var w = (_camFrameRotation == 0 || _camFrameRotation == 180)
-    //         ? image.width
-    //         : image.height;
-
-    //     _camFrameToScreenScale = MediaQuery.of(context).size.width / w;
-    //   }
-
-    //   // call the detector
-    //   var res = _sudokuDetector.detect(image, _camFrameRotation);
-    //   _lastRun = DateTime.now().millisecondsSinceEpoch;
-
-    //   if (res.isEmpty) return;
-
-    //   setState(() {
-    //     // _bbox = res.toList(growable: false);
-    //     _bbox =
-    //         res.map((x) => x * _camFrameToScreenScale).toList(growable: false);
-    //     _bbox = _sudokuDetector.reorder(_bbox);
-    //   });
   }
 
   @override
@@ -221,7 +197,7 @@ class _CameraPageState extends State<CameraPage> {
                         width,
                         () {
                           _camController!.resumePreview();
-                          cameraProvider.discardCurrentImage();
+                          cameraProvider.discardCurrentClickedImage();
                         },
                       ),
                     ],

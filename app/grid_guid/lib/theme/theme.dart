@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class MyThemes {
+class AppThemes {
   static final darkTheme = ThemeData(
     snackBarTheme: SnackBarThemeData(
       backgroundColor: Colors.grey.shade800,
