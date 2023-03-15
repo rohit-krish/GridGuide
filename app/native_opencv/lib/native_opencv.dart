@@ -8,15 +8,15 @@ import 'package:ffi/ffi.dart';
 final DynamicLibrary nativeLib = DynamicLibrary.open("libnative_opencv.so");
 
 // C Functions signatures
-typedef _c_detect = Pointer<Float> Function(Pointer<Uint8> bytes, Int32 width,
+typedef _c_detect_board = Pointer<Float> Function(Pointer<Uint8> bytes, Int32 width,
     Int32 height, Int32 rotation, Pointer<Int32> outCount);
 
 // Dart Functions signatures
-typedef _dart_detect = Pointer<Float> Function(Pointer<Uint8> bytes, int width,
+typedef _dart_detect_board = Pointer<Float> Function(Pointer<Uint8> bytes, int width,
     int height, int rotation, Pointer<Int32> outCount);
 
 // create dart functions that invoke the c functions
-final _detect = nativeLib.lookupFunction<_c_detect, _dart_detect>('detect');
+final _detectBoard = nativeLib.lookupFunction<_c_detect_board, _dart_detect_board>('detect_board');
 
 class NativeOpenCV {
   Pointer<Uint8>? _imageBuffer;
@@ -27,7 +27,7 @@ class NativeOpenCV {
     }
   }
 
-  Float32List detect(
+  Float32List detectBoard(
     int width,
     int height,
     int rotation,
@@ -49,7 +49,7 @@ class NativeOpenCV {
 
     Pointer<Int32> outCount = malloc.allocate<Int32>(1);
 
-    var res = _detect(_imageBuffer!, width, height, rotation, outCount);
+    var res = _detectBoard(_imageBuffer!, width, height, rotation, outCount);
     final count = outCount.value;
 
     malloc.free(outCount);

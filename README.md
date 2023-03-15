@@ -1,7 +1,5 @@
 ## Next
-1. Change the icon to bulb
-2. when user completely solved it show AlertDialog
-3. only detect sudoku after the image is taken
+1. add LICENSE
 
 
 Create flutter app

@@ -98,7 +98,7 @@ class _CameraPageState extends State<CameraPage> {
         _camFrameToScreenScale = MediaQuery.of(context).size.width / w;
       }
 
-      _cameraProvider!.detect(
+      _cameraProvider!.detectBoard(
         image,
         _sudokuDetector,
         _camFrameRotation,

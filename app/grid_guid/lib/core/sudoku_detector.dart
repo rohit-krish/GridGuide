@@ -81,7 +81,7 @@ class SudokuDetector {
     Uint8List uBuffer = planes[1].bytes;
     Uint8List vBuffer = planes[2].bytes;
 
-    var res = _nativeOpenCV.detect(
+    var res = _nativeOpenCV.detectBoard(
       image.width,
       image.height,
       rotation,

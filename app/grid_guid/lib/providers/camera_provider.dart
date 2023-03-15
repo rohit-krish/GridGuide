@@ -9,7 +9,7 @@ class CameraProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void detect(
+  void detectBoard(
     CameraImage image,
     SudokuDetector sudokuDetector,
     int camFrameRotation,
@@ -35,6 +35,10 @@ class CameraProvider with ChangeNotifier {
   List<double> bbox = List.empty();
   bool isImageCaptureButttonClicked = false;
   bool isSnackBarShown = false;
+
+
+
+
 
   final _snackBar = const SnackBar(
     content: Text('Take new picture if detection is not correct'),

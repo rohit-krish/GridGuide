@@ -27,15 +27,14 @@ extern "C"
 {
     // Attributes to prevent 'unused' function from being removed and to make it visible
     __attribute__((visibility("default"))) __attribute__((used))
-    const float * detect(uint8_t *bytes, int width, int height, int rotation, int32_t *outCount)
+    const float * detect_board(uint8_t *bytes, int width, int height, int rotation, int32_t *outCount)
     {
         Mat image(height + height / 2, width, CV_8UC1, bytes);
         cvtColor(image, image, COLOR_YUV2BGRA_NV21);
+        // resize(image, image, Size(720, 720));
 
         rotateMat(image, rotation);
 
-        /// don't need to resize now, it only needed when we have to crop the boxes
-        /// resize(image, image, Size(720, 720));
 
         Mat img_preprocessed;
         float area;
