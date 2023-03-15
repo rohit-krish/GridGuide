@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../core/sudoku_detector.dart';
 import '../core/detection_layer.dart';
 import '../widgets/camera_page/click_button.dart';
+import '../widgets/camera_page/when_dont_have_access_widget.dart';
 import '../providers/camera_provider.dart';
 
 class CameraPage extends StatefulWidget {
@@ -24,6 +25,8 @@ class _CameraPageState extends State<CameraPage> {
 
   double _camFrameToScreenScale = 0;
   int _camFrameRotation = 0;
+
+  bool doHaveAccessToCamera = true;
 
   @override
   void initState() {
@@ -78,6 +81,11 @@ class _CameraPageState extends State<CameraPage> {
       await _camController!.initialize();
       await _camController!
           .startImageStream((image) => _processCameraImage(image));
+    } on CameraException {
+      doHaveAccessToCamera = false;
+      log("don't have access to camera");
+      setState(() {});
+      return;
     } catch (e) {
       log('Error initializing camera, error: ${e.toString()}');
     }
@@ -113,18 +121,21 @@ class _CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
-    _cameraProvider = Provider.of<CameraProvider>(context, listen: false);
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
 
+    // if don't have access to camera
+    if (!doHaveAccessToCamera) return WhenDontHaveAccessToCamera(width);
+
+    // if camera controller not mounted
     if (_camController == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
+    _cameraProvider = Provider.of<CameraProvider>(context, listen: false);
     final scale = 1 /
         (_camController!.value.aspectRatio *
             MediaQuery.of(context).size.aspectRatio);
-
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       body: Transform.scale(

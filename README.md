@@ -66,6 +66,4 @@ Features of the app
 
 ##### Illustrations
 https://www.figma.com/community/file/890095002328610853
-
-
-
+https://undraw.co
