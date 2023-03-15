@@ -20,10 +20,10 @@ class CameraPage extends StatefulWidget {
 class _CameraPageState extends State<CameraPage> {
   CameraController? _camController;
   late SudokuDetector _sudokuDetector;
-  int _camFrameRotation = 0;
-  List<double> _bbox = List.empty();
-  int _lastRun = 0;
+  CameraProvider? _cameraProvider;
+
   double _camFrameToScreenScale = 0;
+  int _camFrameRotation = 0;
 
   @override
   void initState() {
@@ -76,7 +76,8 @@ class _CameraPageState extends State<CameraPage> {
 
     try {
       await _camController!.initialize();
-      // await _camController!.startImageStream((image) => _processCameraImage(image));
+      await _camController!
+          .startImageStream((image) => _processCameraImage(image));
     } catch (e) {
       log('Error initializing camera, error: ${e.toString()}');
     }
@@ -84,35 +85,55 @@ class _CameraPageState extends State<CameraPage> {
     if (mounted) setState(() {});
   }
 
-  // void _processCameraImage(CameraImage image) {
-  //   if (!mounted || DateTime.now().millisecondsSinceEpoch - _lastRun < 30) {
-  //     return;
-  //   }
+  void _processCameraImage(CameraImage image) {
+    if ((_cameraProvider != null) && (_cameraProvider!.isImageCaptureButttonClicked)) {
+      _camController!.pausePreview();
 
-  //   if (_camFrameToScreenScale == 0) {
-  //     var w = (_camFrameRotation == 0 || _camFrameRotation == 180)
-  //         ? image.width
-  //         : image.height;
+      if (_camFrameToScreenScale == 0) {
+        var w = (_camFrameRotation == 0 || _camFrameRotation == 180)
+            ? image.width
+            : image.height;
 
-  //     _camFrameToScreenScale = MediaQuery.of(context).size.width / w;
-  //   }
+        _camFrameToScreenScale = MediaQuery.of(context).size.width / w;
+      }
 
-  //   // call the detector
-  //   var res = _sudokuDetector.detect(image, _camFrameRotation);
-  //   _lastRun = DateTime.now().millisecondsSinceEpoch;
+      _cameraProvider!.detect(
+        image,
+        _sudokuDetector,
+        _camFrameRotation,
+        _camFrameToScreenScale,
+      );
+    }
+    //   if (!mounted || DateTime.now().millisecondsSinceEpoch - _lastRun < 30) {
+    //     return;
+    //   }
 
-  //   if (res.isEmpty) return;
+    //   if (_camFrameToScreenScale == 0) {
+    //     var w = (_camFrameRotation == 0 || _camFrameRotation == 180)
+    //         ? image.width
+    //         : image.height;
 
-  //   setState(() {
-  //     // _bbox = res.toList(growable: false);
-  //     _bbox =
-  //         res.map((x) => x * _camFrameToScreenScale).toList(growable: false);
-  //     _bbox = _sudokuDetector.reorder(_bbox);
-  //   });
-  // }
+    //     _camFrameToScreenScale = MediaQuery.of(context).size.width / w;
+    //   }
+
+    //   // call the detector
+    //   var res = _sudokuDetector.detect(image, _camFrameRotation);
+    //   _lastRun = DateTime.now().millisecondsSinceEpoch;
+
+    //   if (res.isEmpty) return;
+
+    //   setState(() {
+    //     // _bbox = res.toList(growable: false);
+    //     _bbox =
+    //         res.map((x) => x * _camFrameToScreenScale).toList(growable: false);
+    //     _bbox = _sudokuDetector.reorder(_bbox);
+    //   });
+  }
 
   @override
   Widget build(BuildContext context) {
+    _cameraProvider = Provider.of<CameraProvider>(context, listen: false);
+
     if (_camController == null) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -130,7 +151,11 @@ class _CameraPageState extends State<CameraPage> {
         alignment: Alignment.topCenter,
         child: Stack(children: [
           CameraPreview(_camController!),
-          DetectionLayer(bbox: _bbox),
+          Consumer<CameraProvider>(
+            builder: (ctx, cameraProvider, child){
+              return DetectionLayer(bbox: cameraProvider.bbox);
+            },
+          ),
           Padding(
             padding: EdgeInsets.only(
               top: height * 0.025,
@@ -154,9 +179,11 @@ class _CameraPageState extends State<CameraPage> {
                 Consumer<CameraProvider>(
                     builder: (context, cameraProvider, child) {
                   return IconButton(
-                    onPressed: cameraProvider.isImageCaptured ? () {} : () {},
+                    onPressed: cameraProvider.isImageCaptureButttonClicked
+                        ? () {}
+                        : () {},
                     icon: const Icon(Icons.check_outlined),
-                    color: cameraProvider.isImageCaptured
+                    color: cameraProvider.isImageCaptureButttonClicked
                         ? Colors.black
                         : Colors.transparent,
                   );
@@ -177,24 +204,25 @@ class _CameraPageState extends State<CameraPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       ClickButton(
-                        show: cameraProvider.isImageCaptured,
+                        show: cameraProvider.isImageCaptureButttonClicked,
                         Icons.lightbulb_outline_sharp,
                         width,
                         () {},
                       ),
-                      if (!cameraProvider.isImageCaptured)
+                      if (!cameraProvider.isImageCaptureButttonClicked)
                         ClickButton(
                           Icons.camera,
                           width,
-                          () {
-                            cameraProvider.imageIsCaptured();
-                          },
+                          cameraProvider.imageCaptureButtonClicked,
                         ),
                       ClickButton(
-                        show: cameraProvider.isImageCaptured,
+                        show: cameraProvider.isImageCaptureButttonClicked,
                         Icons.autorenew,
                         width,
-                        () {},
+                        () {
+                          _camController!.resumePreview();
+                          cameraProvider.discardCurrentImage();
+                        },
                       ),
                     ],
                   );
