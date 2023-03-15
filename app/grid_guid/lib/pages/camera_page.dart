@@ -86,7 +86,8 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void _processCameraImage(CameraImage image) {
-    if ((_cameraProvider != null) && (_cameraProvider!.isImageCaptureButttonClicked)) {
+    if ((_cameraProvider != null) &&
+        (_cameraProvider!.isImageCaptureButttonClicked)) {
       _camController!.pausePreview();
 
       if (_camFrameToScreenScale == 0) {
@@ -103,6 +104,10 @@ class _CameraPageState extends State<CameraPage> {
         _camFrameRotation,
         _camFrameToScreenScale,
       );
+
+      if (_cameraProvider!.isSnackBarShown == false) {
+        _cameraProvider!.showSnackBar(context);
+      }
     }
   }
 
@@ -128,7 +133,7 @@ class _CameraPageState extends State<CameraPage> {
         child: Stack(children: [
           CameraPreview(_camController!),
           Consumer<CameraProvider>(
-            builder: (ctx, cameraProvider, child){
+            builder: (ctx, cameraProvider, child) {
               return DetectionLayer(bbox: cameraProvider.bbox);
             },
           ),
@@ -170,9 +175,9 @@ class _CameraPageState extends State<CameraPage> {
           SizedBox(
             height: height,
             child: Padding(
-              padding: EdgeInsets.only(top: height * .50),
+              padding: EdgeInsets.only(top: height * .5),
               child: Container(
-                margin: EdgeInsets.only(top: height * .22),
+                margin: EdgeInsets.only(top: height * .2),
                 child: Consumer<CameraProvider>(
                     builder: (context, cameraProvider, child) {
                   return Row(

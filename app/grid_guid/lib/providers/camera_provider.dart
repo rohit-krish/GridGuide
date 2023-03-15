@@ -28,9 +28,21 @@ class CameraProvider with ChangeNotifier {
   void discardCurrentClickedImage() {
     isImageCaptureButttonClicked = false;
     bbox = List.empty();
+    isSnackBarShown = false;
     notifyListeners();
   }
 
   List<double> bbox = List.empty();
   bool isImageCaptureButttonClicked = false;
+  bool isSnackBarShown = false;
+
+  final _snackBar = const SnackBar(
+    content: Text('Take new picture if detection is not correct'),
+    duration: Duration(seconds: 5),
+  );
+
+  void showSnackBar(BuildContext context) {
+    isSnackBarShown = true;
+    ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+  }
 }
