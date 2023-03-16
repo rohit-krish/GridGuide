@@ -1,6 +1,11 @@
 ## Next
 1. add LICENSE
 
+1. warp perspective in c++
+2. split_boxes/crop in c++
+3. return the images to dart
+4. use tflite_flutter and my tflite model to detect the digits
+
 
 Create flutter app
 publish the data to kaggle
