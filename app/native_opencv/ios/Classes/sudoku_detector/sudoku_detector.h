@@ -72,7 +72,6 @@ void split_boxes(Mat img, Mat boxes[81])
         for (int j = 0; j < 9; j++)
         {
             boxes[count] = img(Range(i * 90, (i * 90) + 90), Range(j * 90, (j * 90) + 90));
-            // model trained in 70x70 image it's not necessary to resize because we are doing it inside the model though i'm doing it
             resize(boxes[count], boxes[count], Size(70, 70));
             count++;
         }

@@ -1,6 +1,8 @@
 ## Next
 1. add LICENSE
 
+1. convert the 1d to each boxes then save to android to check if everything is correct
+2. then use tf model to predict each cell
 
 Create flutter app
 publish the data to kaggle
