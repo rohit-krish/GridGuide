@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:grid_guid/core/sudoku_detector.dart';
@@ -15,12 +17,17 @@ class CameraProvider with ChangeNotifier {
     int camFrameRotation,
     double camFrameToScreenScale,
   ) {
-    var res = sudokuDetector.detect(image, camFrameRotation);
+    var res = sudokuDetector.detectBoard(image, camFrameRotation);
 
     if (res.isEmpty) return;
 
     bbox = res.map((x) => x * camFrameToScreenScale).toList(growable: false);
     bbox = sudokuDetector.reorder(bbox);
+    // var boxes = sudokuDetector.getBoxes(bbox.map((item) => item.toInt()).toList());
+    sudokuDetector.getBoxes(bbox.map((item) => item.toInt()).toList());
+    log('*****');
+    // print(boxes);
+    log('*****');
 
     notifyListeners();
   }
@@ -35,10 +42,6 @@ class CameraProvider with ChangeNotifier {
   List<double> bbox = List.empty();
   bool isImageCaptureButttonClicked = false;
   bool isSnackBarShown = false;
-
-
-
-
 
   final _snackBar = const SnackBar(
     content: Text('Take new picture if detection is not correct'),

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
@@ -75,7 +76,7 @@ class SudokuDetector {
     return res;
   }
 
-  Float32List detect(CameraImage image, int rotation) {
+  Float32List detectBoard(CameraImage image, int rotation) {
     var planes = image.planes;
     Uint8List yBuffer = planes[0].bytes;
     Uint8List uBuffer = planes[1].bytes;
@@ -90,5 +91,11 @@ class SudokuDetector {
       vBuffer,
     );
     return res;
+  }
+
+  // Int32List getBoxes(List<int> bbox) {
+  void getBoxes(List<int> bbox) {
+    // return _nativeOpenCV.getBoxes(bbox);
+    _nativeOpenCV.getBoxes(bbox);
   }
 }

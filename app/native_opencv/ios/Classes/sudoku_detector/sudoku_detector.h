@@ -23,7 +23,7 @@ void find_biggest_contour(Mat &src_img, float &max_area, vector<Point> &biggest_
 
     max_area = 0.0;
 
-    // find all countoures
+    // find all contours
     findContours(src_img, contours, hierarchy, RETR_EXTERNAL, CHAIN_APPROX_SIMPLE);
 
     for (int i = 0; i < contours.size(); i++)
@@ -49,7 +49,7 @@ void warp_perspective(vector<Point> contour, Mat img, Mat &img_res)
     Mat matrix;
     Point2f src[4];
 
-    float width = 720.0, height = 720.0;
+    float width = 810.0, height = 810.0;
 
     for (int i = 0; i < 4; i++)
         src[i] = {(float)contour[i].x, (float)contour[i].y};
@@ -57,7 +57,33 @@ void warp_perspective(vector<Point> contour, Mat img, Mat &img_res)
     Point2f dst[4] = {{0.0, 0.0}, {width, 0.0}, {0.0, height}, {width, height}};
 
     matrix = getPerspectiveTransform(src, dst);
-    warpPerspective(img, img_res, matrix, Point(720, 720));
+    warpPerspective(img, img_res, matrix, Point(810, 810));
 
     cvtColor(img_res, img_res, COLOR_BGR2GRAY);
+}
+
+void split_boxes(Mat img, Mat boxes[81])
+{
+    resize(img, img, Size(810, 810));
+    int count = 0;
+
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            boxes[count] = img(Range(i * 90, (i * 90) + 90), Range(j * 90, (j * 90) + 90));
+            // model trained in 70x70 image it's not necessary to resize because we are doing it inside the model though i'm doing it
+            resize(boxes[count], boxes[count], Size(70, 70));
+            count++;
+        }
+    }
+}
+
+void mat_to_array(Mat img, int *res_array, int length)
+{
+    // Get a pointer to the first pixel in the image
+    uchar *pixelPtr = img.ptr<uchar>(0);
+
+    for (int i = 0; i < length; i++)
+        res_array[i] = (int)pixelPtr[i];
 }
