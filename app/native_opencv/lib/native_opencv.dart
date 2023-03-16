@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types
 
+import 'dart:developer';
 import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:ffi/ffi.dart';
@@ -64,11 +65,16 @@ class NativeOpenCV {
   }
 
   Int32List getBoxes(List<int> contour) {
-    _contourBuffer = malloc.allocate<Int32>(contour.length);
+    _contourBuffer = malloc.allocate(sizeOf<Pointer<Int32>>() * contour.length);
+    log('created buffer');
+
     final bytes = _contourBuffer!.asTypedList(contour.length);
     bytes.setAll(0, contour);
+    log('populated data into the buffer');
 
     final res = _getBoxes(_contourBuffer!);
+    log('called c++ function');
+
     return res.asTypedList(4900 * 81);
   }
 }

@@ -7,7 +7,6 @@ using namespace cv;
 
 Mat camera_image;
 
-
 void rotateMat(Mat &img, int rotation)
 {
     if (rotation == 90)
@@ -65,47 +64,47 @@ extern "C"
         *outCount = output.size();
         return res;
     }
-
     __attribute__((visibility("default"))) __attribute__((used))
-    const int * get_boxes(int32_t *cnt) {
-        // the receiving cnt is an array of 8 int values
-        // creating a vector<Point> from the receiving array
+    const int * get_boxes(int *cnt)
+    {
         vector<Point> contour(4);
 
-        for (int i=0; i<4; i++) {
+        for (int i = 0; i < 4; i++)
+        {
             int x = cnt[2 * i];
             int y = cnt[2 * i + 1];
-            Point p(x,y);
+            Point p(x, y);
             contour[i] = p;
         }
 
+        const int n_small_boxes = 81; // 9x9 split of the sudoku board
+        const int n_pixel_of_each_box = 4900; // 70x70
+        const int n_total_pixel_size = n_pixel_of_each_box * n_small_boxes; // 396900
         Mat image_warped;
-        Mat boxes[81];
-        int boxes_arr[4900 * 81]; // 396900
+        Mat boxes[n_small_boxes];
+
+        int *boxes_arr = new int[n_total_pixel_size];
 
         warp_perspective(contour, camera_image, image_warped);
         split_boxes(image_warped, boxes);
 
-        // converting each box of Mat to a array of int
+        // converting each box of Mat, to a single 1D array of integer representation of each pixel
         int count = 0;
-        int length = 4900; // box.rows * box.cols;
-        int *boxArray = new int[length];
+        int *boxArray = new int[n_pixel_of_each_box];
         for (Mat box : boxes)
         {
-            mat_to_array(box, boxArray, length);
+            mat_to_array(box, boxArray, n_pixel_of_each_box);
 
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < n_pixel_of_each_box; i++)
             {
                 boxes_arr[count] = boxArray[i];
                 count++;
             }
         }
 
-        const int total_length = 4900 * 81;
-        unsigned int total_byte_count = sizeof(int) * total_length;
-        int *res = (int *)malloc(total_byte_count);
-        memcpy(res, boxes_arr, total_byte_count);
+        delete[] boxArray;
 
-        return res;
+        return boxes_arr;
     }
+
 }

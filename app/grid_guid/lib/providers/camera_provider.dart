@@ -23,13 +23,14 @@ class CameraProvider with ChangeNotifier {
 
     bbox = res.map((x) => x * camFrameToScreenScale).toList(growable: false);
     bbox = sudokuDetector.reorder(bbox);
-    // var boxes = sudokuDetector.getBoxes(bbox.map((item) => item.toInt()).toList());
-    sudokuDetector.getBoxes(bbox.map((item) => item.toInt()).toList());
-    log('*****');
-    // print(boxes);
-    log('*****');
 
     notifyListeners();
+  }
+
+  void getBoxes(SudokuDetector sudokuDetector) {
+    var boxes = sudokuDetector.getBoxes(bbox.map((item) => item.toInt()).toList());
+    print(boxes.length);
+
   }
 
   void discardCurrentClickedImage() {

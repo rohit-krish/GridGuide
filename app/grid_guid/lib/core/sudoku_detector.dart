@@ -93,9 +93,7 @@ class SudokuDetector {
     return res;
   }
 
-  // Int32List getBoxes(List<int> bbox) {
-  void getBoxes(List<int> bbox) {
-    // return _nativeOpenCV.getBoxes(bbox);
-    _nativeOpenCV.getBoxes(bbox);
+  Int32List getBoxes(List<int> bbox) {
+    return _nativeOpenCV.getBoxes(bbox);
   }
 }

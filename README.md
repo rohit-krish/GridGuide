@@ -1,11 +1,8 @@
 ## Next
 1. add LICENSE
 
-1. warp perspective in c++
-2. split_boxes/crop in c++
-3. return the images to dart
-4. use tflite_flutter and my tflite model to detect the digits
-
+1. convert the 1d to each boxes then save to android to check if everything is correct
+2. then use tf model to predict each cell
 
 Create flutter app
 publish the data to kaggle
