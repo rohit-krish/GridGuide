@@ -72,7 +72,7 @@ void warp_perspective(vector<Point> contour, Mat img, Mat &img_res)
     Mat matrix;
     Point2f src[4];
 
-    float width = 720.0, height = 720.0;
+    float width = 810.0, height = 810.0;
 
     for (int i = 0; i < 4; i++)
         src[i] = {(float)contour[i].x, (float)contour[i].y};
@@ -80,49 +80,92 @@ void warp_perspective(vector<Point> contour, Mat img, Mat &img_res)
     Point2f dst[4] = {{0.0, 0.0}, {width, 0.0}, {0.0, height}, {width, height}};
 
     matrix = getPerspectiveTransform(src, dst);
-    warpPerspective(img, img_res, matrix, Point(720, 720));
+    warpPerspective(img, img_res, matrix, Point(810, 810));
 
     cvtColor(img_res, img_res, COLOR_BGR2GRAY);
 }
 
-// void split_boxes(Mat img, Mat boxes[81])
-// {
-//     resize(img, img, Size(810, 810));
-//     int count = 0;
+void split_boxes(Mat img, Mat boxes[81])
+{
+    resize(img, img, Size(810, 810));
+    int count = 0;
 
-//     for (int i = 0; i < 81; i++)
-//     {
-//         for (int j = 0; j < 81; j++)
-//         {
-//             boxes[count] = img(Range(i * 81, (i * 81) + 81), Range(j * 81, (j * 81) + 81));
-//             count++;
-//         }
-//     }
+    for (int i = 0; i < 9; i++)
+    {
+        for (int j = 0; j < 9; j++)
+        {
+            boxes[count] = img(Range(i * 90, (i * 90) + 90), Range(j * 90, (j * 90) + 90));
+            // model trained in 70x70 image it's not nessesory to resize becuase we are doing it inside the model though i'm doing it
+            resize(boxes[count], boxes[count], Size(70, 70));
+            count++;
+        }
+    }
+}
 
-//     // Mat res = img_warped(Range(80,280), Range(150,330));
-//     // imshow("cropped", res);
-// }
+void mat_to_array(Mat img, int *boxArray, int length)
+{
+    // Get a pointer to the first pixel in the image
+    uchar *pixelPtr = img.ptr<uchar>(0);
+
+    for (int i = 0; i < length; i++)
+        boxArray[i] = (int)pixelPtr[i];
+}
 
 int main()
 {
-    Mat img = imread("../../assets/20_board.jpg");
-    resize(img, img, Size(720, 720));
-    
+    Mat img = imread("../../assets/1.jpg");
+    // resize(img, img, Size(0,0), .2, .2);
+    // resize(img, img, Size(720, 720));
 
     Mat img_preprocessed, img_warped;
     float area;
     vector<Point> biggest_cnt;
-    // Mat boxes[81];
+    Mat boxes[81];
+    int boxes_arr[4900 * 81]; // 396900
 
     preprocess(img, img_preprocessed, false);
     find_biggest_contour(img_preprocessed, area, biggest_cnt);
     reorder_cnt(biggest_cnt);
     warp_perspective(biggest_cnt, img, img_warped);
-    // split_boxes(img_warped, boxes);
+    split_boxes(img_warped, boxes);
 
+    // imshow("img", img_preprocessed);
+    // imshow("warped", img_warped);
 
-    imshow("img", img);
-    imshow("warped", img_warped);
+    int count = 0;
+    const int length = 4900; // box.rows * box.cols;
+    int *boxArray = new int[length];
+    for (Mat box : boxes)
+    {
+        mat_to_array(box, boxArray, length);
+
+        for (int i = 0; i < length; i++)
+        {
+            boxes_arr[count] = boxArray[i];
+            count++;
+        }
+    }
+
+    const int size = 4900 * 81;
+
+    unsigned int total = sizeof(int) * size;
+    int *res = (int *)malloc(total);
+    memcpy(res, boxes_arr, total);
+
+    for (int i = 0; i < size; i++)
+        cout << res[i] << ' ';
+
+    // // Print each element of the array to the console
+    // for (int i = 0; i < boxes[0].rows; i++)
+    // {
+    //     for (int j = 0; j < boxes[0].cols; j++)
+    //     {
+    //         int index = i * boxes[0].cols + j;
+    //         std::cout << boxArray[index] << " ";
+    //         // cout << index << ' ';
+    //     }
+    //     std::cout << std::endl;
+    // }
 
     // for (Mat box : boxes)
     // {
@@ -130,5 +173,5 @@ int main()
     //     waitKey(0);
     // }
 
-    waitKey(0);
+    // waitKey(0);
 }

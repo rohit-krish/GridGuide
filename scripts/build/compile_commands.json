@@ -1,7 +1,0 @@
-[
-{
-  "directory": "/home/rohit/Desktop/MLProjects/GridGuid/scripts/build",
-  "command": "/usr/bin/g++ -isystem /home/rohit/OpenCV/build -isystem /home/rohit/OpenCV/opencv/include -isystem /home/rohit/OpenCV/opencv/modules/core/include -isystem /home/rohit/OpenCV/opencv/modules/flann/include -isystem /home/rohit/OpenCV/opencv/modules/imgproc/include -isystem /home/rohit/OpenCV/opencv/modules/ml/include -isystem /home/rohit/OpenCV/opencv/modules/photo/include -isystem /home/rohit/OpenCV/opencv/modules/dnn/include -isystem /home/rohit/OpenCV/opencv/modules/features2d/include -isystem /home/rohit/OpenCV/opencv/modules/imgcodecs/include -isystem /home/rohit/OpenCV/opencv/modules/videoio/include -isystem /home/rohit/OpenCV/opencv/modules/calib3d/include -isystem /home/rohit/OpenCV/opencv/modules/highgui/include -isystem /home/rohit/OpenCV/opencv/modules/objdetect/include -isystem /home/rohit/OpenCV/opencv/modules/stitching/include -isystem /home/rohit/OpenCV/opencv/modules/ts/include -isystem /home/rohit/OpenCV/opencv/modules/video/include -isystem /home/rohit/OpenCV/opencv/modules/gapi/include -O3 -DNDEBUG -o CMakeFiles/main.dir/cpp_scripts/main.cpp.o -c /home/rohit/Desktop/MLProjects/GridGuid/scripts/cpp_scripts/main.cpp",
-  "file": "/home/rohit/Desktop/MLProjects/GridGuid/scripts/cpp_scripts/main.cpp"
-}
-]

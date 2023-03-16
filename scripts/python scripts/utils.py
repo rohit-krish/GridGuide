@@ -18,10 +18,11 @@ def prediction(boxes, model):
         img = np.asarray(box)
         img = img[10:img.shape[0]-10, 10:img.shape[1]-10]
         img = cv2.resize(img, (70, 70))
+        img = img.reshape(1, 70, 70, 1)
         # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
+        # img = cv2.cvtColor(img, cv2.COLOR_GRAY2BGR)
         # img = img / 255
-        img = img.reshape(1, 70, 70, 3)
+        # img = img.reshape(1, 70, 70, 3)
 
         preds = model.predict(img)
 
