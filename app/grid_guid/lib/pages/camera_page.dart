@@ -94,7 +94,8 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void _processCameraImage(CameraImage image) {
-    if ((_cameraProvider != null) && (_cameraProvider!.isImageCaptureButttonClicked)) {
+    if ((_cameraProvider != null) &&
+        (_cameraProvider!.isImageCaptureButttonClicked)) {
       _camController!.pausePreview();
 
       if (_camFrameToScreenScale == 0) {
@@ -198,9 +199,7 @@ class _CameraPageState extends State<CameraPage> {
                         show: cameraProvider.isImageCaptureButttonClicked,
                         Icons.lightbulb_outline_sharp,
                         width,
-                        () {
-                          cameraProvider.getBoxes(_sudokuDetector, context);
-                        },
+                        () {},
                       ),
                       if (!cameraProvider.isImageCaptureButttonClicked)
                         ClickButton(

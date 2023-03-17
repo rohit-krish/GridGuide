@@ -5,8 +5,6 @@
 using namespace std;
 using namespace cv;
 
-Mat camera_image;
-
 void rotateMat(Mat &img, int rotation)
 {
     if (rotation == 90)
@@ -34,7 +32,6 @@ extern "C"
         Mat img(height + height / 2, width, CV_8UC1, bytes);
         cvtColor(img, img, COLOR_YUV2BGRA_NV21);
         rotateMat(img, rotation);
-        img.copyTo(camera_image);
 
         Mat img_preprocessed;
         float area;
@@ -64,47 +61,4 @@ extern "C"
         *outCount = output.size();
         return res;
     }
-    __attribute__((visibility("default"))) __attribute__((used))
-    const int * get_boxes(int *cnt)
-    {
-        vector<Point> contour(4);
-
-        for (int i = 0; i < 4; i++)
-        {
-            int x = cnt[2 * i];
-            int y = cnt[2 * i + 1];
-            Point p(x, y);
-            contour[i] = p;
-        }
-
-        const int n_small_boxes = 81; // 9x9 split of the sudoku board
-        const int n_pixel_of_each_box = 4900; // 70x70
-        const int n_total_pixel_size = n_pixel_of_each_box * n_small_boxes; // 396900
-        Mat image_warped;
-        Mat boxes[n_small_boxes];
-
-        warp_perspective(contour, camera_image, image_warped);
-        split_boxes(image_warped, boxes);
-
-        // converting each box of Mat, to a single 1D array of integer representation of each pixel
-        int count = 0;
-        int *boxes_arr = new int[n_total_pixel_size];
-        int *boxArray = new int[n_pixel_of_each_box];
-
-        for (Mat box : boxes)
-        {
-            mat_to_array(box, boxArray, n_pixel_of_each_box);
-
-            for (int i = 0; i < n_pixel_of_each_box; i++)
-            {
-                boxes_arr[count] = boxArray[i];
-                count++;
-            }
-        }
-
-        delete[] boxArray;
-
-        return boxes_arr;
-    }
-
 }

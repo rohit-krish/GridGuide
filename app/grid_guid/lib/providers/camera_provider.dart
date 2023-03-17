@@ -25,13 +25,6 @@ class CameraProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void getBoxes(SudokuDetector sudokuDetector, BuildContext context) {
-    if (bbox.isEmpty) return;
-
-    sudokuDetector.getBoxes(bbox.map((item) => item.toInt()).toList());
-
-  }
-
   void discardCurrentClickedImage() {
     isImageCaptureButttonClicked = false;
     bbox = List.empty();
