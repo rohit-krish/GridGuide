@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:native_opencv/native_opencv.dart';
+import 'package:tflite_flutter/tflite_flutter.dart';
 
 class SudokuDetector {
   late NativeOpenCV _nativeOpenCV;
@@ -93,7 +94,73 @@ class SudokuDetector {
     return res;
   }
 
-  Int32List getBoxes(List<int> bbox) {
-    return _nativeOpenCV.getBoxes(bbox);
+  List<Uint8List> _transformBoxesToUint8List(List<int> wholeBoxes) {
+    const oneBoxLimit = 4900;
+    List<Uint8List> boxes = List.empty(growable: true);
+
+    for (int i = 0; i < wholeBoxes.length; i += oneBoxLimit) {
+      boxes.add(Uint8List.fromList(wholeBoxes.sublist(i, i + oneBoxLimit)));
+    }
+
+    return boxes;
+  }
+
+  List<List<int>> _transformBoxesToListOfInt(List<int> wholeBoxes) {
+    const oneBoxLimit = 4900;
+    List<List<int>> boxes = List.empty(growable: true);
+
+    for (int i = 0; i < wholeBoxes.length; i += oneBoxLimit) {
+      boxes.add(wholeBoxes.sublist(i, i + oneBoxLimit));
+    }
+
+    return boxes;
+  }
+
+  Future<int> predict(List<int> box) async {
+    var input = box.map((e) => e.toDouble()).toList().reshape([1, 70, 70, 1]);
+    var output = List.filled(1 * 10, 0, growable: false).reshape([1, 10]);
+
+    InterpreterOptions interpreterOptions = InterpreterOptions();
+
+    try {
+      Interpreter interpreter = await Interpreter.fromAsset(
+        'model/model.tflite',
+        options: interpreterOptions,
+      );
+      interpreter.run(input, output);
+    } catch (e) {
+      log(e.toString());
+    }
+
+    double hightestProb = 0;
+    int digitPred = 1;
+    print(output);
+
+    for (int i = 0; i < output[0].length; i++) {
+      if (output[0][i] > hightestProb) {
+        hightestProb = output[0][i];
+        digitPred = i;
+      }
+    }
+
+    return digitPred;
+  }
+
+  getBoxes(List<int> bbox) async {
+    List<int> wholeBoxes = _nativeOpenCV.getBoxes(bbox).toList(growable: false);
+    // List<Uint8List> uint8boxes = _transformBoxesToUint8List(wholeBoxes);
+    List<List<int>> intboxes = _transformBoxesToListOfInt(wholeBoxes);
+    String completeContent = "";
+
+
+    for (int i = 0; i < 4900; i += 70) {
+      completeContent = "$completeContent\n${intboxes[0].sublist(i, i + 70).join(', ')}";
+    }
+    log(completeContent);
+
+    // log("Prediction: ${await predict(intboxes[2])}");
+
+    // log(box.reduce((value, element) => value>element ? value : element).toString());
+    // saveImageToExternalStorage(boxes[0]);
   }
 }

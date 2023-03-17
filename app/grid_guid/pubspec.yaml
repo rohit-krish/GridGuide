@@ -36,6 +36,7 @@ dependencies:
   provider: ^6.0.5
   native_opencv:
     path: ../native_opencv
+  tflite_flutter: ^0.9.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -66,6 +67,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/permission_error.png
+    - assets/model/model.tflite
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

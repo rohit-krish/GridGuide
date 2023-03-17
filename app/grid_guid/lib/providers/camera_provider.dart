@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:grid_guid/core/sudoku_detector.dart';
@@ -27,9 +25,10 @@ class CameraProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void getBoxes(SudokuDetector sudokuDetector) {
-    var boxes = sudokuDetector.getBoxes(bbox.map((item) => item.toInt()).toList());
-    print(boxes.length);
+  void getBoxes(SudokuDetector sudokuDetector, BuildContext context) {
+    if (bbox.isEmpty) return;
+
+    sudokuDetector.getBoxes(bbox.map((item) => item.toInt()).toList());
 
   }
 

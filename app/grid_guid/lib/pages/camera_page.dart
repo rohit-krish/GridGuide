@@ -198,7 +198,9 @@ class _CameraPageState extends State<CameraPage> {
                         show: cameraProvider.isImageCaptureButttonClicked,
                         Icons.lightbulb_outline_sharp,
                         width,
-                        () {},
+                        () {
+                          cameraProvider.getBoxes(_sudokuDetector, context);
+                        },
                       ),
                       if (!cameraProvider.isImageCaptureButttonClicked)
                         ClickButton(

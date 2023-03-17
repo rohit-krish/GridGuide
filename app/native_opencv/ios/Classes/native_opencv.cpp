@@ -83,14 +83,14 @@ extern "C"
         Mat image_warped;
         Mat boxes[n_small_boxes];
 
-        int *boxes_arr = new int[n_total_pixel_size];
-
         warp_perspective(contour, camera_image, image_warped);
         split_boxes(image_warped, boxes);
 
         // converting each box of Mat, to a single 1D array of integer representation of each pixel
         int count = 0;
+        int *boxes_arr = new int[n_total_pixel_size];
         int *boxArray = new int[n_pixel_of_each_box];
+
         for (Mat box : boxes)
         {
             mat_to_array(box, boxArray, n_pixel_of_each_box);
