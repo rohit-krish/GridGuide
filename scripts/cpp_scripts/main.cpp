@@ -72,7 +72,7 @@ void warp_perspective(vector<Point> contour, Mat img, Mat &img_res)
     Mat matrix;
     Point2f src[4];
 
-    float width = 720.0, height = 720.0;
+    float width = 810.0, height = 810.0;
 
     for (int i = 0; i < 4; i++)
         src[i] = {(float)contour[i].x, (float)contour[i].y};
@@ -80,7 +80,7 @@ void warp_perspective(vector<Point> contour, Mat img, Mat &img_res)
     Point2f dst[4] = {{0.0, 0.0}, {width, 0.0}, {0.0, height}, {width, height}};
 
     matrix = getPerspectiveTransform(src, dst);
-    warpPerspective(img, img_res, matrix, Point(720, 720));
+    warpPerspective(img, img_res, matrix, Point(810, 810));
 
     cvtColor(img_res, img_res, COLOR_BGR2GRAY);
 }
@@ -101,26 +101,33 @@ void split_boxes(Mat img, Mat boxes[81])
     }
 }
 
-void mat_to_array(Mat img, int *res_array, int length)
+int *getPixelValues(Mat &image)
 {
-    // Get a pointer to the first pixel in the image
-    uchar *pixelPtr = img.ptr<uchar>(0);
+    int *pixelValues = new int[image.rows*image.cols]{};
 
-    for (int i = 0; i < length; i++)
-        res_array[i] = (int)pixelPtr[i];
+    int k = 0;
+    for (int i = 0; i < image.rows; i++)
+    {
+        for (int j = 0; j < image.cols; j++)
+        {
+            int pixelValue = static_cast<int>(image.at<uchar>(i, j));
+            pixelValues[k++] = pixelValue;
+        }
+    }
+
+    return pixelValues;
 }
-
 
 int main()
 {
-    Mat img = imread("/home/rohit/Desktop/MLProjects/GridGuid/assets/20_board.jpg");
-    resize(img, img, Size(720, 720));
+    // Mat img = imread("/home/rohit/Desktop/MLProjects/GridGuid/assets/19_board.jpg");
+    Mat img = imread("/home/rohit/Desktop/MLProjects/GridGuid/scripts/cpp_scripts/flutter_1.png");
+    // resize(img, img, Size(720, 720));
 
     Mat img_preprocessed, img_warped;
     float area;
     vector<Point> biggest_cnt;
     Mat boxes[81];
-    int boxes_arr[4900 * 81]; // 396900
 
     preprocess(img, img_preprocessed, false);
     find_biggest_contour(img_preprocessed, area, biggest_cnt);
@@ -128,35 +135,43 @@ int main()
     warp_perspective(biggest_cnt, img, img_warped);
     split_boxes(img_warped, boxes);
 
-    // converting each box of Mat to a array of int
-    int count = 0;
-    int length = 4900; // box.rows * box.cols;
-    for (Mat box : boxes)
-    {
-        int *boxArray = new int[length];
-        mat_to_array(box, boxArray, length);
-
-        for (int i = 0; i < length; i++)
-        {
-            boxes_arr[count] = boxArray[i];
-            count++;
-        }
-        delete[] boxArray;
-    }
-
     imshow("img", img);
     imshow("warped", img_warped);
 
-    for (Mat box : boxes)
-    {
-        imshow("box", box);
-        if (waitKey(0) == 27)
-            break;
-    }
+    // for (Mat box : boxes)
+    // {
+    //     imshow("box", box);
+    //     if (waitKey(0) == 27)
+    //         break;
+    // }
 
     // for (int el : boxes_arr)
-    //     cout << el <<' ';
-    cout << length <<' '<<count;
+    //     cout << el << ' ';
 
     waitKey(0);
+
+    // converting each box of Mat to a array of int
+    int count = 0;
+    int length = 4900;
+    int *boxes_arr = new int[4900 * 81]; // 396900
+
+    for (Mat box : boxes)
+    {
+        int *pixelvals = getPixelValues(box);
+
+        for (int i = 0; i < length; i++)
+        {
+            boxes_arr[count] = pixelvals[i];
+            count++;
+        }
+
+        delete[] pixelvals;
+    }
+
+    for (int i = 0; i < 4900 * 81; i++)
+    {
+        cout << boxes_arr[i] << ' ';
+    }
+
+    delete[] boxes_arr;
 }
