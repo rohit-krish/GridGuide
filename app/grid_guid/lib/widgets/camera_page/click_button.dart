@@ -19,8 +19,8 @@ class ClickButton extends StatelessWidget {
     return GestureDetector(
       onTap: show ? () => onTapFunc() : () {},
       child: Container(
-        height: screenWidth * .12,
-        width: screenWidth * .12,
+        height: screenWidth * .15,
+        width: screenWidth * .15,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
           border: Border.all(
@@ -30,8 +30,8 @@ class ClickButton extends StatelessWidget {
         ),
         child: Center(
           child: Container(
-            height: screenWidth * .097,
-            width: screenWidth * .097,
+            height: screenWidth * .125,
+            width: screenWidth * .125,
             decoration: BoxDecoration(
               color: show ? Colors.white70 : Colors.transparent,
               borderRadius: BorderRadius.circular(100),

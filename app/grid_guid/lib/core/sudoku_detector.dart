@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:typed_data';
 
@@ -123,4 +124,5 @@ class SudokuDetector {
 
     return digitPred;
   }
+
 }

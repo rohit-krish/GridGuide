@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
+import 'package:screenshot/screenshot.dart';
 
 import '../core/sudoku_detector.dart';
 import '../core/detection_layer.dart';
@@ -93,7 +94,7 @@ class _CameraPageState extends State<CameraPage> {
     if (mounted) setState(() {});
   }
 
-  void _processCameraImage(CameraImage image) {
+  void _processCameraImage(CameraImage image) async {
     if ((_cameraProvider != null) &&
         (_cameraProvider!.isImageCaptureButttonClicked)) {
       _camController!.pausePreview();
@@ -138,92 +139,116 @@ class _CameraPageState extends State<CameraPage> {
             MediaQuery.of(context).size.aspectRatio);
 
     return Scaffold(
-      body: Transform.scale(
-        scale: scale,
-        alignment: Alignment.topCenter,
-        child: Stack(children: [
-          CameraPreview(_camController!),
-          Consumer<CameraProvider>(
-            builder: (ctx, cameraProvider, child) {
-              return DetectionLayer(bbox: cameraProvider.bbox);
-            },
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: height * 0.025,
-              left: width * 0.02,
-              right: width * 0.02,
+      body: Stack(children: [
+        // Transform.scale(
+        //   scale: scale,
+        //   alignment: Alignment.topCenter,
+        //   child: Stack(
+        //     children: [
+        //       cameraView(),
+        //       Consumer<CameraProvider>(
+        //         builder: (ctx, cameraProvider, child) {
+        //           return DetectionLayer(bbox: cameraProvider.bbox);
+        //         },
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        Stack(
+          children: [
+            cameraView(),
+            Consumer<CameraProvider>(
+              builder: (ctx, cameraProvider, child) {
+                return DetectionLayer(bbox: cameraProvider.bbox);
+              },
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back_sharp),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  color: Colors.black,
-                ),
-                const Text(
-                  'Camera Mode',
-                  style: TextStyle(color: Colors.black),
-                ),
-                Consumer<CameraProvider>(
-                    builder: (context, cameraProvider, child) {
-                  return IconButton(
-                    onPressed: cameraProvider.isImageCaptureButttonClicked
-                        ? () {}
-                        : () {},
-                    icon: const Icon(Icons.check_outlined),
-                    color: cameraProvider.isImageCaptureButttonClicked
-                        ? Colors.black
-                        : Colors.transparent,
-                  );
-                })
-              ],
-            ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.only(
+            top: height * 0.03,
           ),
-          SizedBox(
-            height: height,
-            child: Padding(
-              padding: EdgeInsets.only(top: height * .5),
-              child: Container(
-                margin: EdgeInsets.only(top: height * .2),
-                child: Consumer<CameraProvider>(
-                    builder: (context, cameraProvider, child) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClickButton(
-                        show: cameraProvider.isImageCaptureButttonClicked,
-                        Icons.lightbulb_outline_sharp,
-                        width,
-                        () {},
-                      ),
-                      if (!cameraProvider.isImageCaptureButttonClicked)
-                        ClickButton(
-                          Icons.camera,
-                          width,
-                          cameraProvider.imageCaptureButtonClicked,
-                        ),
-                      ClickButton(
-                        show: cameraProvider.isImageCaptureButttonClicked,
-                        Icons.autorenew,
-                        width,
-                        () {
-                          _camController!.resumePreview();
-                          cameraProvider.discardCurrentClickedImage();
-                        },
-                      ),
-                    ],
-                  );
-                }),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              IconButton(
+                icon: const Icon(Icons.arrow_back_sharp),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                color: Colors.black,
               ),
+              Text(
+                'Camera Mode',
+                style: TextStyle(color: Colors.black, fontSize: width * .06),
+              ),
+              Consumer<CameraProvider>(
+                  builder: (context, cameraProvider, child) {
+                return IconButton(
+                  onPressed: cameraProvider.isImageCaptureButttonClicked
+                      ? () {}
+                      : () {},
+                  icon: const Icon(Icons.check_outlined),
+                  color: cameraProvider.isImageCaptureButttonClicked
+                      ? Colors.black
+                      : Colors.transparent,
+                );
+              })
+            ],
+          ),
+        ),
+        SizedBox(
+          height: height,
+          child: Padding(
+            padding: EdgeInsets.only(top: height * .67),
+            child: Container(
+              margin: EdgeInsets.only(top: height * .2),
+              child: Consumer<CameraProvider>(
+                  builder: (context, cameraProvider, child) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClickButton(
+                      show: cameraProvider.isImageCaptureButttonClicked,
+                      Icons.lightbulb_outline_sharp,
+                      width,
+                      () async {
+                        log('button clicked');
+                        if (_cameraProvider!.isSolutionButtonClicked == false) {
+                          final widgetToImageController =
+                              ScreenshotController();
+                          final bytes = await widgetToImageController
+                              .captureFromWidget(cameraView());
+                          log('extrackted the bytes');
+                          _cameraProvider!.getSolution(bytes, context);
+                        }
+                      },
+                    ),
+                    if (!cameraProvider.isImageCaptureButttonClicked)
+                      ClickButton(
+                        Icons.camera,
+                        width,
+                        cameraProvider.imageCaptureButtonClicked,
+                      ),
+                    ClickButton(
+                      show: cameraProvider.isImageCaptureButttonClicked,
+                      Icons.autorenew,
+                      width,
+                      () {
+                        _camController!.resumePreview();
+                        cameraProvider.discardCurrentClickedImage();
+                      },
+                    ),
+                  ],
+                );
+              }),
             ),
-          )
-        ]),
-      ),
+          ),
+        )
+      ]),
     );
   }
+
+  CameraPreview cameraView() => CameraPreview(_camController!);
 }
