@@ -48,7 +48,7 @@ class CameraProvider with ChangeNotifier {
     Directory? tempDir  = await getExternalStorageDirectory();
     String path = tempDir!.path;
     log(path.toString());
-    sudokuDetector.extractBoxes(bbox, path);
+    sudokuDetector.extractBoxes(path);
   }
 
   List<double> bbox = List.empty();

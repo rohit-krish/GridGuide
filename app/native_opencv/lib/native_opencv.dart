@@ -9,11 +9,11 @@ final DynamicLibrary nativeLib = DynamicLibrary.open("libnative_opencv.so");
 
 // C Functions signatures
 typedef _c_detect_board = Pointer<Float> Function(Pointer<Uint8>, Int32, Int32, Int32, Pointer<Int32>);
-typedef _c_extract_boxes = Void Function(Pointer<Float>, Pointer<Utf8>);
+typedef _c_extract_boxes = Void Function(Pointer<Utf8>);
 
 // Dart Functions signatures
 typedef _dart_detect_board = Pointer<Float> Function(Pointer<Uint8>, int, int, int, Pointer<Int32>);
-typedef _dart_extract_boxes = void Function(Pointer<Float>, Pointer<Utf8>);
+typedef _dart_extract_boxes = void Function(Pointer<Utf8>);
 
 // create dart functions that invoke the c functions
 final _detectBoard = nativeLib.lookupFunction<_c_detect_board, _dart_detect_board>('detect_board');
@@ -63,14 +63,8 @@ class NativeOpenCV {
     return res.asTypedList(count);
   }
 
-  void extractBoxes(List<double> cnt, String outputPath) {
-    print(cnt);
+  void extractBoxes(String outputPath) {
     print(outputPath);
-    _contourBuffer ??= malloc.allocate(sizeOf<Pointer<Float>>() * cnt.length);
-
-    final bytes = _contourBuffer!.asTypedList(cnt.length);
-    bytes.setAll(0, cnt);
-
-    _extract_boxes(_contourBuffer!, outputPath.toNativeUtf8());
+    _extract_boxes(outputPath.toNativeUtf8());
   }
 }

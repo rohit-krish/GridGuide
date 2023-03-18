@@ -7,6 +7,7 @@ using namespace std;
 using namespace cv;
 
 Mat global_img;
+vector<Point> global_biggest_cnt;
 
 extern "C"
 {
@@ -27,6 +28,9 @@ extern "C"
 
         preprocess(img, img_preprocessed);
         find_biggest_contour(img_preprocessed, area, biggest_cnt);
+
+        // copy the biggest_cnt to global_biggest_cnt
+        copy(biggest_cnt.begin(), biggest_cnt.end(), back_inserter(global_biggest_cnt));
 
         vector<float> output;
 
@@ -51,58 +55,32 @@ extern "C"
     }
 
     __attribute__((visibility("default"))) __attribute__((used))
-    void extract_boxes(float* cnt, char* output_path) {
-        /// Step 01: warp perspective
+    void extract_boxes(char* output_path) {
+        // vector<Point> biggest_cnt;
+        // copy(global_biggest_cnt.begin(), global_biggest_cnt.end(), back_inserter(biggest_cnt));
 
-        // Point2f src[4];
-        Point2f* src = new Point2f[4];
-        float width = 810.0, height = 810.0;
-        Mat matrix;
+        // Step 01: reorder the contours
+        reorder_contour(global_biggest_cnt);
+
+        /// Step 02: warp perspective
         Mat img_warped;
-
-        // convert the cnt to cv::Point2f datatype
-        for (int i = 0; i < 4; i++)
-            src[i] = {cnt[i * 2], cnt[(i * 2) + 1]};
-        
-        Point2f dst[4] = {{0.0, 0.0}, {width, 0.0}, {0.0, height}, {width, height}};
-
-        matrix = getPerspectiveTransform(src, dst);
-        warpPerspective(global_img, img_warped, matrix, Point(width, height));
-
-        cvtColor(img_warped, img_warped, COLOR_BGR2GRAY);
-
-        // chdir(output_path);
-        // imwrite("warped.jpg", img_warped);
-        // imwrite("global_img.jpg", global_img);
-
-        /// Step 02: split into boxes
-
-        Mat boxes[81];
-        int count = 0;
-
-        // make sure that the img_warped in 810x810
-        resize(img_warped, img_warped, Size(810, 810));
-
-        for (int i = 0; i < 9; i++)
-        {
-            for (int j = 0; j < 9; j++)
-            {
-                boxes[count] = img_warped(Range(i * 90, (i * 90) + 90), Range(j * 90, (j * 90) + 90));
-                resize(boxes[count], boxes[count], Size(70, 70));
-                count++;
-            }
-        }
-
-        /// Step 03: save the cropped boxes to the output_path
-
-        // change current working directory to output_path
+        warp_perspective(global_biggest_cnt, global_img, img_warped);
+        // drawContours(global_img, biggest_cnt, 0, Scalar(0, 0, 255), 2);
+        rectangle(global_img, Point(global_biggest_cnt[0].x, global_biggest_cnt[0].y), Point(global_biggest_cnt[3].x, global_biggest_cnt[3].y), Scalar(0, 0, 255), 2);
         chdir(output_path);
+        imwrite("warped.jpg", img_warped);
+        imwrite("global_img.jpg", global_img);
 
-        for (int i = 0; i < 81; i++)
-            imwrite(to_string(i)+".jpg", boxes[i]);
+        // /// Step 03: split into boxes
+        // Mat boxes[81];
+        // split_boxes(img_warped, boxes);
 
-        /// Step 04: release the dynamically allocated memory
-        delete[] src;
+        // /// Step 03: save the cropped boxes to the output_path
 
+        // // change current working directory to output_path
+        // chdir(output_path);
+
+        // for (int i = 0; i < 81; i++)
+        //     imwrite(to_string(i)+".jpg", boxes[i]);
     }
 }

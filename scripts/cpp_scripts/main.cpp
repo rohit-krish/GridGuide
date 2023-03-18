@@ -104,6 +104,7 @@ void split_boxes(Mat img, Mat boxes[81])
 }
 
 Mat image;
+vector<Point> global_biggest_cnt;
 
 int main()
 {
@@ -118,10 +119,13 @@ int main()
 
     preprocess(img, img_preprocessed, false);
     find_biggest_contour(img_preprocessed, area, biggest_cnt);
-    reorder_cnt(biggest_cnt);
+
+    copy(biggest_cnt.begin(), biggest_cnt.end(), back_inserter(global_biggest_cnt));
+
+    reorder_cnt(global_biggest_cnt);
     img.copyTo(image);
 
-    warp_perspective(biggest_cnt, image, img_warped);
+    warp_perspective(global_biggest_cnt, image, img_warped);
     split_boxes(img_warped, boxes);
 
     imshow("img", img);
@@ -129,15 +133,15 @@ int main()
 
 
 
-    char *input_folder = "../boxes";
-    chdir(input_folder);
+    // char *input_folder = "../boxes";
+    // chdir(input_folder);
 
 
-    for (int i = 0; i < 81; i++)
-    {
-        imwrite(to_string(i)+".jpg", boxes[i]);
-        cout << to_string(i)+".jpg\n";
-    }
+    // for (int i = 0; i < 81; i++)
+    // {
+    //     imwrite(to_string(i)+".jpg", boxes[i]);
+    //     cout << to_string(i)+".jpg\n";
+    // }
 
     // for (Mat box : boxes)
     // {
@@ -146,5 +150,5 @@ int main()
     //         break;
     // }
 
-    // waitKey(0);
+    waitKey(0);
 }
