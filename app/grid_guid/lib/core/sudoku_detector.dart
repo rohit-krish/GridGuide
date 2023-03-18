@@ -125,4 +125,7 @@ class SudokuDetector {
     return digitPred;
   }
 
+  void extractBoxes(List<double> cnt, String outputPath) {
+    _nativeOpenCV.extractBoxes(cnt, outputPath);
+  }
 }

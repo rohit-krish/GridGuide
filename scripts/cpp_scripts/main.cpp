@@ -1,6 +1,8 @@
-#include <iostream>
+#include <string>
+#include <unistd.h>
+// #include <iostream>
 #include <opencv2/opencv.hpp>
-#include <opencv2/core.hpp>
+// #include <opencv2/core.hpp>
 
 #include "utils.h"
 // #include "solver.h"
@@ -101,22 +103,7 @@ void split_boxes(Mat img, Mat boxes[81])
     }
 }
 
-int *getPixelValues(Mat &image)
-{
-    int *pixelValues = new int[image.rows*image.cols]{};
-
-    int k = 0;
-    for (int i = 0; i < image.rows; i++)
-    {
-        for (int j = 0; j < image.cols; j++)
-        {
-            int pixelValue = static_cast<int>(image.at<uchar>(i, j));
-            pixelValues[k++] = pixelValue;
-        }
-    }
-
-    return pixelValues;
-}
+Mat image;
 
 int main()
 {
@@ -132,11 +119,25 @@ int main()
     preprocess(img, img_preprocessed, false);
     find_biggest_contour(img_preprocessed, area, biggest_cnt);
     reorder_cnt(biggest_cnt);
-    warp_perspective(biggest_cnt, img, img_warped);
+    img.copyTo(image);
+
+    warp_perspective(biggest_cnt, image, img_warped);
     split_boxes(img_warped, boxes);
 
     imshow("img", img);
     imshow("warped", img_warped);
+
+
+
+    char *input_folder = "../boxes";
+    chdir(input_folder);
+
+
+    for (int i = 0; i < 81; i++)
+    {
+        imwrite(to_string(i)+".jpg", boxes[i]);
+        cout << to_string(i)+".jpg\n";
+    }
 
     // for (Mat box : boxes)
     // {
@@ -145,33 +146,5 @@ int main()
     //         break;
     // }
 
-    // for (int el : boxes_arr)
-    //     cout << el << ' ';
-
-    waitKey(0);
-
-    // converting each box of Mat to a array of int
-    int count = 0;
-    int length = 4900;
-    int *boxes_arr = new int[4900 * 81]; // 396900
-
-    for (Mat box : boxes)
-    {
-        int *pixelvals = getPixelValues(box);
-
-        for (int i = 0; i < length; i++)
-        {
-            boxes_arr[count] = pixelvals[i];
-            count++;
-        }
-
-        delete[] pixelvals;
-    }
-
-    for (int i = 0; i < 4900 * 81; i++)
-    {
-        cout << boxes_arr[i] << ' ';
-    }
-
-    delete[] boxes_arr;
+    // waitKey(0);
 }

@@ -1,10 +1,10 @@
 import 'dart:developer';
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:grid_guid/core/sudoku_detector.dart';
-import 'package:image/image.dart' as img;
+import 'package:path_provider/path_provider.dart';
 
 class CameraProvider with ChangeNotifier {
   void imageCaptureButtonClicked() {
@@ -38,40 +38,17 @@ class CameraProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  getSolution(Uint8List bytes, BuildContext context) {
+  getSolution(SudokuDetector sudokuDetector) async{
     if (bbox.isEmpty) {
       // TODO: show a snackbar which says didn't detect the board
       return;
     }
 
     // isSolutionButtonClicked = true; TODO: uncomment it
-    _imageBytes = bytes;
-
-    var _bbox = bbox.map((e) => e.toInt()).toList(growable: false);
-
-    log('decoding image...');
-    img.Image? image = img.decodeImage(_imageBytes);
-    log('decoded');
-    // var cropped = img.copyCrop(image!, x: x, y: y, width: width, height: height);
-    img.drawRect(
-      image!,
-      x1: _bbox[0] * 2,
-      y1: _bbox[1] * 2,
-      x2: _bbox[6] * 2,
-      y2: _bbox[7] * 2,
-      color: img.ColorRgb8(255, 0, 0),
-    );
-
-
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (ctx) {
-        return Scaffold(
-          body: Center(
-            child: Image.memory(Uint8List.fromList(img.encodePng(image))),
-          ),
-        );
-      }),
-    );
+    Directory? tempDir  = await getExternalStorageDirectory();
+    String path = tempDir!.path;
+    log(path.toString());
+    sudokuDetector.extractBoxes(bbox, path);
   }
 
   List<double> bbox = List.empty();
@@ -80,7 +57,6 @@ class CameraProvider with ChangeNotifier {
   bool isSolutionButtonClicked = false;
 
   late CameraImage _image;
-  late Uint8List _imageBytes;
 
   final _snackBar = const SnackBar(
     content: Text('Take new picture if detection is not correct'),

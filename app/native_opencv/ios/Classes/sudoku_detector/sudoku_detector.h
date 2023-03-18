@@ -6,6 +6,23 @@
 using namespace std;
 using namespace cv;
 
+void rotateMat(Mat &img, int rotation)
+{
+    if (rotation == 90)
+    {
+        transpose(img, img);
+        flip(img, img, 1);
+    }
+    else if (rotation == 270)
+    {
+        transpose(img, img);
+        flip(img, img, 0);
+    }
+    else if (rotation == 180)
+    {
+        flip(img, img, -1);
+    }
+}
 
 void preprocess(Mat &src_img, Mat &dst_img)
 {
