@@ -47,34 +47,31 @@ class CameraProvider with ChangeNotifier {
     // isSolutionButtonClicked = true; TODO: uncomment it
     _imageBytes = bytes;
 
-    int x = bbox[0].toInt();
-    int y = bbox[1].toInt();
-    int width = (bbox[2] - bbox[0]).toInt();
-    int height = (bbox[5] - bbox[1]).toInt();
-
-    // print(x);
-    // print(y);
-    // print(width);
-    // print(height);
-    print(bbox);
-    print(x);
-    print(y);
-    print(width);
-    print(height);
+    var _bbox = bbox.map((e) => e.toInt()).toList(growable: false);
 
     log('decoding image...');
     img.Image? image = img.decodeImage(_imageBytes);
     log('decoded');
     // var cropped = img.copyCrop(image!, x: x, y: y, width: width, height: height);
-    // img.drawRect(dst, x1: x1, y1: y1, x2: x2, y2: y2, color: color);
+    img.drawRect(
+      image!,
+      x1: _bbox[0] * 2,
+      y1: _bbox[1] * 2,
+      x2: _bbox[6] * 2,
+      y2: _bbox[7] * 2,
+      color: img.ColorRgb8(255, 0, 0),
+    );
 
-    Navigator.of(context).push(MaterialPageRoute(builder: (ctx) {
-      return Scaffold(
-        body: Center(
-          child: Image.memory(Uint8List.fromList(img.encodePng(image!))),
-        ),
-      );
-    }));
+
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (ctx) {
+        return Scaffold(
+          body: Center(
+            child: Image.memory(Uint8List.fromList(img.encodePng(image))),
+          ),
+        );
+      }),
+    );
   }
 
   List<double> bbox = List.empty();

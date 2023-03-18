@@ -95,8 +95,7 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void _processCameraImage(CameraImage image) async {
-    if ((_cameraProvider != null) &&
-        (_cameraProvider!.isImageCaptureButttonClicked)) {
+    if ((_cameraProvider != null) && (_cameraProvider!.isImageCaptureButttonClicked)) {
       _camController!.pausePreview();
 
       if (_camFrameToScreenScale == 0) {
@@ -107,6 +106,7 @@ class _CameraPageState extends State<CameraPage> {
         _camFrameToScreenScale = MediaQuery.of(context).size.width / w;
       }
 
+      log('image, width: ${image.width}, height: ${image.height}');
       _cameraProvider!.detectBoard(
         image,
         _sudokuDetector,
@@ -134,35 +134,25 @@ class _CameraPageState extends State<CameraPage> {
     }
 
     _cameraProvider = Provider.of<CameraProvider>(context, listen: false);
-    final scale = 1 /
-        (_camController!.value.aspectRatio *
-            MediaQuery.of(context).size.aspectRatio);
+    final scale = 1 / (_camController!.value.aspectRatio * MediaQuery.of(context).size.aspectRatio);
 
+    log('controller aspect ratio: ${_camController!.value.aspectRatio}, screen aspect ratio: ${MediaQuery.of(context).size.aspectRatio}');
+    log('screen width: $width, height: $height');
     return Scaffold(
       body: Stack(children: [
-        // Transform.scale(
-        //   scale: scale,
-        //   alignment: Alignment.topCenter,
-        //   child: Stack(
-        //     children: [
-        //       cameraView(),
-        //       Consumer<CameraProvider>(
-        //         builder: (ctx, cameraProvider, child) {
-        //           return DetectionLayer(bbox: cameraProvider.bbox);
-        //         },
-        //       ),
-        //     ],
-        //   ),
-        // ),
-        Stack(
-          children: [
-            cameraView(),
-            Consumer<CameraProvider>(
-              builder: (ctx, cameraProvider, child) {
-                return DetectionLayer(bbox: cameraProvider.bbox);
-              },
-            ),
-          ],
+        Transform.scale(
+          scale: scale,
+          alignment: Alignment.topCenter,
+          child: Stack(
+            children: [
+              cameraView(),
+              Consumer<CameraProvider>(
+                builder: (ctx, cameraProvider, child) {
+                  return DetectionLayer(bbox: cameraProvider.bbox);
+                },
+              ),
+            ],
+          ),
         ),
         Padding(
           padding: EdgeInsets.only(
