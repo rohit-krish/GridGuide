@@ -1,27 +1,13 @@
-#include <opencv2/core.hpp>
-#include <opencv2/imgproc.hpp>
+#include <string>
+#include <unistd.h>
+#include <opencv2/opencv.hpp>
 #include "sudoku_detector.h"
 
 using namespace std;
 using namespace cv;
 
-void rotateMat(Mat &img, int rotation)
-{
-    if (rotation == 90)
-    {
-        transpose(img, img);
-        flip(img, img, 1);
-    }
-    else if (rotation == 270)
-    {
-        transpose(img, img);
-        flip(img, img, 0);
-    }
-    else if (rotation == 180)
-    {
-        flip(img, img, -1);
-    }
-}
+Mat global_img;
+vector<Point> global_biggest_cnt;
 
 extern "C"
 {
@@ -33,12 +19,20 @@ extern "C"
         cvtColor(img, img, COLOR_YUV2BGRA_NV21);
         rotateMat(img, rotation);
 
+        // copy the img to global_img
+        img.copyTo(global_img);
+
         Mat img_preprocessed;
         float area;
         vector<Point> biggest_cnt;
 
         preprocess(img, img_preprocessed);
         find_biggest_contour(img_preprocessed, area, biggest_cnt);
+        reorder_contour(biggest_cnt);
+
+        // copy the biggest_cnt to global_biggest_cnt
+        global_biggest_cnt.clear();
+        copy(biggest_cnt.begin(), biggest_cnt.end(), back_inserter(global_biggest_cnt));
 
         vector<float> output;
 
@@ -60,5 +54,30 @@ extern "C"
 
         *outCount = output.size();
         return res;
+    }
+
+    __attribute__((visibility("default"))) __attribute__((used))
+    void extract_boxes(char* output_path) {
+        /// Step 01: warp perspective
+        Mat img_warped;
+        warp_perspective(global_biggest_cnt, global_img, img_warped);
+
+        // for (Point cnt : global_biggest_cnt)
+            // circle(global_img, cnt, 5, Scalar(0, 255, 0), -1);
+
+        /// Step 02: split into boxes
+        Mat boxes[81];
+        split_boxes(img_warped, boxes);
+
+        /// Step 03: save the cropped boxes to the output_path
+
+        // change current working directory to output_path
+        chdir(output_path);
+        // imwrite("warped.jpg", img_warped);
+        // imwrite("global_img.jpg", global_img);
+
+        for (int i = 0; i < 81; i++)
+            imwrite(to_string(i)+".jpg", boxes[i]);
+
     }
 }

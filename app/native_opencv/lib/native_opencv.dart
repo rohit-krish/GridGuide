@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: camel_case_types, non_constant_identifier_names
 
 import 'dart:ffi';
 import 'dart:typed_data';
@@ -8,17 +8,20 @@ import 'package:ffi/ffi.dart';
 final DynamicLibrary nativeLib = DynamicLibrary.open("libnative_opencv.so");
 
 // C Functions signatures
-typedef _c_detect_board = Pointer<Float> Function(Pointer<Uint8> bytes, Int32 width, Int32 height, Int32 rotation, Pointer<Int32> outCount);
+typedef _c_detect_board = Pointer<Float> Function(Pointer<Uint8>, Int32, Int32, Int32, Pointer<Int32>);
+typedef _c_extract_boxes = Void Function(Pointer<Utf8>);
 
 // Dart Functions signatures
-typedef _dart_detect_board = Pointer<Float> Function(Pointer<Uint8> bytes, int width, int height, int rotation, Pointer<Int32> outCount);
+typedef _dart_detect_board = Pointer<Float> Function(Pointer<Uint8>, int, int, int, Pointer<Int32>);
+typedef _dart_extract_boxes = void Function(Pointer<Utf8>);
 
 // create dart functions that invoke the c functions
 final _detectBoard = nativeLib.lookupFunction<_c_detect_board, _dart_detect_board>('detect_board');
+final _extract_boxes = nativeLib.lookupFunction<_c_extract_boxes, _dart_extract_boxes>('extract_boxes');
 
 class NativeOpenCV {
   Pointer<Uint8>? _imageBuffer;
-  Pointer<Int32>? _contourBuffer;
+  Pointer<Float>? _contourBuffer;
 
   void dispose() {
     if (_imageBuffer != null) {
@@ -58,5 +61,10 @@ class NativeOpenCV {
     malloc.free(outCount);
 
     return res.asTypedList(count);
+  }
+
+  void extractBoxes(String outputPath) {
+    print(outputPath);
+    _extract_boxes(outputPath.toNativeUtf8());
   }
 }

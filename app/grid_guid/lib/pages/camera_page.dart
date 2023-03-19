@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:provider/provider.dart';
-import 'package:screenshot/screenshot.dart';
 
 import '../core/sudoku_detector.dart';
 import '../core/detection_layer.dart';
@@ -106,7 +105,6 @@ class _CameraPageState extends State<CameraPage> {
         _camFrameToScreenScale = MediaQuery.of(context).size.width / w;
       }
 
-      log('image, width: ${image.width}, height: ${image.height}');
       _cameraProvider!.detectBoard(
         image,
         _sudokuDetector,
@@ -134,10 +132,10 @@ class _CameraPageState extends State<CameraPage> {
     }
 
     _cameraProvider = Provider.of<CameraProvider>(context, listen: false);
-    final scale = 1 / (_camController!.value.aspectRatio * MediaQuery.of(context).size.aspectRatio);
+    final scale = 1 /
+        (_camController!.value.aspectRatio *
+            MediaQuery.of(context).size.aspectRatio);
 
-    log('controller aspect ratio: ${_camController!.value.aspectRatio}, screen aspect ratio: ${MediaQuery.of(context).size.aspectRatio}');
-    log('screen width: $width, height: $height');
     return Scaffold(
       body: Stack(children: [
         Transform.scale(
@@ -145,7 +143,7 @@ class _CameraPageState extends State<CameraPage> {
           alignment: Alignment.topCenter,
           child: Stack(
             children: [
-              cameraView(),
+              CameraPreview(_camController!),
               Consumer<CameraProvider>(
                 builder: (ctx, cameraProvider, child) {
                   return DetectionLayer(bbox: cameraProvider.bbox);
@@ -203,15 +201,9 @@ class _CameraPageState extends State<CameraPage> {
                       show: cameraProvider.isImageCaptureButttonClicked,
                       Icons.lightbulb_outline_sharp,
                       width,
-                      () async {
-                        log('button clicked');
+                      () {
                         if (_cameraProvider!.isSolutionButtonClicked == false) {
-                          final widgetToImageController =
-                              ScreenshotController();
-                          final bytes = await widgetToImageController
-                              .captureFromWidget(cameraView());
-                          log('extrackted the bytes');
-                          _cameraProvider!.getSolution(bytes, context);
+                          _cameraProvider!.getSolution(_sudokuDetector);
                         }
                       },
                     ),
@@ -239,6 +231,4 @@ class _CameraPageState extends State<CameraPage> {
       ]),
     );
   }
-
-  CameraPreview cameraView() => CameraPreview(_camController!);
 }
