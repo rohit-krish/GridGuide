@@ -1,19 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
-import 'dart:convert';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:grid_guid/core/sudoku_detector.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:http/http.dart' as http;
 
 class CameraProvider with ChangeNotifier {
-  var done = SnackBar(
-    content: Text('done!'),
-    duration: Duration(seconds: 5),
-  );
-
   void imageCaptureButtonClicked() {
     isImageCaptureButttonClicked = true;
 
@@ -44,23 +37,7 @@ class CameraProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  uploadToServer(BuildContext context) async {
-    log('called uploadserver');
-    Directory? tempDir = await getExternalStorageDirectory();
-    String path = tempDir!.path;
-
-    String url = 'http://192.168.43.21:5000/endpoint';
-
-    for (int i = 0; i < 81; i++) {
-      File boxFile = File('$path/$i.jpg');
-      final bytes = await boxFile.readAsBytes();
-
-      await http.post(Uri.parse(url), body: {'string': base64Encode(bytes)});
-    }
-    ScaffoldMessenger.of(context).showSnackBar(done);
-  }
-
-  getSolution(SudokuDetector sudokuDetector) async {
+  getSolution(SudokuDetector sudokuDetector) async{
     if (bbox.isEmpty) {
       // TODO: show a snackbar which says didn't detect the board
       return;
@@ -68,10 +45,11 @@ class CameraProvider with ChangeNotifier {
 
     isSolutionButtonClicked = true;
 
-    Directory? tempDir = await getExternalStorageDirectory();
+    Directory? tempDir  = await getExternalStorageDirectory();
     String path = tempDir!.path;
     log(path.toString());
     sudokuDetector.getBoxes(path);
+
   }
 
   List<double> bbox = List.empty();
@@ -87,7 +65,7 @@ class CameraProvider with ChangeNotifier {
   );
 
   void showSnackBar(BuildContext context) {
-    // isSnackBarShown = true;
-    // ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+    isSnackBarShown = true;
+    ScaffoldMessenger.of(context).showSnackBar(_snackBar);
   }
 }
