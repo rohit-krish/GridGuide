@@ -94,8 +94,7 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void _processCameraImage(CameraImage image) async {
-    if ((_cameraProvider != null) &&
-        (_cameraProvider!.isImageCaptureButttonClicked)) {
+    if ((_cameraProvider != null) && (_cameraProvider!.isImageCaptureButttonClicked)) {
       _camController!.pausePreview();
 
       if (_camFrameToScreenScale == 0) {

@@ -25,7 +25,6 @@ class CameraProvider with ChangeNotifier {
     if (res.isEmpty) return;
 
     bbox = res.map((x) => x * camFrameToScreenScale).toList(growable: false);
-    bbox = sudokuDetector.reorder(bbox);
 
     notifyListeners();
   }
@@ -44,11 +43,14 @@ class CameraProvider with ChangeNotifier {
       return;
     }
 
-    // isSolutionButtonClicked = true; TODO: uncomment it
+    isSolutionButtonClicked = true;
+
     Directory? tempDir  = await getExternalStorageDirectory();
     String path = tempDir!.path;
     log(path.toString());
     sudokuDetector.extractBoxes(path);
+
+
   }
 
   List<double> bbox = List.empty();

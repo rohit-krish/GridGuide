@@ -31,11 +31,11 @@ void preprocess(Mat &src_img, Mat &dst_img)
     adaptiveThreshold(dst_img, dst_img, 255, ADAPTIVE_THRESH_GAUSSIAN_C, 1, 11, 2);
 }
 
-void find_biggest_contour(Mat &src_img, float &max_area, vector<Point> &biggest_cnt)
+void find_biggest_contour(const Mat src_img, float &max_area, vector<Point> &biggest_cnt)
 {
     vector<vector<Point>> contours;
     vector<Vec4i> hierarchy;
-    float area, peri;
+    float area = 0.0, peri = 0.0;
     vector<Point> approx;
 
     max_area = 0.0;
@@ -61,11 +61,12 @@ void find_biggest_contour(Mat &src_img, float &max_area, vector<Point> &biggest_
     }
 }
 
+
 void warp_perspective(vector<Point> contour, Mat img, Mat &img_res)
 {
     Mat matrix;
-    // Point2f* src = new Point2f[4];
-    Point2f src[4];
+    Point2f* src = new Point2f[4];
+    // Point2f src[4];
     float width = 810.0, height = 810.0;
 
     for (int i = 0; i < 4; i++)
@@ -76,17 +77,17 @@ void warp_perspective(vector<Point> contour, Mat img, Mat &img_res)
 
     matrix = getPerspectiveTransform(src, dst);
 
-    warpPerspective(img, img_res, matrix, Point(810, 810));
+    warpPerspective(img, img_res, matrix, Point(width, height));
 
     cvtColor(img_res, img_res, COLOR_BGR2GRAY);
 
-    // delete[] src;
+    delete[] src;
 }
 
-int argmin(float pnt[4])
+int argmin(const float pnt[4])
 {
     int min_val = pnt[0];
-    int min_arg;
+    int min_arg = 0;
 
     for (int i = 0; i < 4; i++)
     {
@@ -99,10 +100,10 @@ int argmin(float pnt[4])
     return min_arg;
 }
 
-int argmax(float pnt[4])
+int argmax(const float pnt[4])
 {
     int max_val = pnt[0];
-    int max_arg;
+    int max_arg = 0;
 
     for (int i = 0; i < 4; i++)
     {
@@ -117,12 +118,15 @@ int argmax(float pnt[4])
 
 void reorder_contour(vector<Point> &contour)
 {
+    if (contour.size() != 4)
+        return;
+
     vector<Point> contour_tmp = contour;
 
-    int n = contour.size();
-    float sum_points[n], diff_points[n];
+    float* sum_points = new float[4];
+    float* diff_points = new float[4];
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < 4; i++)
     {
         sum_points[i] = contour[i].y + contour[i].x;
         diff_points[i] = contour[i].y - contour[i].x;
@@ -132,7 +136,11 @@ void reorder_contour(vector<Point> &contour)
     contour[3] = contour_tmp[argmax(sum_points)];
     contour[1] = contour_tmp[argmin(diff_points)];
     contour[2] = contour_tmp[argmax(diff_points)];
+
+    delete[] sum_points;
+    delete[] diff_points;
 }
+
 
 void split_boxes(Mat img, Mat boxes[81])
 {
