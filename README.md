@@ -1,13 +1,4 @@
-## Next
-1. add LICENSE
-
-1. convert the 1d to each boxes then save to android to check if everything is correct
-2. then use tf model to predict each cell
-
-Create flutter app
-publish the data to kaggle
-<img src="./dataset/data_distribution.png" alt="data distribution chart">
-
+<img src="./screenshot.png" alt="screen shots of the app">
 Names
 
 * GridGuid Sudoku Board Detector & Solver
@@ -23,12 +14,16 @@ Names
 * cellMaster
 
 
+<img src="./dataset/data_distribution.png" alt="data distribution chart">
+
+
 References:
 - https://youtu.be/wGH_KWpaAVM
 - https://youtu.be/G_UYXzGuqvM
 - https://youtu.be/lK4N8E6uNr4
 - https://youtu.be/qOXDoYUgNlU
 
+publish the data to kaggle
 
 Image Requirments:
 - clear picture
