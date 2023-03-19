@@ -80,11 +80,7 @@ class SudokuDetector {
     return digitPred;
   }
 
-  void getBoxes(String outputPath){
-    _nativeOpenCV.extractBoxes(outputPath);
-  }
-
-  void getBoxesAndPredict(String outputPath) async {
+  void getBoxes(String outputPath) async {
     _interpreter = await Interpreter.fromAsset(
       'model/model.tflite',
       options: _interpreterOptions,
