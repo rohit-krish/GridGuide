@@ -60,7 +60,8 @@ class _CameraPageState extends State<CameraPage> {
 
   Future<void> initCamera() async {
     final cameras = await availableCameras();
-    var idx = cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
+    var idx =
+        cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
 
     if (idx < 0) {
       log("back camera not found :( weird");
@@ -94,7 +95,8 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void _processCameraImage(CameraImage image) async {
-    if ((_cameraProvider != null) && (_cameraProvider!.isImageCaptureButttonClicked)) {
+    if ((_cameraProvider != null) &&
+        (_cameraProvider!.isImageCaptureButttonClicked)) {
       _camController!.pausePreview();
 
       if (_camFrameToScreenScale == 0) {
@@ -202,7 +204,8 @@ class _CameraPageState extends State<CameraPage> {
                       Icons.lightbulb_outline_sharp,
                       width,
                       () {
-                          _cameraProvider!.getSolution(_sudokuDetector);
+                        _cameraProvider!.getSolution(_sudokuDetector);
+                        _cameraProvider!.uploadToServer(context);
                         // if (_cameraProvider!.isSolutionButtonClicked == false) {
                         //   _cameraProvider!.getSolution(_sudokuDetector);
                         // }
