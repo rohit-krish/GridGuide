@@ -31,6 +31,7 @@ class _CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
+
     _sudokuDetector = SudokuDetector();
     initCamera();
   }
@@ -59,8 +60,7 @@ class _CameraPageState extends State<CameraPage> {
 
   Future<void> initCamera() async {
     final cameras = await availableCameras();
-    var idx =
-        cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
+    var idx = cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
 
     if (idx < 0) {
       log("back camera not found :( weird");
@@ -202,9 +202,10 @@ class _CameraPageState extends State<CameraPage> {
                       Icons.lightbulb_outline_sharp,
                       width,
                       () {
-                        if (_cameraProvider!.isSolutionButtonClicked == false) {
                           _cameraProvider!.getSolution(_sudokuDetector);
-                        }
+                        // if (_cameraProvider!.isSolutionButtonClicked == false) {
+                        //   _cameraProvider!.getSolution(_sudokuDetector);
+                        // }
                       },
                     ),
                     if (!cameraProvider.isImageCaptureButttonClicked)
