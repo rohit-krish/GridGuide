@@ -1,3 +1,8 @@
+### Next
+1. imporove the mode
+2. update the sudoku board with the detected board
+3. result augmentation onto the preview image
+
 <img src="./screenshot.png" alt="screen shots of the app">
 Names
 
