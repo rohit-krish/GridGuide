@@ -1,3 +1,5 @@
+#!/usr/bin/python3.10
+
 from flask import Flask, request, jsonify
 import base64
 from PIL import Image
@@ -6,6 +8,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
+base_path = '/home/rohit/Desktop/MLProjects/GridGuid/model building/collect-data/uploaded-images'
 
 @app.route('/endpoint', methods=['POST'])
 def endpoint():
@@ -13,7 +16,7 @@ def endpoint():
     string = request.form['string']
     bytes_data = base64.b64decode(string)
     image = Image.open(io.BytesIO(bytes_data))
-    image.save(f'./uploaded-images/{datetime.now().time()}.jpg')
+    image.save(f'{base_path}/{datetime.now().time()}.jpg')
     return jsonify({})
 
 
