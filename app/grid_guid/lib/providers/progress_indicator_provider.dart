@@ -8,4 +8,10 @@ class ProgressIndicatorProvider with ChangeNotifier {
     currentPercent = (_currentPredictedBox * 100) / 81;
     notifyListeners();
   }
+
+  void doneCurrentPrediction() {
+    _currentPredictedBox = 0;
+    currentPercent = 0.0;
+    notifyListeners();
+  }
 }

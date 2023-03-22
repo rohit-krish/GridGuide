@@ -1,7 +1,9 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../core/sudoku_detector.dart';
@@ -167,12 +169,25 @@ class _CameraPageState extends State<CameraPage> {
                   return DetectionLayer(bbox: cameraProvider.bbox);
                 },
               ),
+              Consumer<CameraProvider>(
+                builder: (ctx, cameraProvider, child) {
+                  if (cameraProvider.isDoneProcessing) {
+                    File file = File(
+                      "${cameraProvider.externalStorageDirectory}/inv_perspective.jpg",
+                    );
+                    return Image.file(file);
+                  } else {
+                    return const SizedBox.shrink();
+                  }
+                },
+              ),
             ],
           ),
         ),
         Consumer<CameraProvider>(
           builder: (ctx, cameraProvider, child) {
-            if (cameraProvider.isDoneProcessing == false && cameraProvider.isSolutionButtonClicked == true) {
+            if (cameraProvider.isDoneProcessing == false &&
+                cameraProvider.isSolutionButtonClicked == true) {
               return Center(child: ProgressIndicatorWidget(width));
             } else {
               return const SizedBox.shrink();

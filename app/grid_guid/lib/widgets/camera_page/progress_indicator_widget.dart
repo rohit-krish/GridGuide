@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,9 +11,11 @@ class ProgressIndicatorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = Provider.of<ProgressIndicatorProvider>(context);
+    double precent = provider.currentPercent / 100;
+    // precent -= precent.floor();
     return CircularPercentIndicator(
         radius: width * .08,
-        percent: provider.currentPercent / 100,
+        percent: precent,
         progressColor: Colors.indigo,
         backgroundColor: Colors.indigo.shade100,
         circularStrokeCap: CircularStrokeCap.round,

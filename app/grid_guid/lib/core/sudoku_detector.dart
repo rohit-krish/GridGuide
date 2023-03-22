@@ -1,5 +1,5 @@
 import 'dart:developer' show log;
-import 'dart:typed_data' show Uint8List, Float32List, Int32List;
+import 'dart:typed_data' show Uint8List, Float32List;
 
 import 'package:camera/camera.dart' show CameraImage;
 import 'package:native_opencv/native_opencv.dart';

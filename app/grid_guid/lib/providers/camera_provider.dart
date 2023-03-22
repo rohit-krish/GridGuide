@@ -58,10 +58,10 @@ class CameraProvider with ChangeNotifier {
 
     // get boxes
     Directory? tempDir = await getExternalStorageDirectory();
-    String path = tempDir!.path;
-    List<int> boxDigits = await sudokuDetector.getBoxes(path, progressIndicatorProvider);
+    externalStorageDirectory = tempDir!.path;
+    List<int> boxDigits = await sudokuDetector.getBoxes(externalStorageDirectory, progressIndicatorProvider);
     List<int> unvalidPlaces = checkUnvalidPlaces(boxDigits);
-    sudokuDetector.augmentResults(boxDigits, unvalidPlaces, path);
+    sudokuDetector.augmentResults(boxDigits, unvalidPlaces, externalStorageDirectory);
 
     //* PLAN
     /// check for each cell to know if it is valid or not using cpp script
@@ -72,6 +72,7 @@ class CameraProvider with ChangeNotifier {
 
     // augment
 
+    progressIndicatorProvider.doneCurrentPrediction();
     isDoneProcessing = true;
     notifyListeners();
   }
@@ -81,6 +82,7 @@ class CameraProvider with ChangeNotifier {
   bool isSnackBarShown = false;
   bool isSolutionButtonClicked = false;
   bool isDoneProcessing = false;
+  late String externalStorageDirectory;
 
   late CameraImage _image;
 

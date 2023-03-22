@@ -229,6 +229,7 @@ int main()
     imshow("img_solved_numbers", img_solved_numbers);
     imshow("img_inv_warp", img_inv_warp);
     imshow("inv_perspective", inv_perspective);
+
     // char *input_folder = "../boxes";
     // chdir(input_folder);
 
