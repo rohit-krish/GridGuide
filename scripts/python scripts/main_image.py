@@ -10,7 +10,7 @@ from solver import solve
 img = cv2.imread('../../assets/20_board.jpg')
 img = cv2.resize(img, (720, 720))
 img_blank = np.zeros_like(img)
-model = keras.models.load_model('../../model building/models/model')
+model = keras.models.load_model('../../model building/models/v2/model_v2')
 
 # cap = cv2.VideoCapture(0)
 # while True:
@@ -73,7 +73,7 @@ pts1 = np.float32(
 matrix = cv2.getPerspectiveTransform(pts1, pts2)
 img_inv_warp = img.copy()
 img_inv_warp = cv2.warpPerspective(img_solved_numbers, matrix, (img_w, img_h))
-inv_perspective = cv2.addWeighted(img_inv_warp, 1, img, 0.5, 1)
+inv_perspective = cv2.addWeighted(img_inv_warp, 1, img, 0.7, 1)
 
 cv2.drawContours(img_contours, contours, -1, (0, 0, 255), 5)
 cv2.drawContours(img_biggest_contour, biggest_contour, -1, (0, 0, 255), 20)
@@ -92,7 +92,7 @@ labels = [
 cv2.imshow(
     'img', stackIt(
         images, labels, fontFace=cv2.FONT_HERSHEY_SIMPLEX,
-        fontScale=.8, color=(0, 255, 0), thickness=1, img_scale=.4
+        fontScale=.8, color=(0, 255, 0), thickness=1, img_scale=.45
     )
 )
 

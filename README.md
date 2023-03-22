@@ -1,5 +1,5 @@
 ### Next
-1. imporove the mode
+1. imporove the model
 2. update the sudoku board with the detected board
 3. result augmentation onto the preview image
 

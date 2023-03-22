@@ -4,6 +4,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:grid_guid/core/sudoku_detector.dart';
 import 'package:grid_guid/providers/progress_indicator_provider.dart';
+import 'package:grid_guid/utils/camera_page/check_unvalid_places.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CameraProvider with ChangeNotifier {
@@ -39,9 +40,9 @@ class CameraProvider with ChangeNotifier {
     bbox = List.empty();
     isSnackBarShown = false;
     isSolutionButtonClicked = false;
+    isDoneProcessing = false;
     notifyListeners();
   }
-
 
   augmentSolutions(
     SudokuDetector sudokuDetector,
@@ -59,7 +60,8 @@ class CameraProvider with ChangeNotifier {
     Directory? tempDir = await getExternalStorageDirectory();
     String path = tempDir!.path;
     List<int> boxDigits = await sudokuDetector.getBoxes(path, progressIndicatorProvider);
-    print(boxDigits);
+    List<int> unvalidPlaces = checkUnvalidPlaces(boxDigits);
+    sudokuDetector.augmentResults(boxDigits, unvalidPlaces, path);
 
     //* PLAN
     /// check for each cell to know if it is valid or not using cpp script

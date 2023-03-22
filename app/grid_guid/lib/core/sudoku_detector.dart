@@ -1,5 +1,5 @@
 import 'dart:developer' show log;
-import 'dart:typed_data' show Uint8List, Float32List;
+import 'dart:typed_data' show Uint8List, Float32List, Int32List;
 
 import 'package:camera/camera.dart' show CameraImage;
 import 'package:native_opencv/native_opencv.dart';
@@ -85,15 +85,17 @@ class SudokuDetector {
     String outputPath,
     ProgressIndicatorProvider progressIndicatorProvider,
   ) async {
+    log('getBoxes called');
     List<int> predictions = [];
     _interpreter = await Interpreter.fromAsset(
       'model/model_v2.tflite',
       options: _interpreterOptions,
     );
+    log('loaded interpreter');
 
     _nativeOpenCV.extractBoxes(outputPath);
 
-    // TODO: warn if the images doesn't exist(happens when user deletes it)
+    // TODO: warn if the images doesn't exist(happens when user deletes it) [don't have enough space or data deteted]
     for (int i = 0; i < 81; i++) {
       Uint8List? imgAsList = await _preprocess("$outputPath/$i.jpg");
       if (imgAsList == null) {
@@ -106,7 +108,16 @@ class SudokuDetector {
     }
 
     _interpreter.close();
+    log('closed interpreter');
 
     return predictions;
+  }
+
+  void augmentResults(
+    List<int> solvedNumbers,
+    List<int> unvalidFlag,
+    String outputPath,
+  ) {
+    _nativeOpenCV.augmentResults(solvedNumbers, unvalidFlag, outputPath);
   }
 }

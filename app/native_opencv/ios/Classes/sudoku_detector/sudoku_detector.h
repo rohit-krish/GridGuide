@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <opencv2/opencv.hpp>
+#include <string>
 
 using namespace std;
 using namespace cv;
@@ -61,17 +62,15 @@ void find_biggest_contour(const Mat src_img, float &max_area, vector<Point> &big
     }
 }
 
-
 void warp_perspective(vector<Point> contour, Mat img, Mat &img_res)
 {
     Mat matrix;
-    Point2f* src = new Point2f[4];
+    Point2f *src = new Point2f[4];
     // Point2f src[4];
     float width = 810.0, height = 810.0;
 
     for (int i = 0; i < 4; i++)
         src[i] = {(float)contour[i].x, (float)contour[i].y};
-    
 
     Point2f dst[4] = {{0.0, 0.0}, {width, 0.0}, {0.0, height}, {width, height}};
 
@@ -123,8 +122,8 @@ void reorder_contour(vector<Point> &contour)
 
     vector<Point> contour_tmp = contour;
 
-    float* sum_points = new float[4];
-    float* diff_points = new float[4];
+    float *sum_points = new float[4];
+    float *diff_points = new float[4];
 
     for (int i = 0; i < 4; i++)
     {
@@ -141,7 +140,6 @@ void reorder_contour(vector<Point> &contour)
     delete[] diff_points;
 }
 
-
 void split_boxes(Mat img, Mat boxes[81])
 {
     resize(img, img, Size(810, 810));
@@ -156,4 +154,30 @@ void split_boxes(Mat img, Mat boxes[81])
             count++;
         }
     }
+}
+
+Mat display_numbers(int *numbers, int *unvalid_flag, int width, int height)
+{
+    Mat img(height, width, CV_8UC3, Scalar(0, 0, 0));
+    int h = height / 9;
+    int w = width / 9;
+
+    for (int x = 0; x < 9; x++)
+    {
+        for (int y = 0; y < 9; y++)
+        {
+            if (numbers[(y * 9) + x] != 0)
+            {
+                Scalar color(0, 255, 0);
+
+                if (unvalid_flag[(y * 9) + x] == 1)
+                    color = Scalar(0, 0, 255);
+
+                int point_x = (x * w) + (int)((w / 2) * .8);
+                int point_y = (y * h) + (int)((h / 2) * 1.2);
+                putText(img, to_string(numbers[(y * 9) + x]), Point(point_x, point_y), FONT_HERSHEY_SIMPLEX, 2, color, 2);
+            }
+        }
+    }
+    return img;
 }

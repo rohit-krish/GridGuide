@@ -122,6 +122,18 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
+  bool checkIfACurrentProcessIsGoingOn(CameraProvider cameraProvider) {
+    if (!cameraProvider.isDoneProcessing &&
+        cameraProvider.isSolutionButtonClicked) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Let the current process complete...'),
+        duration: Duration(seconds: 5),
+      ));
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -160,8 +172,7 @@ class _CameraPageState extends State<CameraPage> {
         ),
         Consumer<CameraProvider>(
           builder: (ctx, cameraProvider, child) {
-            if (cameraProvider.isDoneProcessing == false &&
-                cameraProvider.isSolutionButtonClicked == true) {
+            if (cameraProvider.isDoneProcessing == false && cameraProvider.isSolutionButtonClicked == true) {
               return Center(child: ProgressIndicatorWidget(width));
             } else {
               return const SizedBox.shrink();
@@ -218,6 +229,10 @@ class _CameraPageState extends State<CameraPage> {
                       Icons.lightbulb_outline_sharp,
                       width,
                       () {
+                        if (checkIfACurrentProcessIsGoingOn(cameraProvider)) {
+                          return;
+                        }
+
                         if (_cameraProvider!.isSolutionButtonClicked == false) {
                           _cameraProvider!.solutionButtonClicked();
                           _cameraProvider!.augmentSolutions(
@@ -239,6 +254,10 @@ class _CameraPageState extends State<CameraPage> {
                       Icons.autorenew,
                       width,
                       () {
+                        if (checkIfACurrentProcessIsGoingOn(cameraProvider)) {
+                          return;
+                        }
+
                         _camController!.resumePreview();
                         cameraProvider.discardCurrentClickedImage();
                       },

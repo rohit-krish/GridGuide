@@ -6,7 +6,7 @@ using namespace std;
 namespace solver
 {
     // check if a num is valid in (row, col) of the grid
-    bool isValid(int row, int col, int num, int grid[N][N])
+    bool isValid(int row, int col, int num, int **grid)
     {
         for (int row = 0; row < N; row++)
             if (grid[row][col] == num)
@@ -28,7 +28,7 @@ namespace solver
     }
 
     // get empty location and update row and column
-    bool findEmptyPlace(int &row, int &col, int grid[N][N])
+    bool findEmptyPlace(int &row, int &col, int **grid)
     {
         for (row = 0; row < N; row++)
             for (col = 0; col < N; col++)
@@ -37,7 +37,7 @@ namespace solver
         return false;
     }
 
-    bool solveSudoku(int grid[N][N])
+    bool solveSudoku(int **grid)
     {
         int row, col;
         if (!findEmptyPlace(row, col, grid))
@@ -59,7 +59,7 @@ namespace solver
     }
 
     // print the sudoku grid after solve
-    void printGrid(int grid[N][N])
+    void printGrid(int **grid)
     {
         for (int row = 0; row < N; row++)
         {
@@ -83,7 +83,7 @@ namespace solver
 
 int test()
 {
-    int grid[9][9] = {
+    int grid2d[9][9] = {
         {3, 0, 6, 5, 0, 8, 4, 0, 0},
         {5, 2, 0, 0, 0, 0, 0, 0, 0},
         {0, 8, 7, 0, 0, 0, 0, 3, 1},
@@ -94,9 +94,39 @@ int test()
         {0, 0, 0, 0, 0, 0, 0, 7, 4},
         {0, 0, 5, 2, 0, 6, 3, 0, 0}};
 
+    int **grid = new int *[9];
+    for (int i = 0; i < 9; i++)
+    {
+        grid[i] = new int[9];
+        for (int j = 0; j < 9; j++)
+        {
+            grid[i][j] = grid2d[i][j];
+        }
+    }
+
     if (solver::solveSudoku(grid) == true)
-        solver::printGrid(grid);
+    {
+        // solver::printGrid(grid);
+        for (int i = 0; i < 9; i++)
+        {
+            for (int j = 0; j < 9; j++)
+            {
+                cout << grid[i][j] << ' ';
+            }
+            cout << '\n';
+        }
+    }
     else
         cout << "No solution exists";
+
+    for (int i = 0; i < 9; i++)
+        delete[] grid[i];
+
+    delete[] grid;
     return 0;
+}
+
+int main()
+{
+    test();
 }
