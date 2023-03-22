@@ -7,6 +7,7 @@ import './providers/board_provider.dart';
 import './providers/camera_provider.dart';
 import './theme/theme.dart';
 import './pages/home_page.dart';
+import './providers/progress_indicator_provider.dart';
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,10 +33,17 @@ class App extends StatelessWidget {
         create: (_) => BoardProvider(),
       ),
       routes: {
-        CameraPage.routeName: (_) => ChangeNotifierProvider<CameraProvider>(
-              create: (_) => CameraProvider(),
+        CameraPage.routeName: (_) => MultiProvider(
+              providers: [
+                ChangeNotifierProvider<CameraProvider>(
+                  create: (_) => CameraProvider(),
+                ),
+                ChangeNotifierProvider<ProgressIndicatorProvider>(
+                  create: (_) => ProgressIndicatorProvider(),
+                )
+              ],
               child: const CameraPage(),
-            ),
+            )
       },
     );
   }

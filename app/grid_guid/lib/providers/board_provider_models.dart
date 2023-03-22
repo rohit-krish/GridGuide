@@ -22,6 +22,7 @@ class Board {
     board = SudokuUtilities.to1D(generator.newSudoku)
         .map((digit) => BoardCell(digit))
         .toList();
+    
   }
 
   void resetIsDigitVal() {

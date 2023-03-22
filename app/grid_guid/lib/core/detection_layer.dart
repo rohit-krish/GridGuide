@@ -19,7 +19,7 @@ class BoundingBoxPainter extends CustomPainter {
 
   final _paint = Paint()
     ..strokeWidth = 3.0
-    ..color = Colors.indigo
+    ..color = Colors.green
     ..style = PaintingStyle.stroke;
 
   bool didPaint = false;

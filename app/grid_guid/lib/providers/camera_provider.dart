@@ -1,15 +1,20 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:grid_guid/core/sudoku_detector.dart';
+import 'package:grid_guid/providers/progress_indicator_provider.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CameraProvider with ChangeNotifier {
   void imageCaptureButtonClicked() {
     isImageCaptureButttonClicked = true;
 
+    notifyListeners();
+  }
+
+  void solutionButtonClicked() {
+    isSolutionButtonClicked = true;
     notifyListeners();
   }
 
@@ -37,35 +42,55 @@ class CameraProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  getSolution(SudokuDetector sudokuDetector) async{
+
+  augmentSolutions(
+    SudokuDetector sudokuDetector,
+    BuildContext context,
+    ProgressIndicatorProvider progressIndicatorProvider,
+  ) async {
     if (bbox.isEmpty) {
-      // TODO: show a snackbar which says didn't detect the board
+      ScaffoldMessenger.of(context).showSnackBar(
+        getSnackBar("Couldn't detect, Take new picture!!"),
+      );
       return;
     }
 
-    isSolutionButtonClicked = true;
-
-    Directory? tempDir  = await getExternalStorageDirectory();
+    // get boxes
+    Directory? tempDir = await getExternalStorageDirectory();
     String path = tempDir!.path;
-    log(path.toString());
-    sudokuDetector.getBoxes(path);
+    List<int> boxDigits = await sudokuDetector.getBoxes(path, progressIndicatorProvider);
+    print(boxDigits);
 
+    //* PLAN
+    /// check for each cell to know if it is valid or not using cpp script
+    /// if all valid show the detection and solution
+    /// if unvalid exist point out the unvalid and don't show the solution
+
+    // find solution
+
+    // augment
+
+    isDoneProcessing = true;
+    notifyListeners();
   }
 
   List<double> bbox = List.empty();
   bool isImageCaptureButttonClicked = false;
   bool isSnackBarShown = false;
   bool isSolutionButtonClicked = false;
+  bool isDoneProcessing = false;
 
   late CameraImage _image;
 
-  final _snackBar = const SnackBar(
-    content: Text('Take new picture if detection is not correct'),
-    duration: Duration(seconds: 5),
-  );
-
-  void showSnackBar(BuildContext context) {
+  void showSnackBarAfterDetection(BuildContext context) {
     isSnackBarShown = true;
-    ScaffoldMessenger.of(context).showSnackBar(_snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(
+      getSnackBar('Take new picture if detection is not correct'),
+    );
   }
 }
+
+SnackBar getSnackBar(String title) => SnackBar(
+      content: Text(title),
+      duration: const Duration(seconds: 5),
+    );

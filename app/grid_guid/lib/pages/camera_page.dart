@@ -6,8 +6,10 @@ import 'package:provider/provider.dart';
 
 import '../core/sudoku_detector.dart';
 import '../core/detection_layer.dart';
+import '../providers/progress_indicator_provider.dart';
 import '../widgets/camera_page/click_button.dart';
 import '../widgets/camera_page/when_dont_have_access_widget.dart';
+import '../widgets/camera_page/progress_indicator_widget.dart';
 import '../providers/camera_provider.dart';
 
 class CameraPage extends StatefulWidget {
@@ -60,7 +62,8 @@ class _CameraPageState extends State<CameraPage> {
 
   Future<void> initCamera() async {
     final cameras = await availableCameras();
-    var idx = cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
+    var idx =
+        cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
 
     if (idx < 0) {
       log("back camera not found :( weird");
@@ -94,7 +97,8 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   void _processCameraImage(CameraImage image) async {
-    if ((_cameraProvider != null) && (_cameraProvider!.isImageCaptureButttonClicked)) {
+    if ((_cameraProvider != null) &&
+        (_cameraProvider!.isImageCaptureButttonClicked)) {
       _camController!.pausePreview();
 
       if (_camFrameToScreenScale == 0) {
@@ -113,7 +117,7 @@ class _CameraPageState extends State<CameraPage> {
       );
 
       if (_cameraProvider!.isSnackBarShown == false) {
-        _cameraProvider!.showSnackBar(context);
+        _cameraProvider!.showSnackBarAfterDetection(context);
       }
     }
   }
@@ -122,6 +126,8 @@ class _CameraPageState extends State<CameraPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
+    final progressIndicatorProvider =
+        Provider.of<ProgressIndicatorProvider>(context, listen: false);
 
     // if don't have access to camera
     if (!doHaveAccessToCamera) return WhenDontHaveAccessToCamera(width);
@@ -151,6 +157,16 @@ class _CameraPageState extends State<CameraPage> {
               ),
             ],
           ),
+        ),
+        Consumer<CameraProvider>(
+          builder: (ctx, cameraProvider, child) {
+            if (cameraProvider.isDoneProcessing == false &&
+                cameraProvider.isSolutionButtonClicked == true) {
+              return Center(child: ProgressIndicatorWidget(width));
+            } else {
+              return const SizedBox.shrink();
+            }
+          },
         ),
         Padding(
           padding: EdgeInsets.only(
@@ -202,10 +218,14 @@ class _CameraPageState extends State<CameraPage> {
                       Icons.lightbulb_outline_sharp,
                       width,
                       () {
-                          _cameraProvider!.getSolution(_sudokuDetector);
-                        // if (_cameraProvider!.isSolutionButtonClicked == false) {
-                        //   _cameraProvider!.getSolution(_sudokuDetector);
-                        // }
+                        if (_cameraProvider!.isSolutionButtonClicked == false) {
+                          _cameraProvider!.solutionButtonClicked();
+                          _cameraProvider!.augmentSolutions(
+                            _sudokuDetector,
+                            context,
+                            progressIndicatorProvider,
+                          );
+                        }
                       },
                     ),
                     if (!cameraProvider.isImageCaptureButttonClicked)

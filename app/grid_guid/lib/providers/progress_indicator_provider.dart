@@ -1,0 +1,14 @@
+import 'package:flutter/material.dart';
+
+class ProgressIndicatorProvider with ChangeNotifier {
+  int _currentPredictedBox = 0;
+  double currentPercent = 0.0;
+  void predictedNewBox() {
+    _currentPredictedBox = ++_currentPredictedBox;
+    // if (_currentPredictedBox > 81) {
+    //   _currentPredictedBox = 0;
+    // }
+    currentPercent = (_currentPredictedBox * 100) / 81;
+    notifyListeners();
+  }
+}

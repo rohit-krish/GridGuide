@@ -3,9 +3,10 @@ import 'dart:typed_data' show Uint8List, Float32List;
 
 import 'package:camera/camera.dart' show CameraImage;
 import 'package:native_opencv/native_opencv.dart';
-import 'package:tflite_flutter/tflite_flutter.dart'
-    show ListShape, Interpreter, InterpreterOptions;
+import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' show Image, decodeJpgFile;
+
+import '../providers/progress_indicator_provider.dart';
 
 class SudokuDetector {
   late NativeOpenCV _nativeOpenCV;
@@ -80,14 +81,19 @@ class SudokuDetector {
     return digitPred;
   }
 
-  void getBoxes(String outputPath) async {
+  Future<List<int>> getBoxes(
+    String outputPath,
+    ProgressIndicatorProvider progressIndicatorProvider,
+  ) async {
+    List<int> predictions = [];
     _interpreter = await Interpreter.fromAsset(
-      'model/model.tflite',
+      'model/model_v2.tflite',
       options: _interpreterOptions,
     );
 
     _nativeOpenCV.extractBoxes(outputPath);
 
+    // TODO: warn if the images doesn't exist(happens when user deletes it)
     for (int i = 0; i < 81; i++) {
       Uint8List? imgAsList = await _preprocess("$outputPath/$i.jpg");
       if (imgAsList == null) {
@@ -95,10 +101,12 @@ class SudokuDetector {
         continue;
       }
 
-      int pred = await _getPredictions(imgAsList);
-      log(pred.toString());
+      predictions.add(await _getPredictions(imgAsList));
+      progressIndicatorProvider.predictedNewBox();
     }
 
     _interpreter.close();
+
+    return predictions;
   }
 }
