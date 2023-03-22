@@ -46,15 +46,6 @@ Plan
 - ads
 
 
-
-### Data
-* https://github.com/wichtounet/sudoku_dataset
-* https://github.com/akhilennu/sudoku_dataset
-* https://github.com/prathamnishad/Sudoku-Dataset
-* https://github.com/jeffreywolberg/sudoku_dataset
-* https://github.com/jingyibo123/sudoku_dataset
-
-
 ### Game generator
 * https://github.com/kairess/mnist_sudoku_generator
 
