@@ -18,6 +18,9 @@ Names
 * NumberMaze
 * cellMaster
 
+#### Limitations
+1. No Flash Light
+2. Can't recognize 0(which actually is not a problem)
 
 <img src="./data_distribution.png" alt="data distribution chart">
 
