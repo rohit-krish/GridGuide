@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:grid_guid/pages/sudoku_play_page.dart';
 import 'package:grid_guid/providers/board_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -13,6 +12,8 @@ import '../widgets/camera_page/click_button.dart';
 import '../widgets/camera_page/when_dont_have_access_widget.dart';
 import '../widgets/camera_page/progress_indicator_widget.dart';
 import '../providers/camera_provider.dart';
+
+import './sudoku_play_page.dart' show BOARD_PROVIDER;
 
 class CameraPage extends StatefulWidget {
   static const routeName = '/camera-page';
@@ -233,8 +234,8 @@ class _CameraPageState extends State<CameraPage> {
                             context,
                             progressIndicatorProvider,
                           );
-                          print(sudokuBoard?.map((e) => e.digit).toList());
-
+                          BOARD_PROVIDER.updateDetectedBoard(sudokuBoard);
+                          Navigator.of(context).pop();
                         }
                       },
                     ),

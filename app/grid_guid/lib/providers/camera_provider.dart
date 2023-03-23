@@ -80,7 +80,7 @@ class CameraProvider with ChangeNotifier {
       isSolution = false;
       isDigitValid = true;
 
-      if (board[i] == digits[i]) {
+      if ((board[i] == digits[i]) && isValidConfiguration) {
         isSolution = true;
       }
 

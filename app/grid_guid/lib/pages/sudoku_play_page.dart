@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:grid_guid/providers/board_provider_models.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/get_corresponding_index_func.dart';
@@ -8,6 +7,8 @@ import '../utils/sudoku_play_page/alert_dialog_sudoku_reload_button.dart';
 import '../widgets/sudoku_play_page/digit_input_button.dart';
 import '../widgets/sudoku_play_page/sudoku_board_widget.dart';
 import '../providers/board_provider.dart';
+
+late BoardProvider BOARD_PROVIDER;
 
 class SudokuPlay extends StatefulWidget {
   const SudokuPlay({super.key});
@@ -22,16 +23,20 @@ class _SudokuPlayState extends State<SudokuPlay> {
   double? width;
   double? height;
 
+  BoardProvider? getTheBoardProvider() {
+    return boardProvider;
+  }
+
 
   int getCurrentPressedCount() {
     return currentPressedCount;
   }
 
-  updateCurrentPressedCount(int newVal) {
+  void updateCurrentPressedCount(int newVal) {
     currentPressedCount = newVal;
   }
 
-  updateBoard(String value) {
+  void updateBoard(String value) {
     if (boardProvider!.isBoardCompletelySolvedbyUser) {
       boardProvider!.showSnackBar(context);
     } else {
@@ -49,6 +54,7 @@ class _SudokuPlayState extends State<SudokuPlay> {
   @override
   Widget build(BuildContext context) {
     boardProvider = Provider.of<BoardProvider>(context, listen: false);
+    BOARD_PROVIDER = boardProvider!;
 
 
     width = MediaQuery.of(context).size.width;
