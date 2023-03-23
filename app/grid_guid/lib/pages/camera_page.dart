@@ -6,7 +6,7 @@ import 'package:camera/camera.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
-import '../core/sudoku_detector.dart';
+import '../core/sudoku_detector_async.dart';
 import '../core/detection_layer.dart';
 import '../providers/progress_indicator_provider.dart';
 import '../widgets/camera_page/click_button.dart';
@@ -24,7 +24,7 @@ class CameraPage extends StatefulWidget {
 
 class _CameraPageState extends State<CameraPage> {
   CameraController? _camController;
-  late SudokuDetector _sudokuDetector;
+  late SudokuDetectorAsync _sudokuDetector;
   CameraProvider? _cameraProvider;
 
   double _camFrameToScreenScale = 0;
@@ -36,7 +36,7 @@ class _CameraPageState extends State<CameraPage> {
   void initState() {
     super.initState();
 
-    _sudokuDetector = SudokuDetector();
+    _sudokuDetector = SudokuDetectorAsync();
     initCamera();
   }
 
@@ -169,15 +169,20 @@ class _CameraPageState extends State<CameraPage> {
                   return DetectionLayer(bbox: cameraProvider.bbox);
                 },
               ),
-              Consumer<CameraProvider>(
-                builder: (ctx, cameraProvider, child) {
-                  if (cameraProvider.isDoneProcessing) {
-                    return Image.file(cameraProvider.file);
-                  } else {
-                    return const SizedBox.shrink();
-                  }
-                },
-              ),
+              // Consumer<CameraProvider>(
+              //   builder: (ctx, cameraProvider, child) {
+              //     if (cameraProvider.isDoneProcessing) {
+              //       return Image.file(
+              //         File(
+              //           "${cameraProvider.externalStorageDirectory}/inv_perspective.jpg",
+              //         ),
+              //         key: UniqueKey(),
+              //       );
+              //     } else {
+              //       return const SizedBox.shrink();
+              //     }
+              //   },
+              // ),
             ],
           ),
         ),
