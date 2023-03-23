@@ -52,12 +52,6 @@ void _handleMessage(data) {
         var outputPath = data.params['outputPath'] as String;
         _detector.extractBoxes(outputPath);
         break;
-      case 'augmentResults':
-        var solvedNumbers = data.params['solvedNumbers'] as List<int>;
-        var unvalidFlag = data.params['unvalidFlag'] as List<int>;
-        var outputPath = data.params['outputPath'] as String;
-        _detector.augmentResults(solvedNumbers, unvalidFlag, outputPath);
-        break;
       default:
         log('Unknown method: ${data.method}');
     }
@@ -96,13 +90,5 @@ class _SudokuDetector {
 
   void extractBoxes(String outputPath) {
     _nativeOpenCV.extractBoxes(outputPath);
-  }
-
-  void augmentResults(
-    List<int> solvedNumbers,
-    List<int> unvalidFlag,
-    String outputPath,
-  ) {
-    _nativeOpenCV.augmentResults(solvedNumbers, unvalidFlag, outputPath);
   }
 }

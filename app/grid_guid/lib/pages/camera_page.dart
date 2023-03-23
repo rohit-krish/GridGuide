@@ -1,9 +1,9 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:grid_guid/pages/sudoku_play_page.dart';
+import 'package:grid_guid/providers/board_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../core/sudoku_detector_async.dart';
@@ -142,6 +142,7 @@ class _CameraPageState extends State<CameraPage> {
     final width = MediaQuery.of(context).size.width;
     final progressIndicatorProvider =
         Provider.of<ProgressIndicatorProvider>(context, listen: false);
+    final boardProvider = Provider.of<BoardProvider>(context, listen: false);
 
     // if don't have access to camera
     if (!doHaveAccessToCamera) return WhenDontHaveAccessToCamera(width);
@@ -169,20 +170,6 @@ class _CameraPageState extends State<CameraPage> {
                   return DetectionLayer(bbox: cameraProvider.bbox);
                 },
               ),
-              // Consumer<CameraProvider>(
-              //   builder: (ctx, cameraProvider, child) {
-              //     if (cameraProvider.isDoneProcessing) {
-              //       return Image.file(
-              //         File(
-              //           "${cameraProvider.externalStorageDirectory}/inv_perspective.jpg",
-              //         ),
-              //         key: UniqueKey(),
-              //       );
-              //     } else {
-              //       return const SizedBox.shrink();
-              //     }
-              //   },
-              // ),
             ],
           ),
         ),
@@ -214,18 +201,7 @@ class _CameraPageState extends State<CameraPage> {
                 'Camera Mode',
                 style: TextStyle(color: Colors.black, fontSize: width * .06),
               ),
-              Consumer<CameraProvider>(
-                  builder: (context, cameraProvider, child) {
-                return IconButton(
-                  onPressed: cameraProvider.isImageCaptureButttonClicked
-                      ? () {}
-                      : () {},
-                  icon: const Icon(Icons.check_outlined),
-                  color: cameraProvider.isImageCaptureButttonClicked
-                      ? Colors.black
-                      : Colors.transparent,
-                );
-              })
+              SizedBox(width: width * .15)
             ],
           ),
         ),
@@ -245,18 +221,20 @@ class _CameraPageState extends State<CameraPage> {
                       show: cameraProvider.isImageCaptureButttonClicked,
                       Icons.lightbulb_outline_sharp,
                       width,
-                      () {
+                      () async {
                         if (checkIfACurrentProcessIsGoingOn(cameraProvider)) {
                           return;
                         }
 
                         if (_cameraProvider!.isSolutionButtonClicked == false) {
                           _cameraProvider!.solutionButtonClicked();
-                          _cameraProvider!.augmentSolutions(
+                          var sudokuBoard = await _cameraProvider!.captureBoard(
                             _sudokuDetector,
                             context,
                             progressIndicatorProvider,
                           );
+                          print(sudokuBoard?.map((e) => e.digit).toList());
+
                         }
                       },
                     ),

@@ -155,29 +155,3 @@ void split_boxes(Mat img, Mat boxes[81])
         }
     }
 }
-
-Mat display_numbers(int *numbers, int *unvalid_flag, int width, int height)
-{
-    Mat img(height, width, CV_8UC3, Scalar(0, 0, 0));
-    int h = height / 9;
-    int w = width / 9;
-
-    for (int x = 0; x < 9; x++)
-    {
-        for (int y = 0; y < 9; y++)
-        {
-            if (numbers[(y * 9) + x] != 0)
-            {
-                Scalar color(0, 255, 0);
-
-                if (unvalid_flag[(y * 9) + x] == 1)
-                    color = Scalar(0, 0, 255);
-
-                int point_x = (x * w) + (int)((w / 2) * .8);
-                int point_y = (y * h) + (int)((h / 2) * 1.2);
-                putText(img, to_string(numbers[(y * 9) + x]), Point(point_x, point_y), FONT_HERSHEY_SIMPLEX, 2, color, 2);
-            }
-        }
-    }
-    return img;
-}

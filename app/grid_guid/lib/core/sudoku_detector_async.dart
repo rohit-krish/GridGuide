@@ -83,28 +83,6 @@ class SudokuDetectorAsync {
     await res.future;
   }
 
-  void augmentResults(
-    List<int> solvedNumbers,
-    List<int> unvalidFlag,
-    String outputPath,
-  ) async {
-    if (!isSdThreadReady) {
-      return;
-    }
-
-    var reqId = ++_reqId;
-    var res = Completer();
-    _cbs[reqId] = res;
-    var msg = sd.Request(reqId: reqId, method: 'augmentResults', params: {
-      'solvedNumbers': solvedNumbers,
-      'unvalidFlag': unvalidFlag,
-      'outputPath': outputPath,
-    });
-    _toDetectorThread.send(msg);
-
-    await res.future;
-  }
-
   void _handleMessage(data) {
     // the detector thread send us it's SendPort on init, if we got it then the detector is ready
     if (data is SendPort) {

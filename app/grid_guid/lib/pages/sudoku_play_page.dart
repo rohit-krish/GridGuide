@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grid_guid/providers/board_provider_models.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/get_corresponding_index_func.dart';
@@ -48,6 +49,7 @@ class _SudokuPlayState extends State<SudokuPlay> {
   @override
   Widget build(BuildContext context) {
     boardProvider = Provider.of<BoardProvider>(context, listen: false);
+
 
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;

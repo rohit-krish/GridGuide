@@ -3,9 +3,11 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:grid_guid/core/sudoku_detector_async.dart';
+import 'package:grid_guid/providers/board_provider_models.dart';
 import 'package:grid_guid/providers/progress_indicator_provider.dart';
 import 'package:grid_guid/utils/camera_page/check_unvalid_places.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 
 import '../core/get_boxes.dart';
 
@@ -46,7 +48,58 @@ class CameraProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void augmentSolutions(
+  List<BoardCell> _makeBoard(List<int> digits, List<int> unvalidPlaces) {
+    // check if there are any unvalid digits if so don't show any answers
+    bool isValidConfiguration = true;
+    print(unvalidPlaces);
+
+    for (int loc in unvalidPlaces) {
+      if (loc == 1) {
+        isValidConfiguration = false;
+        break;
+      }
+    }
+
+    List<int> board;
+
+    if (isValidConfiguration) {
+      board = SudokuUtilities.to1D(
+        SudokuSolver.solve(SudokuUtilities.to2D(digits)),
+      );
+    } else {
+      board = digits;
+    }
+
+    // now create the sudoku board
+    var sudokuBoard = List.filled(81, BoardCell(0));
+
+    late bool isSolution;
+    late bool isDigitValid;
+
+    for (int i = 0; i < 81; i++) {
+      isSolution = false;
+      isDigitValid = true;
+
+      if (board[i] == digits[i]) {
+        isSolution = true;
+      }
+
+      if (unvalidPlaces[i] == 1) {
+        isDigitValid = false;
+      }
+
+      sudokuBoard[i] = BoardCell(
+        board[i],
+        isSolution: isSolution,
+        isDigitValid: isDigitValid,
+        isMarked: false,
+      );
+    }
+
+    return sudokuBoard;
+  }
+
+  Future<List<BoardCell>?> captureBoard(
     SudokuDetectorAsync sudokuDetector,
     BuildContext context,
     ProgressIndicatorProvider progressIndicatorProvider,
@@ -55,7 +108,7 @@ class CameraProvider with ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
         getSnackBar("Couldn't detect, Take new picture!!"),
       );
-      return;
+      return null;
     }
 
     // get boxes
@@ -69,22 +122,14 @@ class CameraProvider with ChangeNotifier {
 
     List<int> unvalidPlaces = checkUnvalidPlaces(boxDigits);
 
-    // sudokuDetector.augmentResults(
-    //     boxDigits, unvalidPlaces, externalStorageDirectory);
-
-    //* PLAN
-    /// check for each cell to know if it is valid or not using cpp script
-    /// if all valid show the detection and solution
-    /// if unvalid exist point out the unvalid and don't show the solution
-
-    // find solution
-
-    // augment
+    var sudokuBoard = _makeBoard(boxDigits, unvalidPlaces);
 
     progressIndicatorProvider.doneCurrentPrediction();
     isDoneProcessing = true;
 
     notifyListeners();
+
+    return sudokuBoard;
   }
 
   List<double> bbox = List.empty();

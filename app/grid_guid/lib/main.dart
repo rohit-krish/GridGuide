@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:grid_guid/pages/sudoku_play_page.dart';
 import 'package:provider/provider.dart';
 
 import './pages/camera_page.dart';
@@ -40,10 +41,13 @@ class App extends StatelessWidget {
                 ),
                 ChangeNotifierProvider<ProgressIndicatorProvider>(
                   create: (_) => ProgressIndicatorProvider(),
+                ),
+                ChangeNotifierProvider<BoardProvider>(
+                  create: (_) => BoardProvider(),
                 )
               ],
-              child: const CameraPage(),
-            )
+              child: CameraPage(),
+            ),
       },
     );
   }

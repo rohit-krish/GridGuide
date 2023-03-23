@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 import 'dart:math';
+import 'dart:developer' as dev;
 
 import './board_provider_models.dart';
 
@@ -10,6 +11,7 @@ class BoardProvider with ChangeNotifier {
       SudokuGenerator(emptySquares: 27 + Random().nextInt(54 - 27)),
     );
     _getSolution = false;
+    _showDetectedBoard = false;
     notifyListeners();
   }
 
@@ -42,6 +44,15 @@ class BoardProvider with ChangeNotifier {
 
     notifyListeners();
   }
+  void updateDetectedBoard(List<BoardCell>? board) {
+    if (board != null) {
+      dev.log('updateDetectedBoard called');
+      _detectedBoard = board;
+      _showDetectedBoard = true;
+      notifyListeners();
+    }
+  }
+
 
   Board _boardData = Board(
     SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)),
@@ -49,10 +60,15 @@ class BoardProvider with ChangeNotifier {
   bool _getSolution = false;
   bool isBoardCompletelySolvedbyUser = false;
 
+  bool _showDetectedBoard = false;
+  List<BoardCell>? _detectedBoard;
+
   void get generateNewBoard => _generateNewBoard();
   void get getSolutions => _getSolutions();
   bool get isNowShowingSolutions => _getSolution;
-  List<BoardCell> get getBoard => _boardData.getBoard(_getSolution);
+
+  List<BoardCell> get getBoard =>
+      _showDetectedBoard ? _detectedBoard! : _boardData.getBoard(_getSolution);
 
   final _snackBar = const SnackBar(
     content: Text('Puzzle is already solved!'),
