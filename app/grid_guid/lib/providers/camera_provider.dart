@@ -7,6 +7,8 @@ import 'package:grid_guid/providers/progress_indicator_provider.dart';
 import 'package:grid_guid/utils/camera_page/check_unvalid_places.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../core/get_boxes.dart';
+
 class CameraProvider with ChangeNotifier {
   void imageCaptureButtonClicked() {
     isImageCaptureButttonClicked = true;
@@ -44,7 +46,7 @@ class CameraProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  augmentSolutions(
+  void augmentSolutions(
     SudokuDetector sudokuDetector,
     BuildContext context,
     ProgressIndicatorProvider progressIndicatorProvider,
@@ -59,9 +61,16 @@ class CameraProvider with ChangeNotifier {
     // get boxes
     Directory? tempDir = await getExternalStorageDirectory();
     externalStorageDirectory = tempDir!.path;
-    List<int> boxDigits = await sudokuDetector.getBoxes(externalStorageDirectory, progressIndicatorProvider);
+
+    sudokuDetector.extractBoxes(externalStorageDirectory);
+
+    List<int> boxDigits =
+        await getBoxes(externalStorageDirectory, progressIndicatorProvider);
+
     List<int> unvalidPlaces = checkUnvalidPlaces(boxDigits);
-    sudokuDetector.augmentResults(boxDigits, unvalidPlaces, externalStorageDirectory);
+
+    sudokuDetector.augmentResults(
+        boxDigits, unvalidPlaces, externalStorageDirectory);
 
     //* PLAN
     /// check for each cell to know if it is valid or not using cpp script
@@ -74,6 +83,8 @@ class CameraProvider with ChangeNotifier {
 
     progressIndicatorProvider.doneCurrentPrediction();
     isDoneProcessing = true;
+    file = File("$externalStorageDirectory/inv_perspective.jpg");
+
     notifyListeners();
   }
 
@@ -83,6 +94,7 @@ class CameraProvider with ChangeNotifier {
   bool isSolutionButtonClicked = false;
   bool isDoneProcessing = false;
   late String externalStorageDirectory;
+  late File file;
 
   late CameraImage _image;
 

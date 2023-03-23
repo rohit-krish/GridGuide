@@ -172,10 +172,7 @@ class _CameraPageState extends State<CameraPage> {
               Consumer<CameraProvider>(
                 builder: (ctx, cameraProvider, child) {
                   if (cameraProvider.isDoneProcessing) {
-                    File file = File(
-                      "${cameraProvider.externalStorageDirectory}/inv_perspective.jpg",
-                    );
-                    return Image.file(file);
+                    return Image.file(cameraProvider.file);
                   } else {
                     return const SizedBox.shrink();
                   }

@@ -24,15 +24,10 @@ final _augment_results = nativeLib.lookupFunction<_c_augment_results, _dart_augm
 
 class NativeOpenCV {
   Pointer<Uint8>? _imageBuffer;
-  Pointer<Float>? _contourBuffer;
 
   void dispose() {
     if (_imageBuffer != null) {
       malloc.free(_imageBuffer!);
-    }
-
-    if (_contourBuffer != null) {
-      malloc.free(_contourBuffer!);
     }
   }
 
