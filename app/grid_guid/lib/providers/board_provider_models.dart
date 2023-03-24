@@ -22,7 +22,6 @@ class Board {
     board = SudokuUtilities.to1D(generator.newSudoku)
         .map((digit) => BoardCell(digit))
         .toList();
-    
   }
 
   void resetIsDigitVal() {
@@ -85,7 +84,11 @@ class Board {
   }
 
   List<BoardCell> _getSolutionBoard() {
-    var solutions = SudokuUtilities.to1D(generator.newSudokuSolved);
+    var solutions = SudokuUtilities.to1D(
+      SudokuSolver.solve(
+        SudokuUtilities.to2D(board.map((item) => item.digit).toList()),
+      ),
+    );
 
     for (int i = 0; i < 81; i++) {
       if (board[i].digit != solutions[i]) {
@@ -97,7 +100,10 @@ class Board {
     return board;
   }
 
-  List<BoardCell> getBoard(bool getSolution) {
+  List<BoardCell> getBoard(bool getSolution, List<BoardCell>? detectedBoard) {
+    if (detectedBoard != null) {
+      board = detectedBoard;
+    }
     return getSolution ? _getSolutionBoard() : _getDefaultBoard();
   }
 }

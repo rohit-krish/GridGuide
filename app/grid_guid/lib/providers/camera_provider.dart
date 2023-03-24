@@ -49,50 +49,30 @@ class CameraProvider with ChangeNotifier {
   }
 
   List<BoardCell> _makeBoard(List<int> digits, List<int> unvalidPlaces) {
-    // check if there are any unvalid digits if so don't show any answers
-    bool isValidConfiguration = true;
     print(unvalidPlaces);
 
-    for (int loc in unvalidPlaces) {
-      if (loc == 1) {
-        isValidConfiguration = false;
-        break;
-      }
-    }
-
     List<int> board;
-
-    if (isValidConfiguration) {
-      board = SudokuUtilities.to1D(
-        SudokuSolver.solve(SudokuUtilities.to2D(digits)),
-      );
-    } else {
-      board = digits;
-    }
 
     // now create the sudoku board
     var sudokuBoard = List.filled(81, BoardCell(0));
 
-    late bool isSolution;
     late bool isDigitValid;
+    late bool isMarked;
 
     for (int i = 0; i < 81; i++) {
-      isSolution = false;
       isDigitValid = true;
-
-      if ((board[i] == digits[i]) && isValidConfiguration) {
-        isSolution = true;
-      }
+      isMarked = false;
 
       if (unvalidPlaces[i] == 1) {
         isDigitValid = false;
+        isMarked = true;
       }
 
       sudokuBoard[i] = BoardCell(
-        board[i],
-        isSolution: isSolution,
+        digits[i],
+        isSolution: false,
         isDigitValid: isDigitValid,
-        isMarked: false,
+        isMarked: isMarked,
       );
     }
 

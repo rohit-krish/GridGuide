@@ -45,7 +45,14 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: _widgetOptions[_selectedIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: [
+          const SizedBox.shrink(),
+          _widgetOptions[1],
+          _widgetOptions[2],
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(

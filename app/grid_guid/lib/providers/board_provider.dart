@@ -11,7 +11,7 @@ class BoardProvider with ChangeNotifier {
       SudokuGenerator(emptySquares: 27 + Random().nextInt(54 - 27)),
     );
     _getSolution = false;
-    _showDetectedBoard = false;
+    _detectedBoard = null;
     notifyListeners();
   }
 
@@ -30,7 +30,7 @@ class BoardProvider with ChangeNotifier {
     }
 
     //*: check if the board completly solved by the user
-    var board = _boardData.getBoard(_getSolution);
+    var board = _boardData.getBoard(_getSolution, _detectedBoard);
     isBoardCompletelySolvedbyUser = false;
 
     for (int i = 0; i < 81; i++) {
@@ -48,7 +48,6 @@ class BoardProvider with ChangeNotifier {
     if (board != null) {
       dev.log('updateDetectedBoard called');
       _detectedBoard = board;
-      _showDetectedBoard = true;
       notifyListeners();
     }
   }
@@ -60,15 +59,13 @@ class BoardProvider with ChangeNotifier {
   bool _getSolution = false;
   bool isBoardCompletelySolvedbyUser = false;
 
-  bool _showDetectedBoard = false;
   List<BoardCell>? _detectedBoard;
 
   void get generateNewBoard => _generateNewBoard();
   void get getSolutions => _getSolutions();
   bool get isNowShowingSolutions => _getSolution;
 
-  List<BoardCell> get getBoard =>
-      _showDetectedBoard ? _detectedBoard! : _boardData.getBoard(_getSolution);
+  List<BoardCell> get getBoard => _boardData.getBoard(_getSolution, _detectedBoard);
 
   final _snackBar = const SnackBar(
     content: Text('Puzzle is already solved!'),
