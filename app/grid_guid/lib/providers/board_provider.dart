@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grid_guid/utils/camera_page/check_unvalid_places.dart';
 import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 import 'dart:math';
-import 'dart:developer' as dev;
 
 import './board_provider_models.dart';
 
@@ -48,7 +46,6 @@ class BoardProvider with ChangeNotifier {
 
   void updateDetectedBoard(List<BoardCell>? board) {
     if (board != null) {
-      dev.log('updateDetectedBoard called');
       _detectedBoard = board;
       notifyListeners();
     }

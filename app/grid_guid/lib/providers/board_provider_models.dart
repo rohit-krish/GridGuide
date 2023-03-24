@@ -1,5 +1,4 @@
 import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
-import '../utils/camera_page/check_unvalid_places.dart';
 
 class BoardCell {
   int digit;

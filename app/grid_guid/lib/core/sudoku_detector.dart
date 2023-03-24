@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:isolate';
 import 'dart:typed_data' show Uint8List, Float32List;
 
@@ -52,8 +51,6 @@ void _handleMessage(data) {
         var outputPath = data.params['outputPath'] as String;
         _detector.extractBoxes(outputPath);
         break;
-      default:
-        log('Unknown method: ${data.method}');
     }
 
     _toMainThread.send(Response(reqId: data.reqId, data: res));

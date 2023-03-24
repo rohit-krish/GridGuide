@@ -1,4 +1,3 @@
-import 'dart:developer' show log;
 import 'dart:typed_data' show Uint8List;
 
 import 'package:image/image.dart' show Image, decodeJpgFile;
@@ -55,21 +54,15 @@ Future<List<int>> getBoxes(
   String outputPath,
   ProgressIndicatorProvider progressIndicatorProvider,
 ) async {
-  log('getBoxes called');
   List<int> predictions = [];
   _interpreter = await Interpreter.fromAsset(
     'model/model_v2.tflite',
     options: _interpreterOptions,
   );
-  log('loaded interpreter');
 
-  // _nativeOpenCV.extractBoxes(outputPath);
-
-  // TODO: warn if the images doesn't exist(happens when user deletes it) [don't have enough space or data deteted]
   for (int i = 0; i < 81; i++) {
     Uint8List? imgAsList = await _preprocess("$outputPath/$i.jpg");
     if (imgAsList == null) {
-      log('null $i');
       continue;
     }
 
@@ -79,7 +72,6 @@ Future<List<int>> getBoxes(
   }
 
   _interpreter.close();
-  log('closed interpreter');
 
   return predictions;
 }

@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:isolate';
 import 'dart:typed_data';
 import 'package:camera/camera.dart';
@@ -99,7 +98,5 @@ class SudokuDetectorAsync {
       _cbs.remove(reqId);
       return;
     }
-
-    log('Unknown message from SudokuDetector, got: $data');
   }
 }

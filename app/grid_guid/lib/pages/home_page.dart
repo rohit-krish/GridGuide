@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grid_guid/pages/info_page.dart';
 
 import '../pages/camera_page.dart';
 import '../pages/sudoku_play_page.dart';
@@ -17,7 +18,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _widgetOptions = <Widget>[
     const CameraPage(),
     const SudokuPlay(),
-    const Center(child: Text('Info'))
+    const InfoPage()
   ];
 
   void _onItemTapped(int index) {

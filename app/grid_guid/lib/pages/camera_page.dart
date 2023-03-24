@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:grid_guid/providers/board_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../core/sudoku_detector_async.dart';
@@ -69,7 +66,6 @@ class _CameraPageState extends State<CameraPage> {
         cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
 
     if (idx < 0) {
-      log("back camera not found :( weird");
       return;
     }
 
@@ -89,11 +85,8 @@ class _CameraPageState extends State<CameraPage> {
           .startImageStream((image) => _processCameraImage(image));
     } on CameraException {
       doHaveAccessToCamera = false;
-      log("don't have access to camera");
       setState(() {});
       return;
-    } catch (e) {
-      log('Error initializing camera, error: ${e.toString()}');
     }
 
     if (mounted) setState(() {});
@@ -190,20 +183,18 @@ class _CameraPageState extends State<CameraPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Consumer<CameraProvider>(
-                builder: (ctx, value, child) {
-                  return IconButton(
-                    icon: const Icon(Icons.arrow_back_sharp),
-                    onPressed: () {
-                      if (checkIfACurrentProcessIsGoingOn(value)) {
-                        return;
-                      }
-                      Navigator.of(context).pop();
-                    },
-                    color: Colors.black,
-                  );
-                }
-              ),
+              Consumer<CameraProvider>(builder: (ctx, value, child) {
+                return IconButton(
+                  icon: const Icon(Icons.arrow_back_sharp),
+                  onPressed: () {
+                    if (checkIfACurrentProcessIsGoingOn(value)) {
+                      return;
+                    }
+                    Navigator.of(context).pop();
+                  },
+                  color: Colors.black,
+                );
+              }),
               Text(
                 'Camera Mode',
                 style: TextStyle(color: Colors.black, fontSize: width * .06),

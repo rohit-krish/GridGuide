@@ -55,7 +55,6 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
             physics: const ScrollPhysics(),
             itemBuilder: (ctx_, cellIdx_) {
               int count = boardCellCount++;
-              // print('cell $count built');
 
               var boardProvider = Provider.of<BoardProvider>(context);
               var board = boardProvider.getBoard;

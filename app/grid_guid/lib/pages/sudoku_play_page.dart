@@ -8,6 +8,7 @@ import '../widgets/sudoku_play_page/digit_input_button.dart';
 import '../widgets/sudoku_play_page/sudoku_board_widget.dart';
 import '../providers/board_provider.dart';
 
+// ignore: non_constant_identifier_names
 late BoardProvider BOARD_PROVIDER;
 
 class SudokuPlay extends StatefulWidget {

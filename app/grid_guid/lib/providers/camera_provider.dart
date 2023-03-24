@@ -7,7 +7,6 @@ import 'package:grid_guid/providers/board_provider_models.dart';
 import 'package:grid_guid/providers/progress_indicator_provider.dart';
 import 'package:grid_guid/utils/camera_page/check_unvalid_places.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 
 import '../core/get_boxes.dart';
 
