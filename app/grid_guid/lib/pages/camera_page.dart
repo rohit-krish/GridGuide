@@ -143,7 +143,6 @@ class _CameraPageState extends State<CameraPage> {
     final width = MediaQuery.of(context).size.width;
     final progressIndicatorProvider =
         Provider.of<ProgressIndicatorProvider>(context, listen: false);
-    final boardProvider = Provider.of<BoardProvider>(context, listen: false);
 
     // if don't have access to camera
     if (!doHaveAccessToCamera) return WhenDontHaveAccessToCamera(width);
@@ -191,12 +190,19 @@ class _CameraPageState extends State<CameraPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              IconButton(
-                icon: const Icon(Icons.arrow_back_sharp),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                color: Colors.black,
+              Consumer<CameraProvider>(
+                builder: (ctx, value, child) {
+                  return IconButton(
+                    icon: const Icon(Icons.arrow_back_sharp),
+                    onPressed: () {
+                      if (checkIfACurrentProcessIsGoingOn(value)) {
+                        return;
+                      }
+                      Navigator.of(context).pop();
+                    },
+                    color: Colors.black,
+                  );
+                }
               ),
               Text(
                 'Camera Mode',
@@ -220,7 +226,7 @@ class _CameraPageState extends State<CameraPage> {
                   children: [
                     ClickButton(
                       show: cameraProvider.isImageCaptureButttonClicked,
-                      Icons.lightbulb_outline_sharp,
+                      Icons.done_outlined,
                       width,
                       () async {
                         if (checkIfACurrentProcessIsGoingOn(cameraProvider)) {

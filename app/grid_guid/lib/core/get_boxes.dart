@@ -74,6 +74,7 @@ Future<List<int>> getBoxes(
     }
 
     predictions.add(await _getPredictions(imgAsList));
+
     progressIndicatorProvider.predictedNewBox();
   }
 

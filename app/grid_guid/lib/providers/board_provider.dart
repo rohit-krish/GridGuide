@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:grid_guid/utils/camera_page/check_unvalid_places.dart';
 import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 import 'dart:math';
 import 'dart:developer' as dev;
 
-import '../utils/camera_page/check_unvalid_places.dart';
 import './board_provider_models.dart';
 
 class BoardProvider with ChangeNotifier {
@@ -40,22 +40,6 @@ class BoardProvider with ChangeNotifier {
         break;
       } else {
         isBoardCompletelySolvedbyUser = true;
-      }
-    }
-
-    //* check if there are other places which we need to check if it is valid (the situation happens when using the detected board)
-    // it only happens when the detected board is showing
-    if (_detectedBoard != null) {
-      var tmpBoard = SudokuUtilities.to2D(
-        _detectedBoard!.map((e) => e.digit).toList(),
-      );
-
-      for (int i = 0; i < 9; i++) {
-        for (int j = 0; j < 9; j++) {
-          if (isValid(tmpBoard, i, j, tmpBoard[i][j])) {
-            _detectedBoard![(i * 9) +j].isDigitValid = true;
-          }
-        }
       }
     }
 

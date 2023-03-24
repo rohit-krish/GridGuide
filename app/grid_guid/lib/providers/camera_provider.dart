@@ -49,30 +49,20 @@ class CameraProvider with ChangeNotifier {
   }
 
   List<BoardCell> _makeBoard(List<int> digits, List<int> unvalidPlaces) {
-    print(unvalidPlaces);
-
-    List<int> board;
-
     // now create the sudoku board
     var sudokuBoard = List.filled(81, BoardCell(0));
 
-    late bool isDigitValid;
-    late bool isMarked;
-
     for (int i = 0; i < 81; i++) {
-      isDigitValid = true;
-      isMarked = false;
-
       if (unvalidPlaces[i] == 1) {
-        isDigitValid = false;
-        isMarked = true;
+        // placing 0 if it is unvalid
+        digits[i] = 0;
       }
 
       sudokuBoard[i] = BoardCell(
         digits[i],
         isSolution: false,
-        isDigitValid: isDigitValid,
-        isMarked: isMarked,
+        isDigitValid: true,
+        isMarked: false,
       );
     }
 
