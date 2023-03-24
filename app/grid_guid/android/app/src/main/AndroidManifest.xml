@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.codewiz.grid_guid">
    <application
-        android:label="grid_guid"
+        android:label="Grid Guid"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

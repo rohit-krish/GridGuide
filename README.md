@@ -1,7 +1,5 @@
-### Next
-1. imporove the model
-2. update the sudoku board with the detected board
-3. result augmentation onto the preview image
+https://youtube.com/playlist?list=PLMQAFLQy-nKch8Tk31y4i6MxMI9V9C-XO
+https://www.veryicon.com/icons/miscellaneous/learning-software/sudoku-2.html
 
 <img src="./screenshot.png" alt="screen shots of the app">
 Names
