@@ -12,7 +12,7 @@ import '../widgets/camera_page/progress_indicator_widget.dart';
 import '../providers/camera_provider.dart';
 
 import './sudoku_play_page.dart' show BOARD_PROVIDER;
-import '../pages/home_page.dart' show homePrefs;
+import '../pages/home_page.dart' show homePrefs, callHomeSetState;
 
 class CameraPage extends StatefulWidget {
   static const routeName = '/camera-page';
@@ -238,6 +238,9 @@ class _CameraPageState extends State<CameraPage> {
                             context,
                             progressIndicatorProvider,
                           );
+                          homePrefs!.setInt('tokens', (homePrefs!.getInt('tokens') ?? 1) - 3);
+                          callHomeSetState();
+
                           BOARD_PROVIDER.updateDetectedBoard(sudokuBoard);
                           Navigator.of(context).pop();
                         }

@@ -52,6 +52,10 @@ class BoardProvider with ChangeNotifier {
 
   void updateDetectedBoard(List<BoardCell>? board) {
     if (board != null) {
+      // if the user comes to the camera_page after toggle the solution button in sudoku_play page then we gotta toggle it back to off, if not then if we update the board we will also get the solutions
+      if (isNowShowingSolutions) {
+        _getSolutions();
+      }
       _detectedBoard = board;
       notifyListeners();
     }

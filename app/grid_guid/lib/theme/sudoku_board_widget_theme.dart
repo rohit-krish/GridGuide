@@ -82,6 +82,9 @@ Color getWhichCellBorderColorToDisplay(
 
 Color getWhichTextColorToDisplay(BoardCell currentWidget, bool isDarkMode) {
   if (isDarkMode) {
+    if (currentWidget.isDetection) {
+      return Colors.blue.shade600;
+    }
     if (currentWidget.isSolution && !currentWidget.isMarked) {
       return Colors.green.shade700;
     }
@@ -91,6 +94,9 @@ Color getWhichTextColorToDisplay(BoardCell currentWidget, bool isDarkMode) {
       return Colors.grey.shade400;
     }
   } else {
+    if(currentWidget.isDetection && !currentWidget.isSolution && !currentWidget.isMarked) {
+      return Colors.blue.shade600;
+    }
     if (currentWidget.isSolution) {
       return Colors.lightGreen;
     }

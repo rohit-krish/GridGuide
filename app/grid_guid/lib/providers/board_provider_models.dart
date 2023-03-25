@@ -5,11 +5,13 @@ class BoardCell {
   bool isSolution;
   bool isMarked;
   bool? isDigitValid;
+  bool isDetection;
 
   BoardCell(
     this.digit, {
     this.isSolution = false,
     this.isMarked = false,
+    this.isDetection = false,
     this.isDigitValid,
   });
 }
@@ -36,7 +38,7 @@ class Board {
     bool isDigitValid = true;
 
     // check if the boardCell value is given by default or not; if not default then continue else return
-    if (board[index].digit == 0 || board[index].isMarked) {
+    if (board[index].digit == 0 || board[index].isMarked || board[index].isDetection) {
       // putting the value to the tmpBoard
       if (value == 'X') {
         tmpBoard[index] = 0;
@@ -86,6 +88,7 @@ class Board {
     );
 
     for (int i = 0; i < 81; i++) {
+      // TODO: if the bord is not completely solved by the user and in all the loops if the condition written below didn't met then the detected cells has some problems; and show a snackbar to user that to edit the detection to clear the clashes
       if (board[i].digit != solutions[i]) {
         board[i].digit = solutions[i];
         board[i].isSolution = true;

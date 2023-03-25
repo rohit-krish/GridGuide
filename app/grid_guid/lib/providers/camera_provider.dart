@@ -62,6 +62,7 @@ class CameraProvider with ChangeNotifier {
         isSolution: false,
         isDigitValid: true,
         isMarked: false,
+        isDetection: true
       );
     }
 
