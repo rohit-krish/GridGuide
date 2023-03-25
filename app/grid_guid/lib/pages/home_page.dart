@@ -18,14 +18,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-  void _getPrefsInstance() async {
-    homePrefs = await SharedPreferences.getInstance();
-  }
+  late Future<SharedPreferences> futurePrefs;
 
   @override
   void initState() {
-    _getPrefsInstance();
+    futurePrefs = SharedPreferences.getInstance();
+
+    callHomeSetState = () {
+      setState(() {});
+    };
     super.initState();
   }
 
@@ -49,57 +50,61 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    callHomeSetState = () {
-      setState(() {});
-    };
-
     width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Grid Guid'),
-        actions: [
-          TokenWidget(
-            width: width!,
-            tokensLeft: homePrefs?.getInt('tokens') ?? 1,
-            onTapFunc: () {
-              Navigator.of(context)
-                  .pushNamed(TokenPage.routeName)
-                  .then(
-                (_) {
-                  setState(() {});
-                },
-              );
-            },
-          )
-        ],
-      ),
-      body: IndexedStack(
-        index: _selectedIndex,
-        children: [
-          const SizedBox.shrink(),
-          _widgetOptions[1],
-          _widgetOptions[2],
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.photo_camera_outlined),
-            label: 'Camera',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.border_all_outlined),
-            label: 'Play',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.info_outline),
-            label: 'Info',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
-      ),
+    return FutureBuilder<SharedPreferences>(
+      future: futurePrefs,
+      builder: (_, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          homePrefs = snapshot.data;
+          return Scaffold(
+            appBar: AppBar(
+              title: const Text('Grid Guid'),
+              actions: [
+                TokenWidget(
+                  width: width!,
+                  tokensLeft: homePrefs!.getInt('tokens') ?? 1,
+                  onTapFunc: () {
+                    Navigator.of(context).pushNamed(TokenPage.routeName).then(
+                      (_) {
+                        setState(() {});
+                      },
+                    );
+                  },
+                )
+              ],
+            ),
+            body: IndexedStack(
+              index: _selectedIndex,
+              children: [
+                const SizedBox.shrink(),
+                _widgetOptions[1],
+                _widgetOptions[2],
+              ],
+            ),
+            bottomNavigationBar: BottomNavigationBar(
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.photo_camera_outlined),
+                  label: 'Camera',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.border_all_outlined),
+                  label: 'Play',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.info_outline),
+                  label: 'Info',
+                ),
+              ],
+              currentIndex: _selectedIndex,
+              onTap: _onItemTapped,
+            ),
+          );
+        } else {
+          return const CircularProgressIndicator();
+        }
+      },
     );
   }
 }
