@@ -16,14 +16,25 @@ class BoardProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void _getSolutions() {
-    // putting each cell's isDigitValid to null
-    _boardData.resetIsDigitVal();
+  bool _toggleSolutions() {
+    // // putting each cell's isDigitValid to null
+    // _boardData.resetIsDigitVal();
 
-    // changing _getSolution value
+    //* check if the board digits are valid or not
+    try {
+      SudokuUtilities.to2D(_boardData
+          .getBoard(_getSolution, _detectedBoard)
+          .map((e) => e.digit)
+          .toList());
+    } on InvalidSudokuConfigurationException {
+      // dev.log('unvalid');
+      return false;
+    }
+
     _getSolution = !_getSolution;
     isSolutionShowing = _getSolution;
     notifyListeners();
+    return true;
   }
 
   void updateBoard(String value, int index) {
@@ -54,7 +65,7 @@ class BoardProvider with ChangeNotifier {
     if (board != null) {
       // if the user comes to the camera_page after toggle the solution button in sudoku_play page then we gotta toggle it back to off, if not then if we update the board we will also get the solutions
       if (isNowShowingSolutions) {
-        _getSolutions();
+        _toggleSolutions();
       }
       _detectedBoard = board;
       notifyListeners();
@@ -71,7 +82,7 @@ class BoardProvider with ChangeNotifier {
   List<BoardCell>? _detectedBoard;
 
   void get generateNewBoard => _generateNewBoard();
-  void get getSolutions => _getSolutions();
+  bool get toggleSolutions => _toggleSolutions();
   bool get isNowShowingSolutions => _getSolution;
 
   List<BoardCell> get getBoard =>

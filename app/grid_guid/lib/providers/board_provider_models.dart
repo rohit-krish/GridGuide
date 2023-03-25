@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 
 class BoardCell {
@@ -26,11 +28,11 @@ class Board {
         .toList();
   }
 
-  void resetIsDigitVal() {
-    for (int i = 0; i < 81; i++) {
-      board[i].isDigitValid = null;
-    }
-  }
+  // void resetIsDigitVal() {
+  //   for (int i = 0; i < 81; i++) {
+  //     board[i].isDigitValid = null;
+  //   }
+  // }
 
   void updateBoard(String value, int index) {
     // create a temp board copy
@@ -87,14 +89,20 @@ class Board {
       ),
     );
 
+    var hasProblem = false;
+
     for (int i = 0; i < 81; i++) {
       // TODO: if the bord is not completely solved by the user and in all the loops if the condition written below didn't met then the detected cells has some problems; and show a snackbar to user that to edit the detection to clear the clashes
       if (board[i].digit != solutions[i]) {
         board[i].digit = solutions[i];
         board[i].isSolution = true;
         board[i].isMarked = false;
+      } else {
+        if (hasProblem == false) hasProblem = true;
       }
     }
+
+    // log("hasProblem: $hasProblem");
     return board;
   }
 

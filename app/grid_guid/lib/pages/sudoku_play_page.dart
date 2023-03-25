@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:grid_guid/utils/alert_dialog_when_no_token.dart';
 import 'package:provider/provider.dart';
@@ -83,14 +85,30 @@ class _SudokuPlayState extends State<SudokuPlay> {
                 builder: (ctx, boardProvider, child) {
                   return IconButton(
                     onPressed: () async {
+                      bool isAllValid = true;
                       if (boardProvider.isBoardCompletelySolvedbyUser) {
                         boardProvider.showSnackBar(context);
                       } else {
                         if (((homePrefs?.getInt('tokens') ?? 1) > 0) ||
                             boardProvider.isSolutionShowing) {
-                          boardProvider.getSolutions;
+                          isAllValid = boardProvider.toggleSolutions;
                         } else {
-                          showAlertDialogWhenNoToken(context, 1, callHomeSetState);
+                          showAlertDialogWhenNoToken(
+                              context, 1, callHomeSetState);
+                        }
+                        // log(res.toString());
+                        log("now showing?: ${boardProvider.isNowShowingSolutions}, valid? $isAllValid");
+                        if (!boardProvider.isNowShowingSolutions &&
+                            !isAllValid) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                "Can't find solution!, Unvalid Digits Present",
+                              ),
+                              duration: Duration(seconds: 2),
+                            ),
+                          );
+                          return;
                         }
 
                         if (boardProvider.isNowShowingSolutions &&
