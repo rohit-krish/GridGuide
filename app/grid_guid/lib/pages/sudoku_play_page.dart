@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:grid_guid/utils/alert_dialog_when_no_token.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -89,16 +90,12 @@ class _SudokuPlayState extends State<SudokuPlay> {
                             boardProvider.isSolutionShowing) {
                           boardProvider.getSolutions;
                         } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text("Don't have enough tokens"),
-                            duration: Duration(milliseconds: 500),
-                          ));
+                          showAlertDialogWhenNoToken(context, 1, callHomeSetState);
                         }
 
                         if (boardProvider.isNowShowingSolutions &&
                             !boardProvider.isBoardCompletelySolvedbyUser) {
-                          homePrefs?.setInt(
+                          homePrefs!.setInt(
                             'tokens',
                             (homePrefs?.getInt('tokens') ?? 1) - 1,
                           );

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../pages/token_page.dart';
+import '../pages/token_page.dart';
 
-showAlertDialogWhenNoToken(BuildContext context) {
+showAlertDialogWhenNoToken(
+  BuildContext context,
+  int tokenLimit,
+  Function callHomeSetState,
+) {
   return showDialog(
     context: context,
     barrierDismissible: false,
@@ -11,7 +15,11 @@ showAlertDialogWhenNoToken(BuildContext context) {
         title: const Text("Don't have enough Tokens!"),
         content: SingleChildScrollView(
           child: ListBody(
-            children: const [Text('Need atleast 3 Tokens!!\nCollect Tokens?')],
+            children: [
+              Text(
+                "Need atleast $tokenLimit ${tokenLimit == 1 ? 'Token' : 'Tokens'}!!\nCollect Tokens?",
+              )
+            ],
           ),
         ),
         actions: [
@@ -24,8 +32,11 @@ showAlertDialogWhenNoToken(BuildContext context) {
           TextButton(
             onPressed: () {
               Navigator.of(context).pushNamed(TokenPage.routeName).then(
-                    (_) => Navigator.of(context).pop(),
-                  );
+                (_) {
+                  Navigator.of(context).pop();
+                  callHomeSetState();
+                },
+              );
             },
             child: const Text('Yes'),
           ),

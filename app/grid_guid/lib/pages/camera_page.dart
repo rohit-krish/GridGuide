@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:grid_guid/utils/camera_page/alert_dialog_when_no_token.dart';
+import 'package:grid_guid/utils/alert_dialog_when_no_token.dart';
 import 'package:provider/provider.dart';
 
 import '../core/sudoku_detector_async.dart';
@@ -228,7 +228,7 @@ class _CameraPageState extends State<CameraPage> {
 
                         if (_cameraProvider!.isSolutionButtonClicked == false) {
                           if ((homePrefs!.getInt('tokens') ?? 1) < 3) {
-                            showAlertDialogWhenNoToken(context);
+                            showAlertDialogWhenNoToken(context, 3, callHomeSetState);
                             return;
                           }
 
