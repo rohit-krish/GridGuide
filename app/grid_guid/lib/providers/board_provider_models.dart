@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 
 class BoardCell {

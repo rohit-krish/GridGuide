@@ -29,12 +29,10 @@ class TokenProvider with ChangeNotifier {
       rewardedAdLoadCallback: RewardedAdLoadCallback(
         // Called when an ad is successfully received.
         onAdLoaded: (ad) {
-          log("$ad loaded");
           _showAd(ad);
         },
         // Called when an ad request failed.
         onAdFailedToLoad: (LoadAdError error) {
-          log('Rewarded failed to load');
           isFailedToLoad = true;
           isBtnClicked = false;
           notifyListeners();
@@ -46,7 +44,6 @@ class TokenProvider with ChangeNotifier {
   void _showAd(RewardedAd ad) {
     ad.show(
       onUserEarnedReward: (AdWithoutView ad, RewardItem rewardItem) {
-        log('User earned reward');
         var tokens = tokensAvailable + 3;
         sharedPrefs?.setInt('tokens', tokens);
         isBtnClicked = false;

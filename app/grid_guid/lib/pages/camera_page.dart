@@ -229,16 +229,17 @@ class _CameraPageState extends State<CameraPage> {
                         if (_cameraProvider!.isSolutionButtonClicked == false) {
                           if ((homePrefs!.getInt('tokens') ?? 1) < 3) {
                             showAlertDialogWhenNoToken(context);
+                            return;
                           }
 
-                          // _cameraProvider!.solutionButtonClicked();
-                          // var sudokuBoard = await _cameraProvider!.captureBoard(
-                          //   _sudokuDetector,
-                          //   context,
-                          //   progressIndicatorProvider,
-                          // );
-                          // BOARD_PROVIDER.updateDetectedBoard(sudokuBoard);
-                          // Navigator.of(context).pop();
+                          _cameraProvider!.solutionButtonClicked();
+                          var sudokuBoard = await _cameraProvider!.captureBoard(
+                            _sudokuDetector,
+                            context,
+                            progressIndicatorProvider,
+                          );
+                          BOARD_PROVIDER.updateDetectedBoard(sudokuBoard);
+                          Navigator.of(context).pop();
                         }
                       },
                     ),

@@ -27,7 +27,6 @@ class TokenPage extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: width * 0.05),
             child: FittedBox(
               child: Consumer<TokenProvider>(builder: (ctx, value, child) {
-                log('Text rebuilds');
                 return Text(
                   'Remaining Tokens: ${value.tokensAvailable}',
                   style: TextStyle(fontSize: width * .09),

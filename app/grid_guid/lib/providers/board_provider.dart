@@ -45,11 +45,7 @@ class BoardProvider with ChangeNotifier {
       } else {
         isBoardCompletelySolvedbyUser = true;
       }
-
-      dev.log("isValid $i: ${board[i].isDigitValid}");
     }
-
-    dev.log("by user; ${isBoardCompletelySolvedbyUser.toString()}");
 
     notifyListeners();
   }
