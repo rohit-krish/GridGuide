@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/get_corresponding_index_func.dart';
 import '../utils/sudoku_play_page/alert_dialog_user_complets_puzzle.dart';
@@ -7,6 +8,7 @@ import '../utils/sudoku_play_page/alert_dialog_sudoku_reload_button.dart';
 import '../widgets/sudoku_play_page/digit_input_button.dart';
 import '../widgets/sudoku_play_page/sudoku_board_widget.dart';
 import '../providers/board_provider.dart';
+import '../pages/home_page.dart' show callSetState;
 
 // ignore: non_constant_identifier_names
 late BoardProvider BOARD_PROVIDER;
@@ -28,7 +30,6 @@ class _SudokuPlayState extends State<SudokuPlay> {
     return boardProvider;
   }
 
-
   int getCurrentPressedCount() {
     return currentPressedCount;
   }
@@ -37,7 +38,7 @@ class _SudokuPlayState extends State<SudokuPlay> {
     currentPressedCount = newVal;
   }
 
-  void updateBoard(String value) {
+  void updateBoard(String value) async {
     if (boardProvider!.isBoardCompletelySolvedbyUser) {
       boardProvider!.showSnackBar(context);
     } else {
@@ -48,6 +49,10 @@ class _SudokuPlayState extends State<SudokuPlay> {
 
       if (boardProvider!.isBoardCompletelySolvedbyUser == true) {
         showAlertDialogWhenUserCompletesPuzzle(context, boardProvider!);
+        var prefs = await SharedPreferences.getInstance();
+        prefs.setInt('tokens', (prefs.getInt('tokens') ?? 1) + 1);
+
+        callSetState();
       }
     }
   }
@@ -56,7 +61,6 @@ class _SudokuPlayState extends State<SudokuPlay> {
   Widget build(BuildContext context) {
     boardProvider = Provider.of<BoardProvider>(context, listen: false);
     BOARD_PROVIDER = boardProvider!;
-
 
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
@@ -77,9 +81,13 @@ class _SudokuPlayState extends State<SudokuPlay> {
               Consumer<BoardProvider>(
                 builder: (ctx, boardProvider, child) {
                   return IconButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (boardProvider.isBoardCompletelySolvedbyUser) {
                         boardProvider.showSnackBar(context);
+                        var prefs = await SharedPreferences.getInstance();
+                        var val = prefs.getInt('tokens') ?? 1;
+                        prefs.setInt('tokens', val + 1);
+                        setState(() {});
                       } else {
                         boardProvider.getSolutions;
                       }

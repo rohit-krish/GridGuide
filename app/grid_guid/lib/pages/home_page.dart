@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:grid_guid/pages/info_page.dart';
 import 'package:grid_guid/pages/token_page.dart';
@@ -6,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/camera_page.dart';
 import '../pages/sudoku_play_page.dart';
 import '../widgets/home_page/token_widget.dart';
+
+late Function callSetState;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -47,6 +51,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    log('home page buids');
+    callSetState = () {
+      setState(() {});
+    };
+
     width = MediaQuery.of(context).size.width;
 
     return Scaffold(
