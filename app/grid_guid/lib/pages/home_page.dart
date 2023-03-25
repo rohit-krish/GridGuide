@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:grid_guid/pages/info_page.dart';
 import 'package:grid_guid/pages/token_page.dart';
@@ -10,6 +8,7 @@ import '../pages/sudoku_play_page.dart';
 import '../widgets/home_page/token_widget.dart';
 
 late Function callHomeSetState;
+SharedPreferences? homePrefs;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,10 +18,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  SharedPreferences? prefs;
 
   void _getPrefsInstance() async {
-    prefs = await SharedPreferences.getInstance();
+    homePrefs = await SharedPreferences.getInstance();
   }
 
   @override
@@ -63,10 +61,10 @@ class _HomePageState extends State<HomePage> {
         actions: [
           TokenWidget(
             width: width!,
-            tokensLeft: prefs?.getInt('tokens') ?? 1,
+            tokensLeft: homePrefs?.getInt('tokens') ?? 1,
             onTapFunc: () {
               Navigator.of(context)
-                  .pushNamed(TokenPage.routeName, arguments: prefs)
+                  .pushNamed(TokenPage.routeName)
                   .then(
                 (_) {
                   setState(() {});

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:grid_guid/utils/camera_page/alert_dialog_when_no_token.dart';
 import 'package:provider/provider.dart';
 
 import '../core/sudoku_detector_async.dart';
@@ -11,6 +12,7 @@ import '../widgets/camera_page/progress_indicator_widget.dart';
 import '../providers/camera_provider.dart';
 
 import './sudoku_play_page.dart' show BOARD_PROVIDER;
+import '../pages/home_page.dart' show homePrefs;
 
 class CameraPage extends StatefulWidget {
   static const routeName = '/camera-page';
@@ -225,14 +227,18 @@ class _CameraPageState extends State<CameraPage> {
                         }
 
                         if (_cameraProvider!.isSolutionButtonClicked == false) {
-                          _cameraProvider!.solutionButtonClicked();
-                          var sudokuBoard = await _cameraProvider!.captureBoard(
-                            _sudokuDetector,
-                            context,
-                            progressIndicatorProvider,
-                          );
-                          BOARD_PROVIDER.updateDetectedBoard(sudokuBoard);
-                          Navigator.of(context).pop();
+                          if ((homePrefs!.getInt('tokens') ?? 1) < 3) {
+                            showAlertDialogWhenNoToken(context);
+                          }
+
+                          // _cameraProvider!.solutionButtonClicked();
+                          // var sudokuBoard = await _cameraProvider!.captureBoard(
+                          //   _sudokuDetector,
+                          //   context,
+                          //   progressIndicatorProvider,
+                          // );
+                          // BOARD_PROVIDER.updateDetectedBoard(sudokuBoard);
+                          // Navigator.of(context).pop();
                         }
                       },
                     ),

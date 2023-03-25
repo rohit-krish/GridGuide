@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:grid_guid/providers/token_provider.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../pages/home_page.dart' show homePrefs;
 
 class TokenPage extends StatelessWidget {
   static const routeName = '/token-page';
@@ -12,10 +12,8 @@ class TokenPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tokenProvider = Provider.of<TokenProvider>(context, listen: false);
-    final prefs =
-        ModalRoute.of(context)!.settings.arguments as SharedPreferences;
 
-    tokenProvider.init(prefs);
+    tokenProvider.init(homePrefs);
 
     final width = MediaQuery.of(context).size.width;
     return Scaffold(

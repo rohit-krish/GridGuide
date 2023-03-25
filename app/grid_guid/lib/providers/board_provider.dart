@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 import 'dart:math';
+import 'dart:developer' as dev;
 
 import './board_provider_models.dart';
 
@@ -10,6 +11,7 @@ class BoardProvider with ChangeNotifier {
       SudokuGenerator(emptySquares: 27 + Random().nextInt(54 - 27)),
     );
     _getSolution = false;
+    isSolutionShowing = false;
     _detectedBoard = null;
     notifyListeners();
   }
@@ -20,6 +22,7 @@ class BoardProvider with ChangeNotifier {
 
     // changing _getSolution value
     _getSolution = !_getSolution;
+    isSolutionShowing = _getSolution;
     notifyListeners();
   }
 
@@ -36,10 +39,17 @@ class BoardProvider with ChangeNotifier {
       if (board[i].isSolution || board[i].digit == 0) {
         isBoardCompletelySolvedbyUser = false;
         break;
+      } else if (board[i].isDigitValid == false) {
+        isBoardCompletelySolvedbyUser = false;
+        break;
       } else {
         isBoardCompletelySolvedbyUser = true;
       }
+
+      dev.log("isValid $i: ${board[i].isDigitValid}");
     }
+
+    dev.log("by user; ${isBoardCompletelySolvedbyUser.toString()}");
 
     notifyListeners();
   }
@@ -55,6 +65,7 @@ class BoardProvider with ChangeNotifier {
     SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)),
   );
   bool _getSolution = false;
+  bool isSolutionShowing = false;
   bool isBoardCompletelySolvedbyUser = false;
 
   List<BoardCell>? _detectedBoard;

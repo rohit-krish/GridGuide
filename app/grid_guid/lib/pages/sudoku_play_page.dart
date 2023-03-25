@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -8,7 +10,7 @@ import '../utils/sudoku_play_page/alert_dialog_sudoku_reload_button.dart';
 import '../widgets/sudoku_play_page/digit_input_button.dart';
 import '../widgets/sudoku_play_page/sudoku_board_widget.dart';
 import '../providers/board_provider.dart';
-import '../pages/home_page.dart' show callHomeSetState;
+import '../pages/home_page.dart' show callHomeSetState, homePrefs;
 
 // ignore: non_constant_identifier_names
 late BoardProvider BOARD_PROVIDER;
@@ -85,14 +87,22 @@ class _SudokuPlayState extends State<SudokuPlay> {
                       if (boardProvider.isBoardCompletelySolvedbyUser) {
                         boardProvider.showSnackBar(context);
                       } else {
-                        boardProvider.getSolutions;
+                        if (((homePrefs?.getInt('tokens') ?? 1) > 0) ||
+                            boardProvider.isSolutionShowing) {
+                          boardProvider.getSolutions;
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text("Don't have enough tokens"),
+                            duration: Duration(milliseconds: 500),
+                          ));
+                        }
 
                         if (boardProvider.isNowShowingSolutions &&
                             !boardProvider.isBoardCompletelySolvedbyUser) {
-                          var prefs = await SharedPreferences.getInstance();
-                          prefs.setInt(
+                          homePrefs?.setInt(
                             'tokens',
-                            (prefs.getInt('tokens') ?? 1) - 1,
+                            (homePrefs?.getInt('tokens') ?? 1) - 1,
                           );
 
                           callHomeSetState();
