@@ -9,7 +9,7 @@ import '../pages/camera_page.dart';
 import '../pages/sudoku_play_page.dart';
 import '../widgets/home_page/token_widget.dart';
 
-late Function callSetState;
+late Function callHomeSetState;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -51,8 +51,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    log('home page buids');
-    callSetState = () {
+    callHomeSetState = () {
       setState(() {});
     };
 

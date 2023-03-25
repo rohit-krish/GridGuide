@@ -8,7 +8,7 @@ import '../utils/sudoku_play_page/alert_dialog_sudoku_reload_button.dart';
 import '../widgets/sudoku_play_page/digit_input_button.dart';
 import '../widgets/sudoku_play_page/sudoku_board_widget.dart';
 import '../providers/board_provider.dart';
-import '../pages/home_page.dart' show callSetState;
+import '../pages/home_page.dart' show callHomeSetState;
 
 // ignore: non_constant_identifier_names
 late BoardProvider BOARD_PROVIDER;
@@ -52,7 +52,7 @@ class _SudokuPlayState extends State<SudokuPlay> {
         var prefs = await SharedPreferences.getInstance();
         prefs.setInt('tokens', (prefs.getInt('tokens') ?? 1) + 1);
 
-        callSetState();
+        callHomeSetState();
       }
     }
   }
@@ -84,12 +84,19 @@ class _SudokuPlayState extends State<SudokuPlay> {
                     onPressed: () async {
                       if (boardProvider.isBoardCompletelySolvedbyUser) {
                         boardProvider.showSnackBar(context);
-                        var prefs = await SharedPreferences.getInstance();
-                        var val = prefs.getInt('tokens') ?? 1;
-                        prefs.setInt('tokens', val + 1);
-                        setState(() {});
                       } else {
                         boardProvider.getSolutions;
+
+                        if (boardProvider.isNowShowingSolutions &&
+                            !boardProvider.isBoardCompletelySolvedbyUser) {
+                          var prefs = await SharedPreferences.getInstance();
+                          prefs.setInt(
+                            'tokens',
+                            (prefs.getInt('tokens') ?? 1) - 1,
+                          );
+
+                          callHomeSetState();
+                        }
                       }
                     },
                     icon: Icon(
