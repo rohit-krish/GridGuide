@@ -40,6 +40,8 @@ dependencies:
   path_provider: ^2.0.13
   image: ^4.0.15
   percent_indicator: ^4.2.3
+  google_mobile_ads: ^2.3.0
+  shared_preferences: ^2.0.20
 
   cupertino_icons: ^1.0.2
 
@@ -57,11 +59,13 @@ flutter_icons:
   android: true
   ios: false
 
+# flutter pub run flutter_launcher_icons
+
 flutter_native_splash:
   android: true
   ios: false
 
-  color: "#FFFFFF"
+  color: "#f5f5f5"
   image: assets/launch_image.png
 
   color_dark: "#262626"
@@ -77,7 +81,7 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/images/permission_error.png
+    - assets/images/
     - assets/model/model_v2.tflite
 
   fonts:
@@ -85,8 +89,5 @@ flutter:
         fonts:
           - asset: assets/fonts/PTSans-Regular.ttf
             weight: 400
-          - asset: assets/fonts/PTSans-Italic.ttf
-            weight: 400
-            style: italic
           - asset: assets/fonts/PTSans-Bold.ttf
             weight: 700

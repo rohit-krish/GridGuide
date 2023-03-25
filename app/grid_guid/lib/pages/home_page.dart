@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:grid_guid/pages/info_page.dart';
+import 'package:grid_guid/pages/token_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../pages/camera_page.dart';
 import '../pages/sudoku_play_page.dart';
@@ -13,6 +15,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  SharedPreferences? prefs;
+
+  void _getPrefsInstance() async {
+    prefs = await SharedPreferences.getInstance();
+  }
+
+  @override
+  void initState() {
+    _getPrefsInstance();
+    super.initState();
+  }
+
   int _selectedIndex = 1;
   double? width;
   final List<Widget> _widgetOptions = <Widget>[
@@ -41,8 +55,16 @@ class _HomePageState extends State<HomePage> {
         actions: [
           TokenWidget(
             width: width!,
-            tokensLeft: 100,
-            onTapFunc: () {},
+            tokensLeft: prefs?.getInt('tokens') ?? 1,
+            onTapFunc: () {
+              Navigator.of(context)
+                  .pushNamed(TokenPage.routeName, arguments: prefs)
+                  .then(
+                (_) {
+                  setState(() {});
+                },
+              );
+            },
           )
         ],
       ),
