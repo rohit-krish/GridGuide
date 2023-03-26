@@ -4,7 +4,7 @@ https://www.veryicon.com/icons/miscellaneous/learning-software/sudoku-2.html
 <img src="./screenshot.png" alt="screen shots of the app">
 Names
 
-* GridGuid Sudoku Board Detector & Solver
+* GridGuid Sudoku Detector & Solver
 
 * BoldBlocks
 * HyperGrid[taken]
