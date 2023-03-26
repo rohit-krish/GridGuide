@@ -1,4 +1,4 @@
-import 'dart:developer';
+import 'dart:developer' as dev;
 
 import 'package:flutter/material.dart';
 import 'package:grid_guid/utils/alert_dialog_when_no_token.dart';
@@ -28,6 +28,11 @@ class _SudokuPlayState extends State<SudokuPlay> {
   BoardProvider? boardProvider;
   double? width;
   double? height;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   BoardProvider? getTheBoardProvider() {
     return boardProvider;
@@ -96,8 +101,21 @@ class _SudokuPlayState extends State<SudokuPlay> {
                           showAlertDialogWhenNoToken(
                               context, 1, callHomeSetState);
                         }
+                        if (boardProvider.getBoard
+                                .map((e) => e.digit)
+                                .toList()
+                                .contains(0) &&
+                            boardProvider.isNowShowingSolutions) {
+                              boardProvider.dontShowSolutions();
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                            content: Text(
+                                "Can't Find solution!, Valid but wrong digit(s) present."),
+                            duration: Duration(seconds: 2),
+                          ));
+                          return;
+                        }
                         // log(res.toString());
-                        log("now showing?: ${boardProvider.isNowShowingSolutions}, valid? $isAllValid");
                         if (!boardProvider.isNowShowingSolutions &&
                             !isAllValid) {
                           ScaffoldMessenger.of(context).showSnackBar(

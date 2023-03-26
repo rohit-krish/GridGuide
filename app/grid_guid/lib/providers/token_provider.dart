@@ -44,7 +44,7 @@ class TokenProvider with ChangeNotifier {
   void _showAd(RewardedAd ad) {
     ad.show(
       onUserEarnedReward: (AdWithoutView ad, RewardItem rewardItem) {
-        var tokens = tokensAvailable + 3;
+        var tokens = tokensAvailable + 99;
         sharedPrefs?.setInt('tokens', tokens);
         isBtnClicked = false;
         notifyListeners();

@@ -60,7 +60,7 @@ class CameraProvider with ChangeNotifier {
       sudokuBoard[i] = BoardCell(
         digits[i],
         isSolution: false,
-        isDigitValid: true,
+        isDigitValid: digits[i] == 0 ? null: true,
         isMarked: false,
         isDetection: true
       );

@@ -6,9 +6,16 @@ import 'dart:developer' as dev;
 import './board_provider_models.dart';
 
 class BoardProvider with ChangeNotifier {
+  void dontShowSolutions () {
+    _getSolution = false;
+    notifyListeners();
+  }
+
   void _generateNewBoard() {
     _boardData = Board(
-      SudokuGenerator(emptySquares: 27 + Random().nextInt(54 - 27)),
+      SudokuGenerator(
+        emptySquares: 27 + Random().nextInt(54 - 27),
+      ),
     );
     _getSolution = false;
     isSolutionShowing = false;
@@ -17,8 +24,8 @@ class BoardProvider with ChangeNotifier {
   }
 
   bool _toggleSolutions() {
-    // // putting each cell's isDigitValid to null
-    // _boardData.resetIsDigitVal();
+    // putting each cell's isDigitValid to null
+    _boardData.resetIsDigitVal();
 
     //* check if the board digits are valid or not
     try {
@@ -47,6 +54,7 @@ class BoardProvider with ChangeNotifier {
     isBoardCompletelySolvedbyUser = false;
 
     for (int i = 0; i < 81; i++) {
+      dev.log('isSolution: ${board[i].isSolution}, digit: ${board[i].digit}, isDigitValid: ${board[i].isDigitValid}');
       if (board[i].isSolution || board[i].digit == 0) {
         isBoardCompletelySolvedbyUser = false;
         break;

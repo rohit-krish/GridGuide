@@ -29,6 +29,8 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
     final width = MediaQuery.of(context).size.width;
     int boardCellCount = 0;
 
+    var boardProvider = Provider.of<BoardProvider>(context);
+    var board = boardProvider.getBoard;
     return GridView.builder(
       itemCount: 9,
       shrinkWrap: true,
@@ -55,9 +57,6 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
             physics: const ScrollPhysics(),
             itemBuilder: (ctx_, cellIdx_) {
               int count = boardCellCount++;
-
-              var boardProvider = Provider.of<BoardProvider>(context);
-              var board = boardProvider.getBoard;
 
               BoardCell currentWidget = board[getCorrespondingIndex(count)];
               return InkWell(
