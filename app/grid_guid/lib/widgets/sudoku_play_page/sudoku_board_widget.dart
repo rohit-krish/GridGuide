@@ -25,10 +25,8 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
   Widget build(BuildContext context) {
     var brightness = MediaQuery.of(context).platformBrightness;
     bool isDarkMode = brightness == Brightness.dark;
-
     final width = MediaQuery.of(context).size.width;
     int boardCellCount = 0;
-
     var boardProvider = Provider.of<BoardProvider>(context);
     var board = boardProvider.getBoard;
     return GridView.builder(
@@ -57,20 +55,15 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
             physics: const ScrollPhysics(),
             itemBuilder: (ctx_, cellIdx_) {
               int count = boardCellCount++;
-
               BoardCell currentWidget = board[getCorrespondingIndex(count)];
               return InkWell(
                 onTap: () {
-                  /// if board is completely solved by the user the show the snack bar; else receive inputs and do the usual
                   if (boardProvider.isBoardCompletelySolvedbyUser == false) {
-                    // when we press to a cell which is not yet pressed
                     if (count != widget.getCurrentPressedCount()) {
                       setState(() {
                         widget.updateCurrentPressedCount(count);
                       });
-                    }
-                    // when we press a cell which is already presssed
-                    else {
+                    } else {
                       setState(() {
                         widget.updateCurrentPressedCount(-1);
                       });
@@ -97,20 +90,16 @@ class _SudokuBoardWidgetState extends State<SudokuBoardWidget> {
                     color: Colors.transparent,
                   ),
                   alignment: Alignment.center,
-                  child: LayoutBuilder(
-                    builder: (ctx, constrains) {
-                      return Text(
-                        getWhichDigitToDisplay(currentWidget, count),
-                        style: TextStyle(
-                          color: getWhichTextColorToDisplay(
-                            currentWidget,
-                            isDarkMode,
-                          ),
-                          fontSize: constrains.maxWidth * .8,
-                        ),
-                      );
-                    },
-                  ),
+                  child: LayoutBuilder(builder: (ctx, constrains) {
+                    return Text(
+                      getWhichDigitToDisplay(currentWidget, count),
+                      style: TextStyle(
+                        color: getWhichTextColorToDisplay(
+                            currentWidget, isDarkMode),
+                        fontSize: constrains.maxWidth * .8,
+                      ),
+                    );
+                  }),
                 ),
               );
             },

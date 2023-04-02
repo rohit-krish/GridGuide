@@ -10,15 +10,10 @@ Future<void> showAlertDialogWhenUserCompletesPuzzle(
       return AlertDialog(
         title: const Text('You Solved it!'),
         content: SingleChildScrollView(
-          child: ListBody(
-            children: const <Widget>[
-              Text(
-                "Earned 1+ token\n",
-                style: TextStyle(fontSize: 20),
-              ),
-              Text('Load new Puzzle?')
-            ],
-          ),
+          child: ListBody(children: const <Widget>[
+            Text("Earned 1+ token\n", style: TextStyle(fontSize: 20)),
+            Text('Load new Puzzle?')
+          ]),
         ),
         actions: <Widget>[
           TextButton(
@@ -33,7 +28,7 @@ Future<void> showAlertDialogWhenUserCompletesPuzzle(
               Navigator.of(context).pop();
               boardProvider.generateNewBoard;
             },
-          ),
+          )
         ],
       );
     },

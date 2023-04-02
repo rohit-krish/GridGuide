@@ -1,6 +1,5 @@
 import 'dart:isolate';
 import 'dart:typed_data' show Uint8List, Float32List;
-
 import 'package:camera/camera.dart' show CameraImage;
 import 'package:native_opencv/native_opencv.dart';
 
@@ -22,22 +21,15 @@ class Response {
 
 void init(SendPort toMainThread) {
   _detector = _SudokuDetector();
-
-  // save the port on which we will send messages to the main thread
   _toMainThread = toMainThread;
-
-  // create a port on which the main thread can send us message and listen to it
   ReceivePort fromMainThread = ReceivePort();
   fromMainThread.listen(_handleMessage);
-
-  // send the main thread the port on which it can send us messages
   _toMainThread.send(fromMainThread.sendPort);
 }
 
 void _handleMessage(data) {
   if (data is Request) {
     dynamic res;
-
     switch (data.method) {
       case 'detectBoard':
         var image = data.params['image'] as CameraImage;
@@ -52,18 +44,15 @@ void _handleMessage(data) {
         _detector.extractBoxes(outputPath);
         break;
     }
-
     _toMainThread.send(Response(reqId: data.reqId, data: res));
   }
 }
 
 class _SudokuDetector {
   late NativeOpenCV _nativeOpenCV;
-
   _SudokuDetector() {
     _nativeOpenCV = NativeOpenCV();
   }
-
   void dispose() {
     _nativeOpenCV.dispose();
   }
@@ -73,7 +62,6 @@ class _SudokuDetector {
     Uint8List yBuffer = planes[0].bytes;
     Uint8List uBuffer = planes[1].bytes;
     Uint8List vBuffer = planes[2].bytes;
-
     var res = _nativeOpenCV.detectBoard(
       image.width,
       image.height,

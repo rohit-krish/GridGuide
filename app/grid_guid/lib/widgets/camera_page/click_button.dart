@@ -29,19 +29,18 @@ class ClickButton extends StatelessWidget {
           ),
         ),
         child: Center(
-          child: Container(
-            height: screenWidth * .125,
-            width: screenWidth * .125,
-            decoration: BoxDecoration(
-              color: show ? Colors.white70 : Colors.transparent,
-              borderRadius: BorderRadius.circular(100),
-            ),
-            child: Icon(
-              iconData,
-              color: show ? Colors.black : Colors.transparent,
-            ),
+            child: Container(
+          height: screenWidth * .125,
+          width: screenWidth * .125,
+          decoration: BoxDecoration(
+            color: show ? Colors.white70 : Colors.transparent,
+            borderRadius: BorderRadius.circular(100),
           ),
-        ),
+          child: Icon(
+            iconData,
+            color: show ? Colors.black : Colors.transparent,
+          ),
+        )),
       ),
     );
   }

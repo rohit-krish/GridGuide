@@ -13,7 +13,6 @@ import '../core/get_boxes.dart';
 class CameraProvider with ChangeNotifier {
   void imageCaptureButtonClicked() {
     isImageCaptureButttonClicked = true;
-
     notifyListeners();
   }
 
@@ -30,11 +29,8 @@ class CameraProvider with ChangeNotifier {
   ) async {
     _image = image;
     var res = await sudokuDetector.detectBoard(_image, camFrameRotation);
-
     if (res == null) return;
-
     bbox = res.map((x) => x * camFrameToScreenScale).toList(growable: false);
-
     notifyListeners();
   }
 
@@ -48,24 +44,17 @@ class CameraProvider with ChangeNotifier {
   }
 
   List<BoardCell> _makeBoard(List<int> digits, List<int> unvalidPlaces) {
-    // now create the sudoku board
     var sudokuBoard = List.filled(81, BoardCell(0));
-
     for (int i = 0; i < 81; i++) {
       if (unvalidPlaces[i] == 1) {
-        // placing 0 if it is unvalid
         digits[i] = 0;
       }
-
-      sudokuBoard[i] = BoardCell(
-        digits[i],
-        isSolution: false,
-        isDigitValid: digits[i] == 0 ? null: true,
-        isMarked: false,
-        isDetection: true
-      );
+      sudokuBoard[i] = BoardCell(digits[i],
+          isSolution: false,
+          isDigitValid: digits[i] == 0 ? null : true,
+          isMarked: false,
+          isDetection: true);
     }
-
     return sudokuBoard;
   }
 
@@ -75,30 +64,20 @@ class CameraProvider with ChangeNotifier {
     ProgressIndicatorProvider progressIndicatorProvider,
   ) async {
     if (bbox.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        getSnackBar("Couldn't detect, Take new picture!!"),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(getSnackBar("Couldn't detect, Take new picture!!"));
       return null;
     }
-
-    // get boxes
     Directory? tempDir = await getExternalStorageDirectory();
     externalStorageDirectory = tempDir!.path;
-
     sudokuDetector.extractBoxes(externalStorageDirectory);
-
     List<int> boxDigits =
         await getBoxes(externalStorageDirectory, progressIndicatorProvider);
-
     List<int> unvalidPlaces = checkUnvalidPlaces(boxDigits);
-
     var sudokuBoard = _makeBoard(boxDigits, unvalidPlaces);
-
     progressIndicatorProvider.doneCurrentPrediction();
     isDoneProcessing = true;
-
     notifyListeners();
-
     return sudokuBoard;
   }
 
@@ -108,9 +87,7 @@ class CameraProvider with ChangeNotifier {
   bool isSolutionButtonClicked = false;
   bool isDoneProcessing = false;
   late String externalStorageDirectory;
-
   late CameraImage _image;
-
   void showSnackBarAfterDetection(BuildContext context) {
     isSnackBarShown = true;
     ScaffoldMessenger.of(context).showSnackBar(

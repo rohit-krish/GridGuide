@@ -25,9 +25,8 @@ class AppThemes {
   );
   static final lightTheme = ThemeData(
     snackBarTheme: SnackBarThemeData(
-      backgroundColor: Colors.grey.shade300,
-      contentTextStyle: TextStyle(color: Colors.grey.shade900)
-    ),
+        backgroundColor: Colors.grey.shade300,
+        contentTextStyle: TextStyle(color: Colors.grey.shade900)),
     brightness: Brightness.light,
     primarySwatch: Colors.indigo,
     scaffoldBackgroundColor: Colors.grey.shade100,

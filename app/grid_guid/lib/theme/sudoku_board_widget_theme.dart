@@ -32,7 +32,6 @@ double getWhichCellBorderWidthToDisplay(
   Function getCurrentPressedCount,
   bool? isDigitValid,
 ) {
-  // if the board is completley solved then make the border of all cell's width to normal
   if (isBoardCompletelySolvedbyUser) {
     return 1.0;
   }
@@ -51,7 +50,6 @@ Color getWhichCellBorderColorToDisplay(
   Function getCurrentPressedCount,
   bool isDarkMode,
 ) {
-  // if the board is completley solved then make the border of all cell's color to normal
   if (isBoardCompletelySolvedbyUser) {
     if (isDarkMode) {
       return Colors.grey.shade600;

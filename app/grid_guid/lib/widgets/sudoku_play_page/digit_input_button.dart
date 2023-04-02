@@ -17,15 +17,13 @@ class DigitInputButton extends StatelessWidget {
       width: width * .14,
       height: width * .14,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: getWhichBackGroundColorToDisplay(isDarkMode),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 10.0,
-            color: getWhichShadowColorToDisplay(isDarkMode),
-          ),
-        ],
-      ),
+          borderRadius: BorderRadius.circular(10),
+          color: getWhichBackGroundColorToDisplay(isDarkMode),
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 10.0,
+                color: getWhichShadowColorToDisplay(isDarkMode))
+          ]),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
         child: TextButton(
@@ -34,10 +32,9 @@ class DigitInputButton extends StatelessWidget {
             child: Text(
               labelText,
               style: TextStyle(
-                fontSize: width * .07,
-                fontWeight: FontWeight.w500,
-                color: getWhichFontColorToDisplay(isDarkMode)
-              ),
+                  fontSize: width * .07,
+                  fontWeight: FontWeight.w500,
+                  color: getWhichFontColorToDisplay(isDarkMode)),
             ),
           ),
         ),

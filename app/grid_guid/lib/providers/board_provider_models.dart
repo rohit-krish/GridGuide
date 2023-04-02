@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:sudoku_solver_generator/sudoku_solver_generator.dart';
 
 class BoardCell {
@@ -35,32 +33,22 @@ class Board {
   }
 
   void updateBoard(String value, int index) {
-    // create a temp board copy
     var tmpBoard = [...board.map((item) => item.digit)];
     bool isDigitValid = true;
-
-    // check if the boardCell value is given by default or not; if not default then continue else return
     if (board[index].digit == 0 ||
         board[index].isMarked ||
         board[index].isDetection) {
-      // putting the value to the tmpBoard
       if (value == 'X') {
         tmpBoard[index] = 0;
       } else {
         tmpBoard[index] = int.parse(value);
       }
-
-      // checking if the tmpBoard configuration is correct or not
       try {
         SudokuUtilities.isValidConfiguration(SudokuUtilities.to2D(tmpBoard));
       } on InvalidSudokuConfigurationException {
         isDigitValid = false;
       }
-
-      // if the tmpBoard config is correct then it is valid so update the original board
       board[index].isDigitValid = isDigitValid;
-
-      // even if it is valid or not we have to show the digit
       if (value == 'X') {
         board[index].digit = 0;
         board[index].isSolution = false;
@@ -68,7 +56,6 @@ class Board {
       } else {
         board[index].digit = int.parse(value);
       }
-
       board[index].isMarked = true;
     }
   }
@@ -78,18 +65,15 @@ class Board {
       if (board[i].isSolution == true) {
         board[i].digit = 0;
       }
-
       board[i].isSolution = false;
     }
     return board;
   }
 
   List<BoardCell> _getSolutionBoard() {
-    var solutions = SudokuUtilities.to1D(
-      SudokuSolver.solve(
-        SudokuUtilities.to2D(board.map((item) => item.digit).toList()),
-      ),
-    );
+    var solutions = SudokuUtilities.to1D(SudokuSolver.solve(
+      SudokuUtilities.to2D(board.map((item) => item.digit).toList()),
+    ));
 
     for (int i = 0; i < 81; i++) {
       if (board[i].digit != solutions[i]) {
@@ -98,8 +82,6 @@ class Board {
         board[i].isMarked = false;
       }
     }
-
-    // log("hasProblem: $hasProblem");
     return board;
   }
 

@@ -14,13 +14,11 @@ showAlertDialogWhenNoToken(
       return AlertDialog(
         title: const Text("Don't have enough Tokens!"),
         content: SingleChildScrollView(
-          child: ListBody(
-            children: [
-              Text(
-                "Need atleast $tokenLimit ${tokenLimit == 1 ? 'Token' : 'Tokens'}!!\nCollect Tokens?",
-              )
-            ],
-          ),
+          child: ListBody(children: [
+            Text(
+              "Need atleast $tokenLimit ${tokenLimit == 1 ? 'Token' : 'Tokens'}!!\nCollect Tokens?",
+            )
+          ]),
         ),
         actions: [
           TextButton(
@@ -39,7 +37,7 @@ showAlertDialogWhenNoToken(
               );
             },
             child: const Text('Yes'),
-          ),
+          )
         ],
       );
     },

@@ -35,34 +35,24 @@ class App extends StatelessWidget {
       darkTheme: AppThemes.darkTheme,
       home: MultiProvider(
         providers: [
-          ChangeNotifierProvider<BoardProvider>(
-            create: (_) => BoardProvider(),
-          ),
-          ChangeNotifierProvider<TokenProvider>(
-            create: (_) => TokenProvider(),
-          )
+          ChangeNotifierProvider<BoardProvider>(create: (_) => BoardProvider()),
+          ChangeNotifierProvider<TokenProvider>(create: (_) => TokenProvider())
         ],
         child: const HomePage(),
       ),
       routes: {
         CameraPage.routeName: (_) => MultiProvider(
               providers: [
-                ChangeNotifierProvider<CameraProvider>(
-                  create: (_) => CameraProvider(),
-                ),
-                ChangeNotifierProvider<ProgressIndicatorProvider>(
-                  create: (_) => ProgressIndicatorProvider(),
-                ),
-                ChangeNotifierProvider<BoardProvider>(
-                  create: (_) => BoardProvider(),
-                )
+                ChangeNotifierProvider<CameraProvider>(create: (_) => CameraProvider()),
+                ChangeNotifierProvider<ProgressIndicatorProvider>(create: (_) => ProgressIndicatorProvider()),
+                ChangeNotifierProvider<BoardProvider>(create: (_) => BoardProvider())
               ],
               child: const CameraPage(),
             ),
         TokenPage.routeName: (_) => ChangeNotifierProvider<TokenProvider>(
-          child: const TokenPage(),
-          create: (_) => TokenProvider(),
-        )
+              child: const TokenPage(),
+              create: (_) => TokenProvider(),
+            )
       },
     );
   }

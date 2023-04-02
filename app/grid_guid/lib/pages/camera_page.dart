@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
-import 'package:grid_guid/utils/alert_dialog_when_no_token.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/alert_dialog_when_no_token.dart';
 import '../core/sudoku_detector_async.dart';
 import '../core/detection_layer.dart';
 import '../providers/progress_indicator_provider.dart';
@@ -17,7 +17,6 @@ import '../pages/home_page.dart' show homePrefs, callHomeSetState;
 class CameraPage extends StatefulWidget {
   static const routeName = '/camera-page';
   const CameraPage({super.key});
-
   @override
   State<CameraPage> createState() => _CameraPageState();
 }
@@ -26,16 +25,12 @@ class _CameraPageState extends State<CameraPage> {
   CameraController? _camController;
   late SudokuDetectorAsync _sudokuDetector;
   CameraProvider? _cameraProvider;
-
   double _camFrameToScreenScale = 0;
   int _camFrameRotation = 0;
-
   bool doHaveAccessToCamera = true;
-
   @override
   void initState() {
     super.initState();
-
     _sudokuDetector = SudokuDetectorAsync();
     initCamera();
   }
@@ -49,12 +44,9 @@ class _CameraPageState extends State<CameraPage> {
 
   void didChangeAppLifecycleState(AppLifecycleState state) {
     final CameraController? cameraController = _camController;
-
-    // App state changed before we got the chance to initialize.
     if (cameraController == null || !cameraController.value.isInitialized) {
       return;
     }
-
     if (state == AppLifecycleState.inactive) {
       cameraController.dispose();
     } else if (state == AppLifecycleState.resumed) {
@@ -66,21 +58,17 @@ class _CameraPageState extends State<CameraPage> {
     final cameras = await availableCameras();
     var idx =
         cameras.indexWhere((c) => c.lensDirection == CameraLensDirection.back);
-
     if (idx < 0) {
       return;
     }
-
     var desc = cameras[idx];
     _camFrameRotation = desc.sensorOrientation;
-
     _camController = CameraController(
       desc,
       ResolutionPreset.max,
       enableAudio: false,
       imageFormatGroup: ImageFormatGroup.yuv420,
     );
-
     try {
       await _camController!.initialize();
       await _camController!
@@ -90,7 +78,6 @@ class _CameraPageState extends State<CameraPage> {
       setState(() {});
       return;
     }
-
     if (mounted) setState(() {});
   }
 
@@ -98,22 +85,18 @@ class _CameraPageState extends State<CameraPage> {
     if ((_cameraProvider != null) &&
         (_cameraProvider!.isImageCaptureButttonClicked)) {
       _camController!.pausePreview();
-
       if (_camFrameToScreenScale == 0) {
         var w = (_camFrameRotation == 0 || _camFrameRotation == 180)
             ? image.width
             : image.height;
-
         _camFrameToScreenScale = MediaQuery.of(context).size.width / w;
       }
-
       _cameraProvider!.detectBoard(
         image,
         _sudokuDetector,
         _camFrameRotation,
         _camFrameToScreenScale,
       );
-
       if (_cameraProvider!.isSnackBarShown == false) {
         _cameraProvider!.showSnackBarAfterDetection(context);
       }
@@ -138,50 +121,36 @@ class _CameraPageState extends State<CameraPage> {
     final width = MediaQuery.of(context).size.width;
     final progressIndicatorProvider =
         Provider.of<ProgressIndicatorProvider>(context, listen: false);
-
-    // if don't have access to camera
     if (!doHaveAccessToCamera) return WhenDontHaveAccessToCamera(width);
-
-    // if camera controller not mounted
     if (_camController == null) {
       return const Center(child: CircularProgressIndicator());
     }
-
     _cameraProvider = Provider.of<CameraProvider>(context, listen: false);
     final scale = 1 /
         (_camController!.value.aspectRatio *
             MediaQuery.of(context).size.aspectRatio);
-
     return Scaffold(
       body: Stack(children: [
         Transform.scale(
           scale: scale,
           alignment: Alignment.topCenter,
-          child: Stack(
-            children: [
-              CameraPreview(_camController!),
-              Consumer<CameraProvider>(
-                builder: (ctx, cameraProvider, child) {
-                  return DetectionLayer(bbox: cameraProvider.bbox);
-                },
-              ),
-            ],
-          ),
+          child: Stack(children: [
+            CameraPreview(_camController!),
+            Consumer<CameraProvider>(builder: (ctx, cameraProvider, child) {
+              return DetectionLayer(bbox: cameraProvider.bbox);
+            })
+          ]),
         ),
-        Consumer<CameraProvider>(
-          builder: (ctx, cameraProvider, child) {
-            if (cameraProvider.isDoneProcessing == false &&
-                cameraProvider.isSolutionButtonClicked == true) {
-              return Center(child: ProgressIndicatorWidget(width));
-            } else {
-              return const SizedBox.shrink();
-            }
-          },
-        ),
+        Consumer<CameraProvider>(builder: (ctx, cameraProvider, child) {
+          if (cameraProvider.isDoneProcessing == false &&
+              cameraProvider.isSolutionButtonClicked == true) {
+            return Center(child: ProgressIndicatorWidget(width));
+          } else {
+            return const SizedBox.shrink();
+          }
+        }),
         Padding(
-          padding: EdgeInsets.only(
-            top: height * 0.03,
-          ),
+          padding: EdgeInsets.only(top: height * 0.03),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -225,22 +194,21 @@ class _CameraPageState extends State<CameraPage> {
                         if (checkIfACurrentProcessIsGoingOn(cameraProvider)) {
                           return;
                         }
-
                         if (_cameraProvider!.isSolutionButtonClicked == false) {
                           if ((homePrefs!.getInt('tokens') ?? 1) < 3) {
-                            showAlertDialogWhenNoToken(context, 3, callHomeSetState);
+                            showAlertDialogWhenNoToken(
+                                context, 3, callHomeSetState);
                             return;
                           }
-
                           _cameraProvider!.solutionButtonClicked();
                           var sudokuBoard = await _cameraProvider!.captureBoard(
                             _sudokuDetector,
                             context,
                             progressIndicatorProvider,
                           );
-                          homePrefs!.setInt('tokens', (homePrefs!.getInt('tokens') ?? 1) - 3);
+                          homePrefs!.setInt(
+                              'tokens', (homePrefs!.getInt('tokens') ?? 1) - 3);
                           callHomeSetState();
-
                           BOARD_PROVIDER.updateDetectedBoard(sudokuBoard);
                           Navigator.of(context).pop();
                         }
@@ -253,18 +221,15 @@ class _CameraPageState extends State<CameraPage> {
                         cameraProvider.imageCaptureButtonClicked,
                       ),
                     ClickButton(
-                      show: cameraProvider.isImageCaptureButttonClicked,
-                      Icons.autorenew,
-                      width,
-                      () {
-                        if (checkIfACurrentProcessIsGoingOn(cameraProvider)) {
-                          return;
-                        }
-
-                        _camController!.resumePreview();
-                        cameraProvider.discardCurrentClickedImage();
-                      },
-                    ),
+                        show: cameraProvider.isImageCaptureButttonClicked,
+                        Icons.autorenew,
+                        width, () {
+                      if (checkIfACurrentProcessIsGoingOn(cameraProvider)) {
+                        return;
+                      }
+                      _camController!.resumePreview();
+                      cameraProvider.discardCurrentClickedImage();
+                    })
                   ],
                 );
               }),

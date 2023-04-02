@@ -1,10 +1,8 @@
-import 'dart:developer' as dev;
-
 import 'package:flutter/material.dart';
-import 'package:grid_guid/utils/alert_dialog_when_no_token.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../utils/alert_dialog_when_no_token.dart';
 import '../utils/get_corresponding_index_func.dart';
 import '../utils/sudoku_play_page/alert_dialog_user_complets_puzzle.dart';
 import '../utils/sudoku_play_page/alert_dialog_sudoku_reload_button.dart';
@@ -13,12 +11,10 @@ import '../widgets/sudoku_play_page/sudoku_board_widget.dart';
 import '../providers/board_provider.dart';
 import '../pages/home_page.dart' show callHomeSetState, homePrefs;
 
-// ignore: non_constant_identifier_names
 late BoardProvider BOARD_PROVIDER;
 
 class SudokuPlay extends StatefulWidget {
   const SudokuPlay({super.key});
-
   @override
   State<SudokuPlay> createState() => _SudokuPlayState();
 }
@@ -28,7 +24,6 @@ class _SudokuPlayState extends State<SudokuPlay> {
   BoardProvider? boardProvider;
   double? width;
   double? height;
-
   @override
   void initState() {
     super.initState();
@@ -54,12 +49,10 @@ class _SudokuPlayState extends State<SudokuPlay> {
         value,
         getCorrespondingIndex(currentPressedCount),
       );
-
       if (boardProvider!.isBoardCompletelySolvedbyUser == true) {
         showAlertDialogWhenUserCompletesPuzzle(context, boardProvider!);
         var prefs = await SharedPreferences.getInstance();
         prefs.setInt('tokens', (prefs.getInt('tokens') ?? 1) + 1);
-
         callHomeSetState();
       }
     }
@@ -69,125 +62,102 @@ class _SudokuPlayState extends State<SudokuPlay> {
   Widget build(BuildContext context) {
     boardProvider = Provider.of<BoardProvider>(context, listen: false);
     BOARD_PROVIDER = boardProvider!;
-
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-
     return Container(
       margin: EdgeInsets.all(width! * .05),
       height: double.maxFinite,
       width: double.maxFinite,
       alignment: Alignment.topCenter,
-      child: Column(
-        children: [
-          const Spacer(),
-          SudokuBoardWidget(getCurrentPressedCount, updateCurrentPressedCount),
-          const Spacer(),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Consumer<BoardProvider>(
-                builder: (ctx, boardProvider, child) {
-                  return IconButton(
-                    onPressed: () async {
-                      bool isAllValid = true;
-                      if (boardProvider.isBoardCompletelySolvedbyUser) {
-                        boardProvider.showSnackBar(context);
-                      } else {
-                        if (((homePrefs?.getInt('tokens') ?? 1) > 0) ||
-                            boardProvider.isSolutionShowing) {
-                          isAllValid = boardProvider.toggleSolutions;
-                        } else {
-                          showAlertDialogWhenNoToken(
-                              context, 1, callHomeSetState);
-                        }
-                        if (boardProvider.getBoard
-                                .map((e) => e.digit)
-                                .toList()
-                                .contains(0) &&
-                            boardProvider.isNowShowingSolutions) {
-                              boardProvider.dontShowSolutions();
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                            content: Text(
-                                "Can't Find solution!, Valid but wrong digit(s) present."),
-                            duration: Duration(seconds: 2),
-                          ));
-                          return;
-                        }
-                        // log(res.toString());
-                        if (!boardProvider.isNowShowingSolutions &&
-                            !isAllValid) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                "Can't find solution!, Unvalid Digits Present",
-                              ),
-                              duration: Duration(seconds: 2),
-                            ),
-                          );
-                          return;
-                        }
-
-                        if (boardProvider.isNowShowingSolutions &&
-                            !boardProvider.isBoardCompletelySolvedbyUser) {
-                          homePrefs!.setInt(
-                            'tokens',
-                            (homePrefs?.getInt('tokens') ?? 1) - 1,
-                          );
-
-                          callHomeSetState();
-                        }
-                      }
-                    },
-                    icon: Icon(
-                      boardProvider.isNowShowingSolutions &&
-                              (boardProvider.isBoardCompletelySolvedbyUser ==
-                                  false)
-                          ? Icons.lightbulb
-                          : Icons.lightbulb_outline_sharp,
-                    ),
-                  );
-                },
+      child: Column(children: [
+        const Spacer(),
+        SudokuBoardWidget(getCurrentPressedCount, updateCurrentPressedCount),
+        const Spacer(),
+        Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+          Consumer<BoardProvider>(builder: (ctx, boardProvider, child) {
+            return IconButton(
+              onPressed: () async {
+                bool isAllValid = true;
+                if (boardProvider.isBoardCompletelySolvedbyUser) {
+                  boardProvider.showSnackBar(context);
+                } else {
+                  if (((homePrefs?.getInt('tokens') ?? 1) > 0) ||
+                      boardProvider.isSolutionShowing) {
+                    isAllValid = boardProvider.toggleSolutions;
+                  } else {
+                    showAlertDialogWhenNoToken(context, 1, callHomeSetState);
+                  }
+                  if (boardProvider.getBoard
+                          .map((e) => e.digit)
+                          .toList()
+                          .contains(0) &&
+                      boardProvider.isNowShowingSolutions) {
+                    boardProvider.dontShowSolutions();
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text(
+                          "Can't Find solution!, Valid but wrong digit(s) present."),
+                      duration: Duration(seconds: 2),
+                    ));
+                    return;
+                  }
+                  // log(res.toString());
+                  if (!boardProvider.isNowShowingSolutions && !isAllValid) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          "Can't find solution!, Unvalid Digits Present",
+                        ),
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    return;
+                  }
+                  if (boardProvider.isNowShowingSolutions &&
+                      !boardProvider.isBoardCompletelySolvedbyUser) {
+                    homePrefs!.setInt(
+                      'tokens',
+                      (homePrefs?.getInt('tokens') ?? 1) - 1,
+                    );
+                    callHomeSetState();
+                  }
+                }
+              },
+              icon: Icon(
+                boardProvider.isNowShowingSolutions &&
+                        (boardProvider.isBoardCompletelySolvedbyUser == false)
+                    ? Icons.lightbulb
+                    : Icons.lightbulb_outline_sharp,
               ),
-              SizedBox(width: width! * .07),
-              IconButton(
-                onPressed: () {
-                  showAlertDialogForRefreshingBoard(boardProvider!, context);
-                },
-                icon: const Icon(Icons.refresh),
-              )
-            ],
-          ),
-          const Spacer(),
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  DigitInputButton('1', () => updateBoard('1')),
-                  DigitInputButton('2', () => updateBoard('2')),
-                  DigitInputButton('3', () => updateBoard('3')),
-                  DigitInputButton('4', () => updateBoard('4')),
-                  DigitInputButton('5', () => updateBoard('5')),
-                ],
-              ),
-              SizedBox(height: height! * .02),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  DigitInputButton('6', () => updateBoard('6')),
-                  DigitInputButton('7', () => updateBoard('7')),
-                  DigitInputButton('8', () => updateBoard('8')),
-                  DigitInputButton('9', () => updateBoard('9')),
-                  DigitInputButton('X', () => updateBoard('X')),
-                ],
-              ),
-            ],
-          ),
-          const Spacer()
-        ],
-      ),
+            );
+          }),
+          SizedBox(width: width! * .07),
+          IconButton(
+            onPressed: () {
+              showAlertDialogForRefreshingBoard(boardProvider!, context);
+            },
+            icon: const Icon(Icons.refresh),
+          )
+        ]),
+        const Spacer(),
+        Column(children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            DigitInputButton('1', () => updateBoard('1')),
+            DigitInputButton('2', () => updateBoard('2')),
+            DigitInputButton('3', () => updateBoard('3')),
+            DigitInputButton('4', () => updateBoard('4')),
+            DigitInputButton('5', () => updateBoard('5')),
+          ]),
+          SizedBox(height: height! * .02),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            DigitInputButton('6', () => updateBoard('6')),
+            DigitInputButton('7', () => updateBoard('7')),
+            DigitInputButton('8', () => updateBoard('8')),
+            DigitInputButton('9', () => updateBoard('9')),
+            DigitInputButton('X', () => updateBoard('X')),
+          ]),
+        ]),
+        const Spacer()
+      ]),
     );
   }
 }

@@ -11,17 +11,16 @@ class ProgressIndicatorWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = Provider.of<ProgressIndicatorProvider>(context);
     double precent = provider.currentPercent / 100;
-    // precent -= precent.floor();
     return CircularPercentIndicator(
-        radius: width * .08,
-        percent: precent,
-        progressColor: Colors.indigo,
-        backgroundColor: Colors.indigo.shade100,
-        circularStrokeCap: CircularStrokeCap.round,
-        center: Text(
-          '${provider.currentPercent.toInt()}%',
-          textAlign: TextAlign.center,
-        ),
-      );
+      radius: width * .08,
+      percent: precent,
+      progressColor: Colors.indigo,
+      backgroundColor: Colors.indigo.shade100,
+      circularStrokeCap: CircularStrokeCap.round,
+      center: Text(
+        '${provider.currentPercent.toInt()}%',
+        textAlign: TextAlign.center,
+      ),
+    );
   }
 }

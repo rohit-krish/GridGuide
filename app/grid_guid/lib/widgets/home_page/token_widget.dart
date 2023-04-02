@@ -21,24 +21,21 @@ class TokenWidget extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: width * .02),
           child: LayoutBuilder(builder: (context, constrains) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  '$tokensLeft',
-                  style: TextStyle(
-                    fontSize: constrains.maxWidth * .3,
-                    color: Colors.orange,
-                  ),
-                ),
-                SizedBox(width: constrains.maxWidth * .03),
-                Icon(
-                  Icons.token_outlined,
-                  size: constrains.maxWidth * .5,
+            return Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+              Text(
+                '$tokensLeft',
+                style: TextStyle(
+                  fontSize: constrains.maxWidth * .3,
                   color: Colors.orange,
                 ),
-              ],
-            );
+              ),
+              SizedBox(width: constrains.maxWidth * .03),
+              Icon(
+                Icons.token_outlined,
+                size: constrains.maxWidth * .5,
+                color: Colors.orange,
+              ),
+            ]);
           }),
         ),
       ),

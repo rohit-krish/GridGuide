@@ -18,7 +18,6 @@ Future<Uint8List?> _preprocess(String filePath) async {
 }
 
 Future<int> _getPredictions(Uint8List imgAsList) async {
-  // since the image is jpg so we will have RGB channels we have to take it's gray scale
   List resultBytes = List.filled(70 * 70, 0, growable: false);
 
   int index = 0;
@@ -28,7 +27,6 @@ Future<int> _getPredictions(Uint8List imgAsList) async {
     final g = imgAsList[i + 1];
     final b = imgAsList[i + 2];
 
-    // since the model will do the normalization we don't have to normalize b/w 0 & 1
     resultBytes[index] = (r + g + b) / 3.0;
     index++;
   }

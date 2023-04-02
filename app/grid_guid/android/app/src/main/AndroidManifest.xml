@@ -6,10 +6,9 @@
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
-        <!-- TODO: change the app id in relese-->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-3940256099942544~3347511713"/>
+            android:value="ca-app-pub-7407071925527945~8236308933"/>
 
         <activity
             android:name=".MainActivity"
