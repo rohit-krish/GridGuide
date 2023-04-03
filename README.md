@@ -5,6 +5,7 @@ https://www.veryicon.com/icons/miscellaneous/learning-software/sudoku-2.html
 Names
 
 * GridGuid Sudoku Detector & Solver
+* GridGuid - Scan & Solve Sudoku
 
 * BoldBlocks
 * HyperGrid[taken]
