@@ -28,7 +28,7 @@ class InfoPage extends StatelessWidget {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text('Remember!', style: TextStyle(fontSize: width * .07)),
               Text(
-                "1. Won't detect unvalid digits in the sudoku board.\n2. Scratches and Black spaces in the cell is considered Zero.\n3. Can Detect Handwritten Digits aswell.\n4. Can't Guarentee what will detect if two digits are present in one cell.\n5. More clearer the picture more accurate the detection.\n6. Since Zero is not a valid digit in sudoku game, so if any cell contians Zero the detection will be unpredictable",
+                "1. Won't detect invalid digits in the sudoku board.\n2. Scratches in the cell is considered Empty.\n3. Can Detect Handwritten Digits aswell.\n4. Can't Guarantee what will detect if two digits are present in one cell.\n5. More clearer the picture more accurate the detection.\n6. Since Zero is not a valid digit in sudoku game, so if any cell contians Zero the detection will be unpredictable",
                 style: TextStyle(fontSize: width * .05),
               )
             ]),
