@@ -2,7 +2,7 @@
     package="com.codewiz.grid_guid">
     <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="Grid Guid"
+        android:label="Grid Guide"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

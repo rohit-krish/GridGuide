@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:grid_guid/pages/info_page.dart';
-import 'package:grid_guid/pages/token_page.dart';
+import 'package:grid_guide/pages/info_page.dart';
+import 'package:grid_guide/pages/token_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../pages/camera_page.dart';
 import '../pages/sudoku_play_page.dart';
@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
         if (snapshot.connectionState == ConnectionState.done) {
           homePrefs = snapshot.data;
           return Scaffold(
-            appBar: AppBar(title: const Text('Grid Guid'), actions: [
+            appBar: AppBar(title: const Text('Grid Guide'), actions: [
               TokenWidget(
                 width: width!,
                 tokensLeft: homePrefs!.getInt('tokens') ?? 1,

@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:grid_guid/core/sudoku_detector_async.dart';
-import 'package:grid_guid/providers/board_provider_models.dart';
-import 'package:grid_guid/providers/progress_indicator_provider.dart';
-import 'package:grid_guid/utils/camera_page/check_unvalid_places.dart';
+import 'package:grid_guide/core/sudoku_detector_async.dart';
+import 'package:grid_guide/providers/board_provider_models.dart';
+import 'package:grid_guide/providers/progress_indicator_provider.dart';
+import 'package:grid_guide/utils/camera_page/check_unvalid_places.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../core/get_boxes.dart';
