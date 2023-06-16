@@ -1,4 +1,6 @@
 # GridGuid Sudoku Detector & Solver
+## Get It On Play Store
+<b>https://play.google.com/store/apps/details?id=com.codewiz.grid_guide</b>
 
 <img src="./screenshot.png" alt="screen shots of the app"><br>
 
