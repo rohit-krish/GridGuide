@@ -2,16 +2,18 @@
 ## Get It On Play Store
 <b>https://play.google.com/store/apps/details?id=com.codewiz.grid_guide</b>
 
+## Get the dataset I used,
+https://www.kaggle.com/datasets/rohit369/sudoku-digit-classification
+
 <img src="./screenshot.png" alt="screen shots of the app"><br>
 
 ## Features of the app
-- solve sudoku by scaning image
-- play sudoku game
-- generate sudoku game as image
+- solve sudoku by scanning the image
+- play the sudoku game
+
+
 
 <br><img src="./data_distribution.png" alt="data distribution chart">
-
-publish the data to kaggle
 
 ## Limitations
 1. No Flash Light
