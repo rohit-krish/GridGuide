@@ -33,18 +33,6 @@ class InfoPage extends StatelessWidget {
               )
             ]),
           ),
-          SizedBox(height: height * .05),
-          SizedBox(
-            width: double.maxFinite,
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text('Token Limits', style: TextStyle(fontSize: width * .07)),
-              Text(
-                "1. Will Gain one token when user completes the board\n2. Have to spend one Token for showing Solutions\n3. Have to spend three Tokens for sudoku detection\n",
-                style: TextStyle(fontSize: width * .05),
-              )
-            ]),
-          )
         ]),
       )
     ]);

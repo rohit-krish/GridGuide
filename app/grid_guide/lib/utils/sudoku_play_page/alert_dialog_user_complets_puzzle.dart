@@ -9,12 +9,7 @@ Future<void> showAlertDialogWhenUserCompletesPuzzle(
     builder: (BuildContext context) {
       return AlertDialog(
         title: const Text('You Solved it!'),
-        content: SingleChildScrollView(
-          child: ListBody(children: const <Widget>[
-            Text("Earned 1+ token\n", style: TextStyle(fontSize: 20)),
-            Text('Load new Puzzle?')
-          ]),
-        ),
+        content: const Text("Load new Puzzle?", style: TextStyle(fontSize: 20)),
         actions: <Widget>[
           TextButton(
             child: const Text('No'),
