@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../utils/alert_dialog_when_no_token.dart';
 import '../utils/get_corresponding_index_func.dart';
 import '../utils/sudoku_play_page/alert_dialog_user_complets_puzzle.dart';
 import '../utils/sudoku_play_page/alert_dialog_sudoku_reload_button.dart';
 import '../widgets/sudoku_play_page/digit_input_button.dart';
 import '../widgets/sudoku_play_page/sudoku_board_widget.dart';
 import '../providers/board_provider.dart';
-import '../pages/home_page.dart' show callHomeSetState, homePrefs;
 
 late BoardProvider BOARD_PROVIDER;
 
@@ -51,9 +48,6 @@ class _SudokuPlayState extends State<SudokuPlay> {
       );
       if (boardProvider!.isBoardCompletelySolvedbyUser == true) {
         showAlertDialogWhenUserCompletesPuzzle(context, boardProvider!);
-        var prefs = await SharedPreferences.getInstance();
-        prefs.setInt('tokens', (prefs.getInt('tokens') ?? 1) + 1);
-        callHomeSetState();
       }
     }
   }
@@ -81,12 +75,7 @@ class _SudokuPlayState extends State<SudokuPlay> {
                 if (boardProvider.isBoardCompletelySolvedbyUser) {
                   boardProvider.showSnackBar(context);
                 } else {
-                  if (((homePrefs?.getInt('tokens') ?? 1) > 0) ||
-                      boardProvider.isSolutionShowing) {
-                    isAllValid = boardProvider.toggleSolutions;
-                  } else {
-                    showAlertDialogWhenNoToken(context, 1, callHomeSetState);
-                  }
+                  isAllValid = boardProvider.toggleSolutions;
                   if (boardProvider.getBoard
                           .map((e) => e.digit)
                           .toList()
@@ -111,14 +100,6 @@ class _SudokuPlayState extends State<SudokuPlay> {
                       ),
                     );
                     return;
-                  }
-                  if (boardProvider.isNowShowingSolutions &&
-                      !boardProvider.isBoardCompletelySolvedbyUser) {
-                    homePrefs!.setInt(
-                      'tokens',
-                      (homePrefs?.getInt('tokens') ?? 1) - 1,
-                    );
-                    callHomeSetState();
                   }
                 }
               },

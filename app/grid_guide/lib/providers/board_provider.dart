@@ -15,7 +15,6 @@ class BoardProvider with ChangeNotifier {
       SudokuGenerator(emptySquares: 27 + Random().nextInt(54 - 27)),
     );
     _getSolution = false;
-    isSolutionShowing = false;
     _detectedBoard = null;
     notifyListeners();
   }
@@ -32,7 +31,6 @@ class BoardProvider with ChangeNotifier {
     }
 
     _getSolution = !_getSolution;
-    isSolutionShowing = _getSolution;
     notifyListeners();
     return true;
   }
@@ -70,7 +68,6 @@ class BoardProvider with ChangeNotifier {
   Board _boardData =
       Board(SudokuGenerator(emptySquares: 27 + Random().nextInt(50 - 27)));
   bool _getSolution = false;
-  bool isSolutionShowing = false;
   bool isBoardCompletelySolvedbyUser = false;
   List<BoardCell>? _detectedBoard;
   void get generateNewBoard => _generateNewBoard();

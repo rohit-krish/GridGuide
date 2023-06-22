@@ -1,6 +1,9 @@
 # GridGuid Sudoku Detector & Solver
-## Get It On Play Store
-<b>https://play.google.com/store/apps/details?id=com.codewiz.grid_guide</b>
+## Preview
+<b>https://youtube.com/shorts/dRAKu7-uJF0?feature=share</b>
+
+<!-- ## Get It On Play Store
+<b>https://play.google.com/store/apps/details?id=com.codewiz.grid_guide</b> -->
 
 ## Get the dataset I used,
 https://www.kaggle.com/datasets/rohit369/sudoku-digit-classification
